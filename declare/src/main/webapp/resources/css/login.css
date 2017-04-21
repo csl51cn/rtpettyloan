@@ -1,0 +1,35 @@
+BODY {
+	PADDING-BOTTOM: 0px; LINE-HEIGHT: 23px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT-FAMILY: Verdana, Geneva, sans-serif; BACKGROUND: url(../images/login/bsptlogon.jpg); COLOR: #3b6e81; FONT-SIZE: 12px; PADDING-TOP: 0px
+}
+.second_body {
+	MARGIN: 10% auto 0px; PADDING-LEFT: 300px; WIDTH: 330px; BACKGROUND: url(../images/login/login_panel.png) no-repeat; HEIGHT: 243px; PADDING-TOP: 110px
+}
+.login_button {
+	BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; WIDTH: 58px; BACKGROUND: url(../images/login/login1.jpg); HEIGHT: 26px; COLOR: #fff; MARGIN-LEFT: 15px; BORDER-TOP: medium none; FONT-WEIGHT: bold; BORDER-RIGHT: medium none
+}
+.reset_botton {
+	BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; WIDTH: 58px; BACKGROUND: url(../images/login/login1.jpg); HEIGHT: 26px; COLOR: #fff; MARGIN-LEFT: 15px; BORDER-TOP: medium none; FONT-WEIGHT: bold; BORDER-RIGHT: medium none
+}
+.reset_botton {
+	BACKGROUND: url(../images/login/reset.jpg)
+}
+.inputText {
+	border:1px solid #8fbbd8;
+	background:#fff url(../images/login/inputtext_bg.gif) repeat-x top;
+	height:20px;
+	line-height:20px;
+	padding-left:2px;
+	color: #009900;
+	width:160px;
+	font-size:12px;
+}
+.validateText {
+	border:1px solid #8fbbd8;
+	background:#fff url(../images/login/inputtext_bg.gif) repeat-x top;
+	height:20px;
+	line-height:20px;
+	padding-left:2px;
+	color: #009900;
+	width:50px;
+	font-size:12px;
+}

@@ -1,0 +1,183 @@
+@charset "utf-8";
+* {
+	*margin:0;
+	*padding:0;
+	*border:0;
+	font-size:12px;
+	font-family:Verdana, Arial,, Helvetica, sans-serif;
+	scrollbar-face-color:#dff9fe;
+	scrollbar-highlight-color:#FFFFFF;
+	scrollbar-3dlight-color:#9adae7;
+	scrollbar-darkshadow-color:#9adae7;
+	scrollbar-Shadow-color:#FFFFFF;
+	scrollbar-arrow-color:#006498;
+	scrollbar-track-color:#fff;
+}
+body {
+	margin:0px 1px 1px;
+	background:#fff;
+	border:0;
+	color:#333;
+}
+table{border-collapse:collapse;}
+table a{color:blue;text-decoration:none; } 
+table a:hover {color:#CC3300;text-decoration:none;}
+
+/*editBlock*/
+.editBlock {
+	padding:1px!important;
+    padding:0px!important;
+	padding:0;
+	background-color:#EFF5F9;
+	border:1px solid #a8cce9;
+	margin-top: 1px;
+}
+.editBlock table {
+	width:100%;
+}
+.editBlock th {
+	height:16px;
+	text-align:right;
+	font-weight:normal;
+	padding:4px;
+	padding-top:8px;
+	border:1px solid #e3eef7;
+	background:#f4f8fc;
+	*color: #165E9E;
+	vertical-align:top;
+}
+.editBlock td {
+	border:1px solid #e3eef7;
+	padding:2px 4px;
+	background:#fff;
+}
+
+.editBlock .subtitle, .editBlock .subtitleClose {
+	text-align:left;
+	height:26px;
+	line-height:26px;
+	padding:0 24px;
+	cursor:pointer;
+}
+.editBlock .subtitle {
+	background-image:url(../images/panel_title.png) ;
+	background:#e2edf6 url(../images/arrow_up.gif) no-repeat 6px center ;
+	color:#8196a5;
+	border-bottom:1px solid #fff;
+}
+.editBlock .subtitleClose {
+	background:#e2edf6 url(../images/arrow_down.gif) no-repeat 6px center;
+	color:#005edf;
+	border-bottom:1px solid #fff;
+}
+ 
+.editBlock .toolbar {
+	text-align: center;
+	padding: 4px;
+	border-top: 1px dotted #a8cce9;
+	background-color:#e2edf6;
+}
+
+.editBlock a {
+	text-decoration: underline;
+}
+
+.editBlock .inputText{
+	border:1px solid #95B8E7;
+	*color:#007fca;
+	width:245px;
+	padding:4px 2px;
+}
+.editBlock textarea{
+	border:1px solid #95B8E7;
+	*color:#007fca;
+	width:200px;
+	height:75px;
+	padding:4px 2px;
+}
+.editBlock .inputText_disabled{
+	border:1px solid #95B8E7;
+	background-color:#F0F0F0;
+	color:#007fca;
+	width:200px;
+	padding:4px 2px;
+}
+.editBlock label{
+	margin:0 15px 0 4px;
+}
+.editBlock .tip{
+	line-height:20px;
+	color:#5f6a72;
+}
+.editBlock select{
+	width:202px;
+}
+.editBlock select{
+	width:124px;
+}
+
+.info {
+	border: 1px solid #dedede;
+	margin: 8px 0;
+	padding: 8px;
+	line-height:180%;
+	color:#666;
+	padding-left:40px;
+	background:#fff url(../images/icon_info.gif) no-repeat 12px 12px;
+}
+
+.inputButton {
+	background:#fff url(../images/button_bg.gif) repeat-x center;
+	border:1px solid #7898b8;
+	color:#000;
+	cursor:pointer;
+	overflow:visible;
+	width:auto;
+	padding:2px 10px;
+	padding:4px 13px 0 15px \9;
+	vertical-align:middle;
+}
+
+.warning {
+	color: #F80C11;
+	font-weight: bold;
+}
+
+/*msg*/
+.msgFalse {
+	background:#ffeeee url(../images/msgFalse.gif) no-repeat 30px 12px;
+	border:1px solid #f07a7a;
+}
+.msgFalse dt {
+	font-size:14px;
+	font-weight:bold;
+	color:#e82900;
+}
+.msgFalse dd {
+	margin:0;
+	padding-top:12px;
+	color:#e82900;
+}
+.msgSuccess {
+	background:#f5ffeb url(../images/msgSuccess.gif) no-repeat 30px 12px;
+	border:1px solid #5fb945;
+}
+.msgSuccess dt {
+	font-size:14px;
+	font-weight:bold;
+	color:#439506;
+}
+.msgSuccess dd {
+	margin:0;
+	padding-top:12px;
+	color:#439506;
+}
+
+.msgFalse, .msgSuccess {
+	border-left:0;
+	border-right:0;
+	padding: 20px;
+	padding-left: 100px;
+	margin-top:10%;
+}
+

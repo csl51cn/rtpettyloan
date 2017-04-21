@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/' >
+
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d [%c:%L] %-5p - %m%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="levelMin" value="debug" />
+            <param name="levelMax" value="error" />
+            <param name="AcceptOnMatch" value="true" />
+        </filter>
+    </appender>
+
+    <appender name="fems.console.file" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="D:/bsptlog/fems.console.log" />
+        <param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+        <layout class="org.apache.log4j.PatternLayout">
+        	<param name="ConversionPattern" value="%d [%c:%L] %-5p - %m%n"/>
+        </layout>
+    </appender>
+    <appender name="fems.springframework.file" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="D:/bsptlog/fems.springframework.log" />
+        <param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+        <layout class="org.apache.log4j.PatternLayout">
+        	<param name="ConversionPattern" value="%d [%c:%L] %-5p - %m%n"/>
+        </layout>
+    </appender>
+    <appender name="fems.message.file" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="D:/bsptlog/fems.message.file.log" />
+        <param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+        <layout class="org.apache.log4j.PatternLayout">
+        	<param name="ConversionPattern" value="%d [%c:%L] %-5p - %m%n"/>
+        </layout>
+    </appender>
+
+    <logger name="org.springframework" additivity="true">
+        <level value ="warn"/>
+        <appender-ref ref="fems.springframework.file" />
+    </logger>
+    <logger name="com.global" additivity="true">
+        <level value ="debug"/>
+        <appender-ref ref="fems.console.file" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="com.pactera" additivity="true">
+        <level value ="debug"/>
+        <appender-ref ref="fems.message.file" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="org.springframework" additivity="true">
+        <level value ="error"/>
+        <appender-ref ref="CONSOLE" />
+    </logger>
+</log4j:configuration>
+
