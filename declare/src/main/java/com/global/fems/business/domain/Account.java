@@ -10,7 +10,7 @@ import com.global.framework.dbutils.support.Entity;
  * @author zhaoyating
  * 
  */
-@TableMapping(primaryKey = "CISNO", primaryKeyType = "Single", tableName = "PA_ACCOUNT")
+@TableMapping(primaryKey = "CISNO", primaryKeyType = "Single", tableName = "dc_PA_ACCOUNT")
 public class Account  extends Entity {
 
 	@ColumnMapping(columnName = "CISNO", columnType = "String")

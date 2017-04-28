@@ -18,7 +18,7 @@ public class ChannelDaoImpl extends BaseDaoSupport implements ChannelDao {
 	
 	public PageBean queryChannelForPage(Channel channel, PageBean page) throws BaseException {
 		StringBuilder sql = new StringBuilder(256);
-		sql.append("SELECT c.* FROM pa_channel c WHERE 1 = 1");
+		sql.append("SELECT c.* FROM dc_pa_channel c WHERE 1 = 1");
 		List<Object> args = new ArrayList<Object>();
 		
 		if(StringUtils.isNotBlank(channel.getChannelCnName())) {
@@ -60,7 +60,7 @@ public class ChannelDaoImpl extends BaseDaoSupport implements ChannelDao {
 
 	
 	public Boolean checkChannelCodeExist(String channelCode) throws BaseException {
-		String sql = "select count(1) from pa_channel c where c.channelcode=?";
+		String sql = "select count(1) from dc_pa_channel c where c.channelcode=?";
 		int count = super.findForIntBySql(sql, new Object[]{channelCode});
 		return count > 0 ? false : true;
 	}
@@ -74,13 +74,13 @@ public class ChannelDaoImpl extends BaseDaoSupport implements ChannelDao {
 	
 	public Channel queryChannelByReqSysCode(String reqSysCode)
 			throws BaseException {
-		String sql = "select * from pa_channel t where t.reqsyscode=? ";
+		String sql = "select * from dc_pa_channel t where t.reqsyscode=? ";
 		return super.findForObjectBySql(sql, new Object[]{reqSysCode}, Channel.class);
 	}
 	
 	
 	public boolean checkReqSysCodeExist(String reqSysCode) throws BaseException {
-		String sql = "select count(1) from pa_channel c where c.reqsyscode=?";
+		String sql = "select count(1) from dc_pa_channel c where c.reqsyscode=?";
 		int count = super.findForIntBySql(sql, new Object[]{reqSysCode});
 		return count > 0 ? false : true;
 	}
@@ -88,7 +88,7 @@ public class ChannelDaoImpl extends BaseDaoSupport implements ChannelDao {
 	
 	public Channel queryChannelByBizChnlCode(String bizChnlCode)
 			throws BaseException {
-		String sql = "select * from pa_channel where BIZCHNLCODE =? ";
+		String sql = "select * from dc_pa_channel where BIZCHNLCODE =? ";
 		return super.findForObjectBySql(sql, new Object[]{bizChnlCode}, Channel.class);
 	}
 }

@@ -46,14 +46,14 @@ public class SpfeMdfDaoImpl extends BaseDaoSupport implements SpfeMdfDao{
 	}
 
 	public SpfeMdf findById(String id) throws BaseException {
-		String sql = "select a.*,b.refNo,b.tradeNo from bu_spfe_mdf a, wfl_taskinfo b where a.seqno=b.txnserialno and a.seqno=? ";
+		String sql = "select a.*,b.refNo,b.tradeNo from dc_bu_spfe_mdf a, dc_wfl_taskinfo b where a.seqno=b.txnserialno and a.seqno=? ";
 		sql += " union ";
-		sql += "select a.*,b.refNo,b.tradeNo from bu_spfe_mdf a, wfl_taskinfo_his b where a.seqno=b.txnserialno and a.seqno=? ";
+		sql += "select a.*,b.refNo,b.tradeNo from dc_bu_spfe_mdf a, dc_wfl_taskinfo_his b where a.seqno=b.txnserialno and a.seqno=? ";
 		return super.findForObjectBySql(sql, new Object[]{id, id}, SpfeMdf.class);
 	}
 	
 	public SpfeMdf findByPrimaryKey(String key) throws BaseException {
-		String sql ="select a.*,(select t.txnserialno from wfl_taskinfo_his t where t.BIZNO=a.PRIMARYBIZNO) primarySeqNo from bu_spfe_mdf a where a.SEQNO=?";
+		String sql ="select a.*,(select t.txnserialno from dc_wfl_taskinfo_his t where t.BIZNO=a.PRIMARYBIZNO) primarySeqNo from dc_bu_spfe_mdf a where a.SEQNO=?";
 		return super.findForObjectBySql(sql, new Object[]{key}, SpfeMdf.class);
 	}
 	
@@ -63,33 +63,33 @@ public class SpfeMdfDaoImpl extends BaseDaoSupport implements SpfeMdfDao{
 	}
 
 	public SpfeLmt findNotCancelById(String id,String csrId) throws BaseException {
-		String sql = "select a.*,b.refno from BU_spfe_lmt a, wfl_taskinfo_his b where b.txnserialno=a.seqno and b.transstate='4' and SEQNO=? and not exists(select 1 from BU_spfe_csr where seqno !=? and primarybizno=a.bizno)";
+		String sql = "select a.*,b.refno from dc_BU_spfe_lmt a, dc_wfl_taskinfo_his b where b.txnserialno=a.seqno and b.transstate='4' and SEQNO=? and not exists(select 1 from dc_BU_spfe_csr where seqno !=? and primarybizno=a.bizno)";
 		return super.findForObjectBySql(sql.toString(), new Object[]{id,csrId}, SpfeLmt.class);
 	}
 
 	public List<SpfeLmt> findNotCancelAll() throws BaseException {
-		String sql = "select a.*,b.refno from BU_spfe_lmt a, wfl_taskinfo_his b where b.txnserialno=a.seqno and b.transstate='4' and not exists(select 1 from BU_spfe_csr where primarybizno=a.bizno)";
+		String sql = "select a.*,b.refno from dc_BU_spfe_lmt a, dc_wfl_taskinfo_his b where b.txnserialno=a.seqno and b.transstate='4' and not exists(select 1 from dc_BU_spfe_csr where primarybizno=a.bizno)";
 		return (List<SpfeLmt>) super.findForListBySql(sql, new Object[]{}, SpfeLmt.class);
 	}
 
 	public List<ZTreeNode> getSpfeListForZTreeNode(String orgs) throws BaseException {//decode(a.trade_type,'JH','-1','GH','-2')
 		String sql = " select b.bizno treeId, case when  a.trade_type= 'JH' then case when a.OCCUPY_LMT_STATUS='Y' then '-11' else '-12' end else case when a.OCCUPY_LMT_STATUS='Y' then '-21' else '-22' end end  pid,b.refno treeName" +
-				"  from (select LMT.SEQNO,LMT.BIZNO,LMT.TRADE_TYPE,LMT.BIZNO,LMT.OCCUPY_LMT_STATUS from BU_SPFE_LMT lmt where " +
-				//"  not EXISTS(select 1 from BU_SPFE_CSR csr where CSR.PRIMARYBIZNO=LMT.BIZNO  UNION all select 1 from BU_SPFE_MDF mdf where mdf.PRIMARYBIZNO=LMT.BIZNO )" +
+				"  from (select LMT.SEQNO,LMT.BIZNO,LMT.TRADE_TYPE,LMT.BIZNO,LMT.OCCUPY_LMT_STATUS from dc_BU_SPFE_LMT lmt where " +
+				//"  not EXISTS(select 1 from dc_BU_SPFE_CSR csr where CSR.PRIMARYBIZNO=LMT.BIZNO  UNION all select 1 from dc_BU_SPFE_MDF mdf where mdf.PRIMARYBIZNO=LMT.BIZNO )" +
 				" lmt.sfzx='Y'"+
 				"  union ALL" +
-				"  select MDF.SEQNO,MDF.BIZNO,MDF.TRADE_TYPE,MDF.BIZNO,'Y' from BU_SPFE_MDF mdf where " +
-				//"  not EXISTS(SELECT 1 from BU_SPFE_CSR csr where csr.PRIMARYBIZNO = MDF.BIZNO  UNION all select 1 from BU_SPFE_MDF mdf where mdf.PRIMARYBIZNO= MDF.BIZNO)" +
+				"  select MDF.SEQNO,MDF.BIZNO,MDF.TRADE_TYPE,MDF.BIZNO,'Y' from dc_BU_SPFE_MDF mdf where " +
+				//"  not EXISTS(SELECT 1 from dc_BU_SPFE_CSR csr where csr.PRIMARYBIZNO = MDF.BIZNO  UNION all select 1 from dc_BU_SPFE_MDF mdf where mdf.PRIMARYBIZNO= MDF.BIZNO)" +
 				" mdf.sfzx='Y'"+
-				"  and EXISTS(select 1 from BU_SPFE_LMT lmt1 where LMT1.bizno = MDF.PRIMARYBIZNO UNION all select 1 from BU_SPFE_MDF mdf1 where MDF1.bizno = MDF.PRIMARYBIZNO) " +
-				"  ) a ,wfl_taskinfo_his b where b.txnserialno=a.seqno and b.transstate='4' and b.TRANSORGNO in ('"+orgs+"') order by b.createdate desc";
+				"  and EXISTS(select 1 from dc_BU_SPFE_LMT lmt1 where LMT1.bizno = MDF.PRIMARYBIZNO UNION all select 1 from dc_BU_SPFE_MDF mdf1 where MDF1.bizno = MDF.PRIMARYBIZNO) " +
+				"  ) a ,dc_wfl_taskinfo_his b where b.txnserialno=a.seqno and b.transstate='4' and b.TRANSORGNO in ('"+orgs+"') order by b.createdate desc";
 		return (List<ZTreeNode>) super.findForListBySql(sql, new Object[]{},
 			ZTreeNode.class);
 	}
 
 	public PageBean queryFinishTaskListByUserID(TaskInfo task,PageBean page) throws BaseException {
 		List<String> args = new ArrayList<String>();
-		String sql = "select tt.txnserialno,tt.bizno,tt.refno,tt.tradeNo, (select tradename from wfl_tradecode c where c.tradeno=tt.tradeno) tradeName from wfl_taskinfo_his tt where tt.txnserialno in (select l.seqno from bu_spfe_lmt l where l.sfzx='Y' union all select m.seqno from bu_spfe_mdf m where m.sfzx='Y' union all select m.seqno from bu_spfe_mkup m where m.sfzx = 'Y') and not exists (select 1 from bu_spfe_csr csr where csr.primarybizno=tt.bizno) and tt.transstate='4' ";
+		String sql = "select tt.txnserialno,tt.bizno,tt.refno,tt.tradeNo, (select tradename from dc_wfl_tradecode c where c.tradeno=tt.tradeno) tradeName from dc_wfl_taskinfo_his tt where tt.txnserialno in (select l.seqno from dc_bu_spfe_lmt l where l.sfzx='Y' union all select m.seqno from dc_bu_spfe_mdf m where m.sfzx='Y' union all select m.seqno from dc_bu_spfe_mkup m where m.sfzx = 'Y') and not exists (select 1 from dc_bu_spfe_csr csr where csr.primarybizno=tt.bizno) and tt.transstate='4' ";
 				
 		sql += " and to_char(tt.finishdate,'yyyy-MM-dd') >= ? ";
 		args.add(task.getStartFinishTime());
@@ -114,12 +114,12 @@ public class SpfeMdfDaoImpl extends BaseDaoSupport implements SpfeMdfDao{
 	}
 	
 	public SpfeMdf findSpfeMdfByMdfBizNo(String bizNo,String sfzx) throws BaseException {
-		String sql ="select a.* , '' SEQNO,'' BIZNO, a.BIZNO primaryBizNo from BU_SPFE_MDF a where  a.bizno=? and a.sfzx=?";
+		String sql ="select a.* , '' SEQNO,'' BIZNO, a.BIZNO primaryBizNo from dc_BU_SPFE_MDF a where  a.bizno=? and a.sfzx=?";
 		return super.findForObjectBySql(sql, new Object[]{bizNo,sfzx}, SpfeMdf.class);
 	}
 
 	public SpfeMdf findSpfeMdfByLmtBizNo(String bizNo,String sfzx) throws BaseException {
-		String sql ="select t.*,'' SEQNO,'' BIZNO,t.seqno primarySeqNo,t.bizno primaryBizNo from  BU_SPFE_LMT t where t.bizno =?  and t.sfzx=?";
+		String sql ="select t.*,'' SEQNO,'' BIZNO,t.seqno primarySeqNo,t.bizno primaryBizNo from dc_BU_SPFE_LMT t where t.bizno =?  and t.sfzx=?";
 		SpfeMdf mode = super.findForObjectBySql(sql, new Object[]{bizNo,sfzx}, SpfeMdf.class);
 		return mode;
 	}
@@ -140,10 +140,10 @@ public class SpfeMdfDaoImpl extends BaseDaoSupport implements SpfeMdfDao{
 				+"b.AMT_BALANCE_USD,"
 				+"b.TYPE_STATUS,"
 				+"C.REFNO "
-				+"from BU_SPFE_MDF a,BU_SPFE_LMT b,wfl_taskinfo_his c "
+				+"from dc_BU_SPFE_MDF a,dc_BU_SPFE_LMT b,dc_wfl_taskinfo_his c "
 				+"where a.PRIMARYBIZNO=b.BIZNO "
 				+"and c.transState = '4' "
-				+"and not exists (select 1 from bu_spfe_csr csr where csr.primarybizno=c.bizno) "
+				+"and not exists (select 1 from dc_bu_spfe_csr csr where csr.primarybizno=c.bizno) "
 				+"and a.seqno=c.txnserialNo "
 				+"and a.sfzx=? ";  
 		
@@ -173,10 +173,10 @@ public class SpfeMdfDaoImpl extends BaseDaoSupport implements SpfeMdfDao{
 				+"b.AMT_BALANCE_USD,"
 				+"b.TYPE_STATUS,"
 				+"C.REFNO "
-				+"from BU_SPFE_MDF a,BU_SPFE_mdf b,wfl_taskinfo_his c "
+				+"from dc_BU_SPFE_MDF a,dc_BU_SPFE_mdf b,dc_wfl_taskinfo_his c "
 				+"where a.PRIMARYBIZNO=b.BIZNO "
 				+"and c.transState = '4' "
-				+"and not exists (select 1 from bu_spfe_csr csr where csr.primarybizno=c.bizno) "
+				+"and not exists (select 1 from dc_bu_spfe_csr csr where csr.primarybizno=c.bizno) "
 				+"and a.seqno=c.txnserialNo "
 				+"and a.sfzx=? "; 
 		
@@ -206,10 +206,10 @@ public class SpfeMdfDaoImpl extends BaseDaoSupport implements SpfeMdfDao{
 				+"b.AMT_BALANCE_USD,"
 				+"b.TYPE_STATUS,"
 				+"C.REFNO "
-				+"from BU_SPFE_MDF a,BU_SPFE_MKUP b,wfl_taskinfo_his c "
+				+"from dc_BU_SPFE_MDF a,dc_BU_SPFE_MKUP b,dc_wfl_taskinfo_his c "
 				+"where a.PRIMARYBIZNO=b.BIZNO "
 				+"and c.transState = '4' "
-				+"and not exists (select 1 from bu_spfe_csr csr where csr.primarybizno=c.bizno) "
+				+"and not exists (select 1 from dc_bu_spfe_csr csr where csr.primarybizno=c.bizno) "
 				+"and a.seqno=c.txnserialNo "
 				+"and a.sfzx=? ";  
 		
@@ -227,7 +227,7 @@ public class SpfeMdfDaoImpl extends BaseDaoSupport implements SpfeMdfDao{
 	}
 
 	public SpfeMdf findSpfeMdfByLmtSeqNo(String seqNo) throws BaseException {
-		String sql ="select t.*,'' SEQNO,'' BIZNO,t.seqno primarySeqNo,t.bizno primaryBizNo from  BU_SPFE_LMT t where t.seqNo =?";
+		String sql ="select t.*,'' SEQNO,'' BIZNO,t.seqno primarySeqNo,t.bizno primaryBizNo from dc_BU_SPFE_LMT t where t.seqNo =?";
 		SpfeMdf mode = super.findForObjectBySql(sql, new Object[]{seqNo}, SpfeMdf.class);
 		return mode;
 	}
@@ -250,7 +250,7 @@ public class SpfeMdfDaoImpl extends BaseDaoSupport implements SpfeMdfDao{
 	}
 
 	public SpfeMdf findByBizNo(String bizNo) throws BaseException {
-		String sql ="select * from bu_spfe_mdf where bizno=?";
+		String sql ="select * from dc_bu_spfe_mdf where bizno=?";
 		return super.findForObjectBySql(sql, new Object[]{bizNo}, SpfeMdf.class);
 	}
 
@@ -261,19 +261,19 @@ public class SpfeMdfDaoImpl extends BaseDaoSupport implements SpfeMdfDao{
 	}
 
 	public String getBizNoByRefNo(String refNo) throws BaseException {
-		String sql ="select bizno from  wfl_taskinfo_his where refno=?";
+		String sql ="select bizno from dc_wfl_taskinfo_his where refno=?";
 		Map result = super.getJdbcTemplate().queryForMap(sql, new Object[]{refNo});
 		return (String) result.get(result.keySet().toArray()[0]);
 	}
 	public SpfeLmt findNotCancelByBizNo(String bizno,boolean isDetailQuey) throws BaseException {
-		String sql = "select t.*,(select refno from wfl_taskinfo_his h where h.bizno = t.bizno) refno from bu_spfe_lmt t where  ";
+		String sql = "select t.*,(select refno from dc_wfl_taskinfo_his h where h.bizno = t.bizno) refno from dc_bu_spfe_lmt t where  ";
 		Object param[] =new Object[]{bizno}; 
 				if(!isDetailQuey){
-					sql +="not exists(select 1 from (select bizno from  bu_spfe_csr csr where  csr.primaryBizNo=? union all select bizno from" +
+					sql +="not exists(select 1 from dc_(select bizno from dc_bu_spfe_csr csr where  csr.primaryBizNo=? union all select bizno from" +
 							" bu_spfe_mdf mdf where mdf.primaryBizNo=?) a , wfl_taskinfo_his h where a.bizno=h.bizno) and" ;
 					param =new Object[]{bizno,bizno,bizno}; 
 				}
-				sql += " exists (select 1 from  wfl_taskinfo_his wf where wf.bizno = t.bizno) and t.bizno = ? ";
+				sql += " exists (select 1 from dc_wfl_taskinfo_his wf where wf.bizno = t.bizno) and t.bizno = ? ";
 			
 		return super.findForObjectBySql(sql, param, SpfeLmt.class);
 	}
@@ -282,7 +282,7 @@ public class SpfeMdfDaoImpl extends BaseDaoSupport implements SpfeMdfDao{
 		try {
 			StringBuffer sql = new StringBuffer();
 			//添加tradeNo返回值，撤销接口要用到 泉州修改 2015-12-04  chao.jiang
-			sql.append("select distinct refNo,bizNo,transOrgNo,tradeNo from wfl_taskinfo_his t where t.transstate='4' and not exists(select 1 from bu_spfe_csr c where c.primarybizno=t.bizno) and t.txnserialno=?");
+			sql.append("select distinct refNo,bizNo,transOrgNo,tradeNo from dc_wfl_taskinfo_his t where t.transstate='4' and not exists(select 1 from dc_bu_spfe_csr c where c.primarybizno=t.bizno) and t.txnserialno=?");
 			Map<String, Object> map = super.getJdbcTemplate().queryForMap(sql.toString(), seqno);
 			return map;
 		} catch (DataAccessException e) {
@@ -293,7 +293,7 @@ public class SpfeMdfDaoImpl extends BaseDaoSupport implements SpfeMdfDao{
 	
 	public SpfeMdf findSpfeMdfByLmtSeqNo(String txnSerialNo, String refNo, String sfzx) {
 		List<String> list = new ArrayList<String>();
-		String sql ="select t.*,t.seqno primarySeqNo,t.bizno primaryBizNo, B.REFNO from  BU_SPFE_LMT t, wfl_taskinfo_his b where t.seqno=b.txnserialno and b.transState='4' and not exists (select 1 from bu_spfe_csr csr where csr.primarybizno=t.bizno) and t.sfzx=? ";
+		String sql ="select t.*,t.seqno primarySeqNo,t.bizno primaryBizNo, B.REFNO from dc_BU_SPFE_LMT t, dc_wfl_taskinfo_his b where t.seqno=b.txnserialno and b.transState='4' and not exists (select 1 from dc_bu_spfe_csr csr where csr.primarybizno=t.bizno) and t.sfzx=? ";
 		list.add(sfzx);
 		if (StringUtils.isNotBlank(txnSerialNo)) {
 			sql += "and t.seqno=? ";
@@ -310,7 +310,7 @@ public class SpfeMdfDaoImpl extends BaseDaoSupport implements SpfeMdfDao{
 	public SpfeMdf findSpfeMkupBySeqNo(String txnSerialNo, String refNo,
 			String sfzx) {
 		List<String> list = new ArrayList<String>();
-		String sql ="select t.*,t.seqno primarySeqNo,t.bizno primaryBizNo, B.REFNO from  BU_SPFE_MKUP t, wfl_taskinfo_his b where t.seqno=b.txnserialno and b.transState='4' and not exists (select 1 from bu_spfe_csr csr where csr.primarybizno=t.bizno) and t.sfzx=? ";
+		String sql ="select t.*,t.seqno primarySeqNo,t.bizno primaryBizNo, B.REFNO from dc_BU_SPFE_MKUP t, dc_wfl_taskinfo_his b where t.seqno=b.txnserialno and b.transState='4' and not exists (select 1 from dc_bu_spfe_csr csr where csr.primarybizno=t.bizno) and t.sfzx=? ";
 		list.add(sfzx);
 		if (StringUtils.isNotBlank(txnSerialNo)) {
 			sql += "and t.seqno=? ";

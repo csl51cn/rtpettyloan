@@ -21,7 +21,7 @@ import com.global.framework.system.domain.UserRole;
 public class LoginDaoImpl extends BaseDaoSupport implements LoginDao {
 
 	public User login(User user) throws BaseException {
-		String sql = "select t.*,(select orgname from sys_org where orgid=t.orgid) orgName from sys_user t where t.userCode = ?";
+		String sql = "select t.*,(select orgname from dc_sys_org where orgid=t.orgid) orgName from dc_sys_user t where t.userCode = ?";
 		return (User) super.findForObjectBySql(sql, new Object[]{user.getUserCode()}, User.class);
 	}
 
@@ -34,7 +34,7 @@ public class LoginDaoImpl extends BaseDaoSupport implements LoginDao {
 	}
 
 	public void updateLoginLog(UserLoginLog log) throws BaseException {
-		String sql = "update sys_userloginlog set logouttime=?,logoutstatus=? where userid=? and logintime=?";
+		String sql = "update dc_sys_userloginlog set logouttime=?,logoutstatus=? where userid=? and logintime=?";
 		super.updateBySql(sql, new Object[] { log.getLogoutTime(), 
 				log.getLogoutStatus(),
 				log.getUserId(), 
@@ -42,24 +42,24 @@ public class LoginDaoImpl extends BaseDaoSupport implements LoginDao {
 	}
 
 	public UserLoginLog getLastLoginLog(String userId) throws BaseException {
-		String sql = "select logid,loginip,logintime,logouttime,logoutstatus from sys_userloginlog where userid=? AND loginTime=(select max(logintime) from sys_userloginlog)";
+		String sql = "select logid,loginip,logintime,logouttime,logoutstatus from dc_sys_userloginlog where userid=? AND loginTime=(select max(logintime) from dc_sys_userloginlog)";
 		return (UserLoginLog) super.findForObjectBySql(sql, new Object[]{userId}, UserLoginLog.class);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<UserRole> getUserRoleList(String userId) throws BaseException {
-		String sql = "select t.*,(select rolename from sys_role where roleid=t.roleid) rolename from sys_userrole t where t.userid = ?";
+		String sql = "select t.*,(select rolename from dc_sys_role where roleid=t.roleid) rolename from dc_sys_userrole t where t.userid = ?";
 		return (List<UserRole>) super.findForListBySql(sql, new Object[]{userId}, UserRole.class);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<UserRole> getUserRoleList() throws BaseException {
-		String sql = "select t.*,(select rolename from sys_role where roleid=t.roleid) rolename from sys_userrole t ";
+		String sql = "select t.*,(select rolename from dc_sys_role where roleid=t.roleid) rolename from dc_sys_userrole t ";
 		return (List<UserRole>) super.findForListBySql(sql, null, UserRole.class);
 	}
 
 	public DataRight getDataRight(String roleId) throws BaseException {
-		String sql = "select * from sys_roledataright t where t.roleid = ? ";
+		String sql = "select * from dc_sys_roledataright t where t.roleid = ? ";
 		return (DataRight) super.findForObjectBySql(sql, new Object[]{roleId}, DataRight.class);
 	}
 }

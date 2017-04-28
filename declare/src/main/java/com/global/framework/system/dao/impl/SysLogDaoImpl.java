@@ -25,7 +25,7 @@ public class SysLogDaoImpl extends BaseDaoSupport implements SysLogDao{
 	public PageBean queryLogForPage( ExceptionLog log, PageBean page)
 			throws BaseException {
 		StringBuilder sql = new StringBuilder();
-		sql.append("select * from sys_exceptionlog t where 1=1 ");
+		sql.append("select * from dc_sys_exceptionlog t where 1=1 ");
 		List<Object> list = new ArrayList<Object>();
 		if (StringUtils.isNotBlank(log.getBizNo())) {
 			sql.append(" and t.bizNo = ? ");
@@ -42,12 +42,12 @@ public class SysLogDaoImpl extends BaseDaoSupport implements SysLogDao{
 	}
     
 	public void delete(String exceptionLogId) throws BaseException {
-		String sql = "delete from sys_exceptionlog t where t.exceptionLogId = ?　";
+		String sql = "delete from dc_sys_exceptionlog t where t.exceptionLogId = ?　";
 		super.delete(sql, new Object[] { exceptionLogId });
 	}
 
 	public ExceptionLog findById(String exceptionLogId) throws BaseException {
-		String sql="select * from sys_exceptionlog t where t.exceptionlogid=?";
+		String sql="select * from dc_sys_exceptionlog t where t.exceptionlogid=?";
 		return super.findForObjectBySql(sql, new Object[]{exceptionLogId}, ExceptionLog.class);
 	}
 	

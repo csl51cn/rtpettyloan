@@ -11,7 +11,7 @@ import com.global.framework.dbutils.support.Entity;
  * @version v1.0
  */
 @SuppressWarnings("serial")
-@TableMapping(primaryKey = "privId", primaryKeyType = "Single", tableName = "wfl_tradeprivilege")
+@TableMapping(primaryKey = "privId", primaryKeyType = "Single", tableName = "dc_wfl_tradeprivilege")
 public class TradePrivilege extends Entity {
 
 	@ColumnMapping(columnName = "privId", columnType = "Integer")

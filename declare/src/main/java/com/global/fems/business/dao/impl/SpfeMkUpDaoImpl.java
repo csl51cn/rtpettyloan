@@ -35,7 +35,7 @@ public class SpfeMkUpDaoImpl extends BaseDaoSupport  implements SpfeMkUpDao{
 	}
 
 	public SpfeMkUp findById(String id) throws BaseException {
-		String sql ="select t.*,(select refno from wfl_taskinfo_his h where h.txnserialno = t.seqno) refno   from bu_spfe_mkup t where t.seqno=?";
+		String sql ="select t.*,(select refno from dc_wfl_taskinfo_his h where h.txnserialno = t.seqno) refno   from dc_bu_spfe_mkup t where t.seqno=?";
 		return super.findForObjectBySql(sql, new Object[]{id}, SpfeMkUp.class);
 	}
 	

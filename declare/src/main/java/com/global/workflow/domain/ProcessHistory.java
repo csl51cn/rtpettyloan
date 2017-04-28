@@ -11,7 +11,7 @@ import com.global.framework.dbutils.support.Entity;
  * @date 2013-6-11 下午5:36:48
  */
 @SuppressWarnings("serial")
-@TableMapping(primaryKey = "", primaryKeyType = "None", tableName = "wfl_processhistory")
+@TableMapping(primaryKey = "", primaryKeyType = "None", tableName = "dc_wfl_processhistory")
 public class ProcessHistory extends Entity {
 
 	@ColumnMapping(columnName = "txnSerialNo", columnType = "String")

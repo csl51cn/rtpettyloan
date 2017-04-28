@@ -11,7 +11,7 @@ import com.global.framework.dbutils.support.Entity;
  * @version v1.0
  */
 @SuppressWarnings("serial")
-@TableMapping(primaryKey = "orgId", primaryKeyType = "Single", tableName = "sys_org")
+@TableMapping(primaryKey = "orgId", primaryKeyType = "Single", tableName = "dc_sys_org")
 public class Org extends Entity {
 	
 	@ColumnMapping(columnName = "orgId", columnType = "String")

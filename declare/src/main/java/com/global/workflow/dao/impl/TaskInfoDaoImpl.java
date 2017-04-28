@@ -48,20 +48,20 @@ public class TaskInfoDaoImpl extends BaseDaoSupport implements TaskInfoDao {
 			throw new BaseException("业务参号和业务流水号不能同时为空!");
 		}
 		if(StringUtils.isNotBlank(txnSerialNo) && StringUtils.isBlank(refNo)){
-			sql = "select t.* from wfl_taskinfo t  where  txnserialno=? and sfzx='Y' union  select t_his.* from wfl_taskinfo_his t_his  where txnserialno=? and sfzx='Y'";
+			sql = "select t.* from dc_wfl_taskinfo t  where  txnserialno=? and sfzx='Y' union  select t_his.* from dc_wfl_taskinfo_his t_his  where txnserialno=? and sfzx='Y'";
 			param = new Object[]{txnSerialNo,txnSerialNo};
 		}else if(StringUtils.isNotBlank(refNo) && StringUtils.isBlank(txnSerialNo)){
-			sql = "select t.* from wfl_taskinfo t  where  refNo=?  and sfzx='Y' union  select t_his.* from wfl_taskinfo_his t_his  where refNo=?  and sfzx='Y'";
+			sql = "select t.* from dc_wfl_taskinfo t  where  refNo=?  and sfzx='Y' union  select t_his.* from dc_wfl_taskinfo_his t_his  where refNo=?  and sfzx='Y'";
 			param = new Object[]{refNo,refNo};
 		}else{
-			sql ="select t.* from wfl_taskinfo t  where refno=? and txnserialno=?  and sfzx='Y' union  select t_his.* from wfl_taskinfo_his t_his  where refno=? and txnserialno=?  and sfzx='Y'";
+			sql ="select t.* from dc_wfl_taskinfo t  where refno=? and txnserialno=?  and sfzx='Y' union  select t_his.* from dc_wfl_taskinfo_his t_his  where refno=? and txnserialno=?  and sfzx='Y'";
 			param = new Object[]{refNo,txnSerialNo,refNo,txnSerialNo};
 		}
 		return super.findForObjectBySql(sql, param, TaskInfo.class);
 	}
 	
 	public TaskInfo getTaskInfoForCancel(String txnSerialNo) throws BaseException{
-		String sql ="select c.* from (select t.* from wfl_taskinfo t  where  txnserialno=? union  select t_his.* from wfl_taskinfo_his t_his  where txnserialno=?) c where  not exists(select 1 from BU_spfe_csr where SEQNO = c.txnserialno )";
+		String sql ="select c.* from (select t.* from dc_wfl_taskinfo t  where  txnserialno=? union  select t_his.* from dc_wfl_taskinfo_his t_his  where txnserialno=?) c where  not exists(select 1 from BU_spfe_csr where SEQNO = c.txnserialno )";
 		return super.findForObjectBySql(sql, new Object[]{txnSerialNo,txnSerialNo}, TaskInfo.class);
 	}
 	
@@ -93,24 +93,24 @@ public class TaskInfoDaoImpl extends BaseDaoSupport implements TaskInfoDao {
 						"tt.createDate, " +
 						"tt.tradeNo, " +
 						"tt.transstate,"+
-						"(select username from sys_user where userid = tt.createUser) as createUser, " +
-						"(select tradename from wfl_tradecode where tradeno = tt.tradeno) as tradename, " +
-						"decode(tt.transstate,'0','新建','1','待复核','2','待授权','3','授权','5','经办更正') transstatename, " +
-						"(select accessurl from sys_menu m where menuid=(select distinct menuid from wfl_tradeprivilege where tradeno = tt.tradeno)) url " +
+						"(select username from dc_sys_user where userid = tt.createUser) as createUser, " +
+						"(select tradename from dc_wfl_tradecode where tradeno = tt.tradeno) as tradename, " +
+						"case  tt.transstate when '0' then '新建 when '1' then '待复核' when '2' then '待授权' when '3' then '授权' when '5' then '经办更正' end  as transstatename, " +
+						"(select accessurl from dc_sys_menu m where menuid=(select distinct menuid from dc_wfl_tradeprivilege where tradeno = tt.tradeno)) url " +
 					 "from (";
 		// 查询当前用户保存或经办更正的任务列表
-		sql += "select * from wfl_taskinfo t where t.createuser=? and t.transstate in (0,5) ";
+		sql += "select * from dc_wfl_taskinfo t where t.createuser=? and t.transstate in (0,5) ";
 		args.add(user.getUserId());
 
 		// 查询当前用户有权限的复核任务
 		sql += " UNION ";
 		sql += "select * "
-				+ "  from wfl_taskinfo t "
+				+ "  from dc_wfl_taskinfo t "
 				+ " where t.createuser <> ? "
 				+ "   and t.transstate = '1' "
 				+ "   and exists  "
 				+ " (select 1 "
-				+ "          from sys_userrole u, sys_roleright r, wfl_tradeprivilege p "
+				+ "          from dc_sys_userrole u, dc_sys_roleright r, dc_wfl_tradeprivilege p "
 				+ "         where u.roleid = r.roleid "
 				+ "           and r.rightid = p.privid "
 				+ "           and p.tradeno = t.tradeno "
@@ -120,12 +120,12 @@ public class TaskInfoDaoImpl extends BaseDaoSupport implements TaskInfoDao {
 		// 查询当前用户有权限的授权任务
 		sql += " UNION ";
 		sql += "select * "
-				+ "  from wfl_taskinfo t "
+				+ "  from dc_wfl_taskinfo t "
 				+ " where t.createuser <> ? "
 				+ "   and t.transstate = '2' "
 				+ "   and exists  "
 				+ " (select 1 "
-				+ "          from sys_userrole u, sys_roleright r, wfl_tradeprivilege p "
+				+ "          from dc_sys_userrole u, dc_sys_roleright r, dc_wfl_tradeprivilege p "
 				+ "         where u.roleid = r.roleid "
 				+ "           and r.rightid = p.privid "
 				+ "           and p.tradeno = t.tradeno "
@@ -156,11 +156,11 @@ public class TaskInfoDaoImpl extends BaseDaoSupport implements TaskInfoDao {
 			args.add(task.getTradeNo());
 		}
 		if (StringUtils.isNotBlank(task.getStartCreateTime())) {
-			sql += " and to_char(tt.createdate,'yyyy-MM-dd') >= ? ";
+			sql += " and convert(varchar(100),tt.createdate,23) >= ? ";
 			args.add(task.getStartCreateTime());
 		}
 		if (StringUtils.isNotBlank(task.getEndCreateTime())) {
-			sql += " and to_char(tt.createdate,'yyyy-MM-dd') <= ? ";
+			sql += " and convert(varchat(100),tt.createdate,23) <= ? ";
 			args.add(task.getEndCreateTime());
 		}
 		return super.findForPage(sql, args.toArray(), page, TaskInfo.class);
@@ -177,12 +177,12 @@ public class TaskInfoDaoImpl extends BaseDaoSupport implements TaskInfoDao {
 					"tt.tradeNo, " +
 					"tt.transstate," +
 					"tt.refNo,"+
-					"(select username from sys_user where userid = tt.createUser) as createUser, " +
-					"(select tradename from wfl_tradecode where tradeno = tt.tradeno) as tradename, " +
-					"(select accessurl from sys_menu m where menuid=(select distinct menuid from wfl_tradeprivilege where tradeno = tt.tradeno)) url ," +
-					"decode(tt.transstate,'4','成功','6','删除','7','失败') transstatename, " +
+					"(select username from dc_sys_user where userid = tt.createUser) as createUser, " +
+					"(select tradename from dc_wfl_tradecode where tradeno = tt.tradeno) as tradename, " +
+					"(select accessurl from dc_sys_menu m where menuid=(select distinct menuid from dc_wfl_tradeprivilege where tradeno = tt.tradeno)) url ," +
+					"case tt.transstate when '4' then '成功' when '6' then '删除' when '7' then '失败' end as  transstatename, " +
 					"tt.finishDate " +
-				"from wfl_taskinfo_his tt where (tt.actors like ? or tt.createuser is null)   ";
+				"from dc_wfl_taskinfo_his tt where (tt.actors like ? or tt.createuser is null)   ";
 		args.add("%," + user.getUserId() + ",%");
 		
 		if (StringUtils.isNotBlank(task.getTxnSerialNo())) {
@@ -206,19 +206,19 @@ public class TaskInfoDaoImpl extends BaseDaoSupport implements TaskInfoDao {
 			args.add(task.getReqSeqNo());
 		}
 		if (StringUtils.isNotBlank(task.getStartCreateTime())) {
-			sql += " and to_char(tt.createdate,'yyyy-MM-dd') >= ? ";
+			sql += " and convert(varchar(100),tt.createdate,23) >= ? ";
 			args.add(task.getStartCreateTime());
 		}
 		if (StringUtils.isNotBlank(task.getEndCreateTime())) {
-			sql += " and to_char(tt.createdate,'yyyy-MM-dd') <= ? ";
+			sql += " and convert(varchar(100),tt.createdate,23) <= ? ";
 			args.add(task.getEndCreateTime());
 		}
 		if (StringUtils.isNotBlank(task.getStartFinishTime())) {
-			sql += " and to_char(tt.finishdate,'yyyy-MM-dd') >= ? ";
+			sql += " and convert(varchar(100),tt.finishdate,23) >= ? ";
 			args.add(task.getStartFinishTime());
 		}
 		if (StringUtils.isNotBlank(task.getEndFinishTime())) {
-			sql += " and to_char(tt.finishdate,'yyyy-MM-dd') <= ? ";
+			sql += " and convert(varchar(100),tt.finishdate,23) <= ? ";
 			args.add(task.getEndFinishTime());
 		}
 		if (StringUtils.isNotBlank(task.getRefNo())) {
@@ -242,12 +242,12 @@ public class TaskInfoDaoImpl extends BaseDaoSupport implements TaskInfoDao {
 					"tt.createDate, " +
 					"tt.tradeNo, " +
 					"tt.transstate,"+
-					"(select username from sys_user where userid = tt.createUser) as createUser, " +
-					"(select tradename from wfl_tradecode where tradeno = tt.tradeno) as tradename, " +
-					"(select accessurl from sys_menu m where menuid = (select distinct menuid " +
-					" from wfl_tradeprivilege where tradeno = tt.tradeno)) url,"+
-					"decode(tt.transstate,'1','待复核','2','待授权','3','授权') transstatename " +
-				"from wfl_taskinfo tt where tt.transstate in ('1','2','3') and tt.actors like ? ";
+					"(select username from dc_sys_user where userid = tt.createUser) as createUser, " +
+					"(select tradename from dc_wfl_tradecode where tradeno = tt.tradeno) as tradename, " +
+					"(select accessurl from dc_sys_menu m where menuid = (select distinct menuid " +
+					" from dc_wfl_tradeprivilege where tradeno = tt.tradeno)) url,"+
+					"case tt.transstate when '1' then '待复核' when '2' then '待授权' when '3' then '授权' end  as  transstatename " +
+				"from dc_wfl_taskinfo tt where tt.transstate in ('1','2','3') and tt.actors like ? ";
 		args.add("%," + user.getUserId() + ",%");
 		
 		if (StringUtils.isNotBlank(task.getTxnSerialNo())) {
@@ -263,11 +263,11 @@ public class TaskInfoDaoImpl extends BaseDaoSupport implements TaskInfoDao {
 			args.add(task.getTradeNo());
 		}
 		if (StringUtils.isNotBlank(task.getStartCreateTime())) {
-			sql += " and to_char(tt.createdate,'yyyy-MM-dd') >= ? ";
+			sql += " and  convert(varchar(100), tt.createdate, 23)  >= ? ";
 			args.add(task.getStartCreateTime());
 		}
 		if (StringUtils.isNotBlank(task.getEndCreateTime())) {
-			sql += " and to_char(tt.createdate,'yyyy-MM-dd') <= ? ";
+			sql += " and convert(varchar(100), tt.createdate, 23)<= ? ";
 			args.add(task.getEndCreateTime());
 		}
 		return super.findForPage(sql, args.toArray(), page, TaskInfo.class);
@@ -276,7 +276,7 @@ public class TaskInfoDaoImpl extends BaseDaoSupport implements TaskInfoDao {
 	
 	public PageBean queryFlowHistoryList(String txnSerialNo, PageBean page)
 			throws BaseException {
-		String sql = "select p.*,u.username operName from wfl_processhistory p"
+		String sql = "select p.*,u.username operName from dc_wfl_processhistory p"
 				+ "	join sys_user u on p.operid = u.userid"
 				+ " where p.txnserialno=?";
 		return (PageBean) super.findForPage(sql, new Object[]{txnSerialNo},page, ProcessHistory.class);
@@ -284,14 +284,14 @@ public class TaskInfoDaoImpl extends BaseDaoSupport implements TaskInfoDao {
 	
 	
 	public String queryTradeUnionMenu(String tradeNo) throws BaseException {
-		String sql = "select distinct m.accessurl from wfl_tradeprivilege wf inner join sys_menu m on wf.menuid = m.menuid and wf.tradeno=? ";
+		String sql = "select distinct m.accessurl from dc_wfl_tradeprivilege wf inner join dc_sys_menu m on wf.menuid = m.menuid and wf.tradeno=? ";
 		List<Map<String, Object>> list = super.findForListMapBySql(sql, new Object[]{tradeNo});
 		return (String) list.get(0).get("ACCESSURL");
 	}
 
 	
 	public TaskInfoHis queryTaksInfoHis(String txnSerialNo) throws BaseException {
-		String sql = "SELECT * FROM wfl_taskinfo_his t WHERE t.txnserialno = ? AND t.transState in ('4','7')";
+		String sql = "SELECT * FROM dc_wfl_taskinfo_his t WHERE t.txnserialno = ? AND t.transState in ('4','7')";
 		return super.findForObjectBySql(sql, new Object[] { txnSerialNo }, TaskInfoHis.class);
 	}
 	
@@ -315,7 +315,7 @@ public class TaskInfoDaoImpl extends BaseDaoSupport implements TaskInfoDao {
 	
 	public int getTaskCountByReqSeqNo(String reqSeqNo) {
 		try {
-			String sql = "select sum(tt.n) from (select count(1) n from wfl_taskinfo t where t.reqseqno = ? union all select count(1) n from wfl_taskinfo_his t where t.reqseqno = ?) tt";
+			String sql = "select sum(tt.n) from (select count(1) n from dc_wfl_taskinfo t where t.reqseqno = ? union all select count(1) n from dc_wfl_taskinfo_his t where t.reqseqno = ?) tt";
 			return super.findForIntBySql(sql, new Object[]{reqSeqNo, reqSeqNo});
 		} catch (Exception e) {
 			return 0;
@@ -323,7 +323,7 @@ public class TaskInfoDaoImpl extends BaseDaoSupport implements TaskInfoDao {
 	}
 	
 	public TaskInfoHis getTaskInfoHis(String txnSerialNo, String refNo) {
-		String sql = "select * from wfl_taskinfo_his t where t.sfzx='Y' ";
+		String sql = "select * from dc_wfl_taskinfo_his t where t.sfzx='Y' ";
 		List<String> list = new ArrayList<String>();
 		if (StringUtils.isNotBlank(txnSerialNo)) {
 			sql += " and t.txnserialno=? ";
@@ -331,14 +331,14 @@ public class TaskInfoDaoImpl extends BaseDaoSupport implements TaskInfoDao {
 		}
 		if (StringUtils.isNotBlank(refNo)) {
 			sql += " and t.refNo=? ";
-			//sql += " and NOT EXISTS (SELECT 1 FROM wfl_taskinfo_his t1 WHERE t1.finishdate > t.finishdate) ";
+			//sql += " and NOT EXISTS (SELECT 1 FROM dc_wfl_taskinfo_his t1 WHERE t1.finishdate > t.finishdate) ";
 			list.add(refNo);
 		}
 		return super.findForObjectBySql(sql, list.toArray(), TaskInfoHis.class);
 	}
 	
 	public void updateTaskInfoHisStatus(String primaryBizNo, String sfzx) {
-		String sql = "update wfl_taskinfo_his set sfzx=? where bizno=? ";
+		String sql = "update dc_wfl_taskinfo_his set sfzx=? where bizno=? ";
 		super.updateBySql(sql, new Object[]{sfzx, primaryBizNo});
 	}
 	
@@ -346,7 +346,7 @@ public class TaskInfoDaoImpl extends BaseDaoSupport implements TaskInfoDao {
 		
 		String sql ="";
 		Object param[] = null;
-		sql ="select t.* from wfl_taskinfo t  where reqSeqNo=? ";
+		sql ="select t.* from dc_wfl_taskinfo t  where reqSeqNo=? ";
 		param = new Object[]{reqSeqNo};
 		return super.findForObjectBySql(sql, param, TaskInfo.class);
 	}
@@ -355,7 +355,7 @@ public class TaskInfoDaoImpl extends BaseDaoSupport implements TaskInfoDao {
 			throws BaseException {
 		String sql ="";
 		Object param[] = null;
-		sql ="select t.* from wfl_taskinfo_his t  where reqSeqNo=? and sfzx='Y'";
+		sql ="select t.* from dc_wfl_taskinfo_his t  where reqSeqNo=? and sfzx='Y'";
 		param = new Object[]{reqSeqNo};
 		return super.findForObjectBySql(sql, param, TaskInfoHis.class);
 	}

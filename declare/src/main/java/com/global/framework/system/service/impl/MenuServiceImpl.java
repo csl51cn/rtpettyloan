@@ -284,7 +284,7 @@ public class MenuServiceImpl implements MenuService {
 			throws BaseException {
 		Map<String, Set<Menu>> map = new ConcurrentHashMap<String, Set<Menu>>();
 		List<RoleRight> roleRightList = this.roleDao.getRoleRightList();
-		List<Menu> menuGroupCacheList = CacheService.getMenuGroupCacheList();
+		List<Menu> menuGroupCacheList = CacheService.getInstance().getMenuGroupCacheList();
 		List<Menu> menuCacheList = CacheService.getMenuCacheList();
 
 		map.put("menuGroup",

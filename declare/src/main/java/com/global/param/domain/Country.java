@@ -11,7 +11,7 @@ import com.global.framework.dbutils.support.Entity;
  * @date 2014-6-14 下午10:47:26
  */
 @SuppressWarnings("serial")
-@TableMapping(primaryKey = "countryNo", primaryKeyType = "Single", tableName = "pa_country_info")
+@TableMapping(primaryKey = "countryNo", primaryKeyType = "Single", tableName = "dc_pa_country_info")
 public class Country extends Entity {
 
 	@ColumnMapping(columnName = "countryNo", columnType = "String")

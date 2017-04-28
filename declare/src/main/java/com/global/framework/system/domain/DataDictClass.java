@@ -11,7 +11,7 @@ import com.global.framework.dbutils.support.Entity;
  * @version v1.0
  */
 @SuppressWarnings("serial")
-@TableMapping(primaryKey = "classId", primaryKeyType = "Single", tableName = "sys_datadictclass")
+@TableMapping(primaryKey = "classId", primaryKeyType = "Single", tableName = "dc_sys_datadictclass")
 public class DataDictClass extends Entity {
 
 	@ColumnMapping(columnName = "classId", columnType = "String")

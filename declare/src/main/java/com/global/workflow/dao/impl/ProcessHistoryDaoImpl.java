@@ -30,7 +30,7 @@ public class ProcessHistoryDaoImpl extends BaseDaoSupport implements
 
 	public PageBean getProcessHistoryForPage(String txnSerialNo, PageBean page)
 			throws BaseException {
-		String sql = "select ph.*,(select username from sys_user where userid=ph.procuserid) procUserName from wfl_processhistory ph where ph.txnserialno=?";
+		String sql = "select ph.*,(select username from dc_sys_user where userid=ph.procuserid) procUserName from dc_wfl_processhistory ph where ph.txnserialno=?";
 		return super.findForPage(sql, new Object[] { txnSerialNo }, page,
 				ProcessHistory.class);
 	}

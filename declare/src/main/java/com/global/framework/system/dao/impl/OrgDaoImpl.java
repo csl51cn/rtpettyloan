@@ -28,7 +28,7 @@ public class OrgDaoImpl extends BaseDaoSupport implements OrgDao {
 	public PageBean queryOrgForPage(Org org, PageBean page)
 			throws BaseException {
 		StringBuilder sql = new StringBuilder(256);
-		sql.append("SELECT t.*,(select orgName from sys_org where orgId=t.parentOrgId) parentOrgName FROM sys_org t WHERE 1 = 1 ");
+		sql.append("SELECT t.*,(select orgName from dc_sys_org where orgId=t.parentOrgId) parentOrgName FROM dc_sys_org t WHERE 1 = 1 ");
 		List<Object> args = new ArrayList<Object>();
 		if (StringUtils.isNotBlank(org.getOrgName())) {
 			sql.append(" and t.orgName like ? ");
@@ -57,13 +57,13 @@ public class OrgDaoImpl extends BaseDaoSupport implements OrgDao {
 
 	public void deleteOrg(Org org) throws BaseException {
 		//查询该机构是否有下级机构
-		String sql = "select count(0) from sys_org o where o.parentorgid=? ";
+		String sql = "select count(0) from dc_sys_org o where o.parentorgid=? ";
 		int count = super.findForIntBySql(sql, new Object[]{org.getOrgId()});
 		if (count > 0) {
 			throw new BaseException("该机构含有下级机构不允许删除！");
 		}
 		
-//		String sql2 = "select * from sys_user u where u.orgid=? ";
+//		String sql2 = "select * from dc_sys_user u where u.orgid=? ";
 //		int count2 = super.findForIntBySql(sql2, new Object[]{org.getOrgId()});
 //		if (count2 > 0) {
 //			throw new BaseException("该机构下有用户信息存在，不允许删除");
@@ -77,14 +77,14 @@ public class OrgDaoImpl extends BaseDaoSupport implements OrgDao {
 	}
 
 	public String getMaxOrgNoByLevel(String orgLevel) throws BaseException {
-		String sql = "select max(o.orgid) orgid from sys_org o where o.orglevel=?";
+		String sql = "select max(o.orgid) orgid from dc_sys_org o where o.orglevel=?";
 		Org org = (Org) super.findForObjectBySql(sql,
 				new Object[] { orgLevel }, Org.class);
 		return org.getOrgId();
 	}
 
 	public Org getOrgInfo(String bankCode) throws BaseException {
-		String sql = "select * from sys_org o where o.bankCode = ?";
+		String sql = "select * from dc_sys_org o where o.bankCode = ?";
 		return super.findForObjectBySql(sql, new Object[] { bankCode }, Org.class);
 	}
 }

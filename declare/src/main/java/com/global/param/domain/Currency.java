@@ -11,7 +11,7 @@ import com.global.framework.dbutils.support.Entity;
  * @date 2014-6-18下午4:04:11
  */
 @SuppressWarnings("serial")
-@TableMapping(primaryKey = "curSign", primaryKeyType = "Single", tableName = "pa_currency_info")
+@TableMapping(primaryKey = "curSign", primaryKeyType = "Single", tableName = "dc_pa_currency_info")
 public class Currency extends Entity {
 	@ColumnMapping(columnName = "CURSIGN", columnType = "String")
 	private String curSign;// 货币符号

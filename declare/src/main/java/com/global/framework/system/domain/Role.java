@@ -9,7 +9,7 @@ import com.global.framework.dbutils.support.Entity;
  * @date 2011-9-5 下午11:03:44
  * @version v1.0
  */
-@TableMapping(primaryKey = "roleId", primaryKeyType = "Single", tableName = "sys_role")
+@TableMapping(primaryKey = "roleId", primaryKeyType = "Single", tableName = "dc_sys_role")
 public class Role extends Entity {
 	private static final long serialVersionUID = 1425115705396866724L;
 	

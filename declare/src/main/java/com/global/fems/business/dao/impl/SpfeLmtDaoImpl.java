@@ -37,7 +37,7 @@ public class SpfeLmtDaoImpl extends BaseDaoSupport implements SpfeLmtDao{
 	}
 
 	public SpfeLmt findById(String id) throws BaseException {
-		String sql ="select lmt.*,(select refno from wfl_taskinfo_his h where h.bizno = lmt.bizno) refno   from bu_spfe_lmt lmt where seqno=?";
+		String sql ="select lmt.*,(select refno from dc_wfl_taskinfo_his h where h.bizno = lmt.bizno) refno   from dc_bu_spfe_lmt lmt where seqno=?";
 		return super.findForObjectBySql(sql, new Object[]{id},SpfeLmt.class);
 	}
 	
@@ -47,11 +47,11 @@ public class SpfeLmtDaoImpl extends BaseDaoSupport implements SpfeLmtDao{
 	}
 
 	public SpfeLmt findByBizNo(String bizNo) throws BaseException {
-		return super.findForObjectBySql("select * from bu_spfe_lmt where bizno=?", new Object[]{bizNo}, SpfeLmt.class);
+		return super.findForObjectBySql("select * from dc_bu_spfe_lmt where bizno=?", new Object[]{bizNo}, SpfeLmt.class);
 	}
 
 	public void updateBySql(SpfeLmt mode) throws BaseException {
-		String sql = "update BU_SPFE_LMT set amt_usd=amt_usd + ?,AMT_BALANCE_USD=?,TYPE_STATUS=?,RECODE=?,REMSG=? where seqno=? ";
+		String sql = "update dc_BU_SPFE_LMT set amt_usd=amt_usd + ?,AMT_BALANCE_USD=?,TYPE_STATUS=?,RECODE=?,REMSG=? where seqno=? ";
 		super.updateBySql(sql, new Object[]{SysUtils.replaceAll(mode.getAMT_USD(),",",""), SysUtils.replaceAll(mode.getAMT_BALANCE_USD(),",",""), mode.getTYPE_STATUS(), mode.getRECODE(), mode.getREMSG(), mode.getSEQNO()});
 	}
 

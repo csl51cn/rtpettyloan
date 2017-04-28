@@ -26,7 +26,7 @@ public class TradeTemplateDaoImpl extends BaseDaoSupport implements
 
 	@SuppressWarnings("unchecked")
 	public List<TradeTemplate> queryTradeTemplate() throws BaseException {
-		String sql = "select t.*,(select tradename from wfl_tradecode where tradeno=t.tradeno) tradeName from wfl_tradetemplate t";
+		String sql = "select t.*,(select tradename from dc_wfl_tradecode where tradeno=t.tradeno) tradeName from dc_wfl_tradetemplate t";
 		return (List<TradeTemplate>) super.findForListBySql(sql, null,
 				TradeTemplate.class);
 	}

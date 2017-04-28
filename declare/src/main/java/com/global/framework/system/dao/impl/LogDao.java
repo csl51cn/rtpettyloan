@@ -30,7 +30,7 @@ public class LogDao extends BaseDaoSupport implements ILogDao {
 	public PageBean queryLogForPage(OperateLog log, PageBean page)
 			throws BaseException {
 		StringBuffer sql = new StringBuffer();
-		sql.append("select * from sys_operatelog t where 1=1 ");
+		sql.append("select * from dc_sys_operatelog t where 1=1 ");
 		List<Object> list = new ArrayList<Object>();
 		if (StringUtils.isNotBlank(log.getUserId())) {
 			sql.append(" and t.userid = ? ");

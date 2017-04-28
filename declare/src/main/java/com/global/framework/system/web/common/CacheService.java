@@ -230,6 +230,7 @@ public final class CacheService {
 			menuGroupCacheList = this.menuService.getMenuGroupList();
 			// 设置菜单组信息的缓存
 			if (menuGroupCacheList != null) {
+
 				Iterator<Menu> it = menuGroupCacheList.iterator();
 				while (it.hasNext()) {
 					Menu dto = it.next();

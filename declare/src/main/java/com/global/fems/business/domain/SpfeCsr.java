@@ -11,7 +11,7 @@ import com.global.framework.dbutils.support.Entity;
  * 
  */
 @SuppressWarnings("serial")
-@TableMapping(primaryKey = "SEQNO", primaryKeyType = "Single", tableName = "BU_spfe_csr")
+@TableMapping(primaryKey = "SEQNO", primaryKeyType = "Single", tableName = "dc_BU_spfe_csr")
 public class SpfeCsr extends Entity {
 	@ColumnMapping(columnName = "SEQNO", columnType = "String")
 	private String SEQNO; // 业务流水号

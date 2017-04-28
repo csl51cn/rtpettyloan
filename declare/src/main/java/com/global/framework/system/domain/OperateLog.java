@@ -4,7 +4,7 @@ import com.global.framework.dbutils.annotation.ColumnMapping;
 import com.global.framework.dbutils.annotation.TableMapping;
 import com.global.framework.dbutils.support.Entity;
 
-@TableMapping(primaryKey = "logId", primaryKeyType = "Single", tableName = "sys_operatelog")
+@TableMapping(primaryKey = "logId", primaryKeyType = "Single", tableName = "dc_sys_operatelog")
 public class OperateLog extends Entity {
 	private static final long serialVersionUID = -3240304915824370285L;
 

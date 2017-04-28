@@ -12,7 +12,7 @@ import com.global.framework.dbutils.support.Entity;
  * @version v1.0
  */
 @SuppressWarnings("serial")
-@TableMapping(primaryKey = "userId", primaryKeyType = "Single", tableName = "sys_user")
+@TableMapping(primaryKey = "userId", primaryKeyType = "Single", tableName = "dc_sys_user")
 public class User extends Entity {
 
 	@ColumnMapping(columnName = "userId", columnType = "String")

@@ -28,8 +28,8 @@ public class ChannelInterfaceDaoImpl extends BaseDaoSupport implements
 			ChannelInterface channelInterface, PageBean page)
 			throws BaseException {
 		StringBuilder sql = new StringBuilder(256);
-		sql.append("SELECT c.*,(select d.channelcode from pa_channel d where d.channelid=c.channelid) channelcode," +
-				"(select d.channelcnname from pa_channel d where d.channelid=c.channelid) channelname FROM pa_channel_interface c WHERE 1=1 ");
+		sql.append("SELECT c.*,(select d.channelcode from dc_pa_channel d where d.channelid=c.channelid) channelcode," +
+				"(select d.channelcnname from dc_pa_channel d where d.channelid=c.channelid) channelname from dc_pa_channel_interface c WHERE 1=1 ");
 		List<Object> args = new ArrayList<Object>();
 		
 		if(StringUtils.isNotBlank(channelInterface.getChannelId())) {
@@ -75,13 +75,13 @@ public class ChannelInterfaceDaoImpl extends BaseDaoSupport implements
 	
 	public List<ChannelInterface> queryChannelInterface(String channelId)
 			throws BaseException {
-		String sql = "select * from pa_channel_interface where channelid=?";
+		String sql = "select * from dc_pa_channel_interface where channelid=?";
 		return (List<ChannelInterface>) super.findForListBySql(sql, new Object[]{channelId}, ChannelInterface.class);
 	}
 	
 	
 	public void deleteChannelInterface(String channelId) throws BaseException {
-		String sql = "delete from pa_channel_interface t where t.channelid = ? ";
+		String sql = "delete from dc_pa_channel_interface t where t.channelid = ? ";
 		super.delete(sql, new Object[]{channelId});
 	}
 	
@@ -93,7 +93,7 @@ public class ChannelInterfaceDaoImpl extends BaseDaoSupport implements
 	
 	public ChannelInterface getChannelInterface(String channelId,
 			String faceCode) throws BaseException {
-		String sql = "select * from pa_channel_interface a, pa_channel b where a.channelid=b.channelid and b.reqsyscode=? and facecode=? ";
+		String sql = "select * from dc_pa_channel_interface a, pa_channel b where a.channelid=b.channelid and b.reqsyscode=? and facecode=? ";
 		return super.findForObjectBySql(sql, new Object[]{channelId, faceCode}, ChannelInterface.class);
 	}
 }

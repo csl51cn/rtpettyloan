@@ -10,7 +10,7 @@ import com.global.framework.dbutils.support.Entity;
  * @date 2011-2-28 下午4:26:47
  * @version v1.0
  */
-@TableMapping(primaryKey = "dictId", primaryKeyType = "Single", tableName = "sys_datadict")
+@TableMapping(primaryKey = "dictId", primaryKeyType = "Single", tableName = "dc_sys_datadict")
 public class DataDict extends Entity {
 
 	private static final long serialVersionUID = -8325772235645609521L;

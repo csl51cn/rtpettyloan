@@ -11,7 +11,7 @@ import com.global.framework.util.SysUtils;
  * @author longjun
  * 
  */
-@TableMapping(primaryKey = "SEQNO", primaryKeyType = "Single", tableName = "BU_spfe_lmt")
+@TableMapping(primaryKey = "SEQNO", primaryKeyType = "Single", tableName = "dc_BU_spfe_lmt")
 public class SpfeLmt  extends Entity {
 
 	@ColumnMapping(columnName = "SEQNO", columnType = "String")

@@ -11,7 +11,7 @@ import com.global.framework.dbutils.support.Entity;
  * @date 2015-7-8
  * @version v1.0
  */
-@TableMapping(primaryKey = "nguid", primaryKeyType = "Single", tableName = "bu_task_timeout")
+@TableMapping(primaryKey = "nguid", primaryKeyType = "Single", tableName = "dc_bu_task_timeout")
 public class TaskTimeout extends Entity {
 
 	@ColumnMapping(columnName = "nguid", columnType = "String")

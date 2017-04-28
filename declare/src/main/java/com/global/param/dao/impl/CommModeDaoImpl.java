@@ -26,8 +26,8 @@ public class CommModeDaoImpl extends BaseDaoSupport implements CommModeDao {
 	public PageBean queryForPage(CommMode info, PageBean page)
 			throws BaseException {
 		StringBuilder sql = new StringBuilder(256);
-		sql.append("SELECT c.*,(select d.channelcode from pa_channel d where d.channelid=c.channelid) channelcode," +
-				"(select d.channelcnname from pa_channel d where d.channelid=c.channelid) channelname FROM pa_channel_commmode c WHERE 1=1 ");
+		sql.append("SELECT c.*,(select d.channelcode from dc_pa_channel d where d.channelid=c.channelid) channelcode," +
+				"(select d.channelcnname from dc_pa_channel d where d.channelid=c.channelid) channelname from dc_pa_channel_commmode c WHERE 1=1 ");
 		List<Object> args = new ArrayList<Object>();
 		
 		if(StringUtils.isNotBlank(info.getChannelId())) {
@@ -55,7 +55,7 @@ public class CommModeDaoImpl extends BaseDaoSupport implements CommModeDao {
 	
 	@SuppressWarnings("unchecked")
 	public List<CommMode> getCommModeList() throws BaseException {
-		String sql = "select t.*, (select c.reqsyscode from pa_channel c where c.channelid=t.channelid) reqsyscode from pa_channel_commmode t";
+		String sql = "select t.*, (select c.reqsyscode from dc_pa_channel c where c.channelid=t.channelid) reqsyscode from dc_pa_channel_commmode t";
 		return (List<CommMode>) super.findForListBySql(sql, null, CommMode.class);
 	}
 }

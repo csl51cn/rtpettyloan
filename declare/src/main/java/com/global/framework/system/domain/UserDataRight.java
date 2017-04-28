@@ -10,7 +10,7 @@ import com.global.framework.dbutils.support.Entity;
  * @date 2013-2-28 下午4:23:50
  * @version v1.0
  */
-@TableMapping(primaryKey = "guid", primaryKeyType = "Single", tableName = "sys_userdataright")
+@TableMapping(primaryKey = "guid", primaryKeyType = "Single", tableName = "dc_sys_userdataright")
 public class UserDataRight extends Entity {
 
 	private static final long serialVersionUID = -7445870074170771677L;

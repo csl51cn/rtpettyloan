@@ -5,7 +5,7 @@ import com.global.framework.dbutils.annotation.TableMapping;
 import com.global.framework.dbutils.support.Entity;
 
 @SuppressWarnings("serial")
-@TableMapping(primaryKey = "OPERNO", primaryKeyType = "Single", tableName = "PA_COMMON_ORG_USER")
+@TableMapping(primaryKey = "OPERNO", primaryKeyType = "Single", tableName = "dc_PA_COMMON_ORG_USER")
 public class CommonOrgUser extends Entity {
 
 	@ColumnMapping(columnName = "common_org_code", columnType = "String")

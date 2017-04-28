@@ -10,7 +10,7 @@ import com.global.framework.dbutils.support.Entity;
  * @date 2013-1-27 下午7:05:38
  * @version v1.0
  */
-@TableMapping(primaryKey = "logId", primaryKeyType = "Single", tableName = "sys_userloginlog")
+@TableMapping(primaryKey = "logId", primaryKeyType = "Single", tableName = "dc_sys_userloginlog")
 public class UserLoginLog extends Entity {
 
 	private static final long serialVersionUID = -6234750868696355754L;

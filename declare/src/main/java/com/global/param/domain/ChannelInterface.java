@@ -11,7 +11,7 @@ import com.global.framework.dbutils.support.Entity;
  * @date 2015-7-10
  * @version v1.0
  */
-@TableMapping(primaryKey = "channelId,faceCode", primaryKeyType = "Combine", tableName = "pa_channel_interface")
+@TableMapping(primaryKey = "channelId,faceCode", primaryKeyType = "Combine", tableName = "dc_pa_channel_interface")
 public class ChannelInterface extends Entity {
 
 	@ColumnMapping(columnName="channelId", columnType="String")

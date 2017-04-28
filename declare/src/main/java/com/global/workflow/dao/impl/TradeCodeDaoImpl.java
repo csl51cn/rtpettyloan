@@ -19,7 +19,7 @@ public class TradeCodeDaoImpl extends BaseDaoSupport implements TradeCodeDao {
 
 	@SuppressWarnings("unchecked")
 	public List<TradeCode> getTradeCodeList() throws BaseException {
-		String sql = "select t.* from wfl_tradecode t where t.tradeno not in('CWDD','CWDC')";
+		String sql = "select t.* from dc_wfl_tradecode t where t.tradeno not in('CWDD','CWDC')";
 		return (List<TradeCode>) super.findForListBySql(sql, null, TradeCode.class);
 	}
 	

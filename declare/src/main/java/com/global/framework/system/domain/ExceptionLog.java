@@ -10,7 +10,7 @@ import com.global.framework.dbutils.support.Entity;
  * @author bai.shulun and longjun
  * 
  */
-@TableMapping(primaryKey = "exceptionlogId", primaryKeyType = "Single", tableName = "sys_exceptionlog")
+@TableMapping(primaryKey = "exceptionlogId", primaryKeyType = "Single", tableName = "dc_sys_exceptionlog")
 public class ExceptionLog extends Entity {
 
 	@ColumnMapping(columnName = "exceptionlogId", columnType = "String")

@@ -5,7 +5,7 @@ import com.global.framework.dbutils.annotation.TableMapping;
 import com.global.framework.dbutils.support.Entity;
 
 @SuppressWarnings("serial")
-@TableMapping(primaryKey = "", primaryKeyType = "None", tableName = "PA_SAFEEXRATE")
+@TableMapping(primaryKey = "", primaryKeyType = "None", tableName = "dc_PA_SAFEEXRATE")
 public class SafeExRate extends Entity {
 
 	@ColumnMapping(columnName = "year_month", columnType = "String")

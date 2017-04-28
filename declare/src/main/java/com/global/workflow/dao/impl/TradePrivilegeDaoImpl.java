@@ -22,7 +22,7 @@ public class TradePrivilegeDaoImpl extends BaseDaoSupport implements
 	@SuppressWarnings("unchecked")
 	public List<TradePrivilege> queryTradePrivilege(String tradeNo)
 			throws BaseException {
-		String sql = "select * from wfl_tradeprivilege t where t.tradeno = ?";
+		String sql = "select * from dc_wfl_tradeprivilege t where t.tradeno = ?";
 		return (List<TradePrivilege>) super.findForListBySql(sql,
 				new Object[] { tradeNo }, TradePrivilege.class);
 	}
@@ -30,7 +30,7 @@ public class TradePrivilegeDaoImpl extends BaseDaoSupport implements
 	@SuppressWarnings("unchecked")
 	public List<TradePrivilege> queryTradePrivilegeByMenuID(String menuid)
 			throws BaseException {
-		String sql = "select * from wfl_tradeprivilege t where t.menuid = ?";
+		String sql = "select * from dc_wfl_tradeprivilege t where t.menuid = ?";
 		return (List<TradePrivilege>) super.findForListBySql(sql,
 				new Object[] { menuid }, TradePrivilege.class);
 	}

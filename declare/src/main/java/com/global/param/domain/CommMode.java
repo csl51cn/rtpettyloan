@@ -11,7 +11,7 @@ import com.global.framework.dbutils.support.Entity;
  * @date 2015-7-10
  * @version v1.0
  */
-@TableMapping(primaryKey = "channelId", primaryKeyType = "Single", tableName = "pa_channel_commmode")
+@TableMapping(primaryKey = "channelId", primaryKeyType = "Single", tableName = "dc_pa_channel_commmode")
 public class CommMode extends Entity {
 
 	@ColumnMapping(columnName="channelId", columnType="String")

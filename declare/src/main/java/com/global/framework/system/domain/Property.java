@@ -5,7 +5,7 @@ import com.global.framework.dbutils.annotation.TableMapping;
 import com.global.framework.dbutils.support.Entity;
 
 @SuppressWarnings("serial")
-@TableMapping(primaryKey = "key", primaryKeyType = "Single", tableName = "SYS_PROPERTY")
+@TableMapping(primaryKey = "key", primaryKeyType = "Single", tableName = "dc_SYS_PROPERTY")
 public class Property extends Entity {
 
 	@ColumnMapping(columnName = "KEY", columnType = "String")

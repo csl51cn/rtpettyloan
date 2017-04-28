@@ -40,7 +40,7 @@ public class OperateDaoImpl extends BaseDaoSupport implements OperateDao {
 	public PageBean queryOperateForPage(Operate operate, PageBean page)
 			throws BaseException {
 		StringBuffer sql = new StringBuffer(
-				"select t.*,(select menuName from sys_menu where menuId=t.menuId) menuName from sys_operate t where 1=1 ");
+				"select t.*,(select menuName from dc_sys_menu where menuId=t.menuId) menuName from dc_sys_operate t where 1=1 ");
 		List<Object> list = new ArrayList<Object>();
 		if (StringUtils.isNotBlank(operate.getMenuId())) {
 			sql.append(" and t.menuid = ? ");
@@ -58,12 +58,12 @@ public class OperateDaoImpl extends BaseDaoSupport implements OperateDao {
 	public List<ZTreeNode> getRightTree() throws BaseException {
 		//权限类型 1:代表菜单, 2:代表按钮 3:工作流权限
 		String sql = "select * from ("
-				+ "select a.menuId treeId,a.parentMenuId pid,a.menuName treeName,a.sortno,'1' righttype from sys_menu a "//菜单
+				+ "select a.menuId treeId,a.parentMenuId pid,a.menuName treeName,a.sortno,'1' righttype from dc_sys_menu a "//菜单
 				//+ "union "
-				//+ "select b.operateId treeId,b.menuId pid,b.operateName treeName,b.sortno, '2' righttype from sys_operate b where b.ischeck='Y' "//按钮
+				//+ "select b.operateId treeId,b.menuId pid,b.operateName treeName,b.sortno, '2' righttype from dc_sys_operate b where b.ischeck='Y' "//按钮
 				+ "union "
-				+ "select to_char(c.privid) treeId,c.menuId pid,decode(c.opeid,1,'经办','2','复核','3','授权') treeName,1 sortno, '3' righttype from wfl_tradeprivilege c "
-				+ "  where c.tradeno in (select tradeno from wfl_tradetemplate where isused = 'Y') "//工作流权限
+				+ "select to_char(c.privid) treeId,c.menuId pid,decode(c.opeid,1,'经办','2','复核','3','授权') treeName,1 sortno, '3' righttype from dc_wfl_tradeprivilege c "
+				+ "  where c.tradeno in (select tradeno from dc_wfl_tradetemplate where isused = 'Y') "//工作流权限
 				+ ") abc order by abc.sortno asc ";
 		return (List<ZTreeNode>) super.findForListBySql(sql, null,
 				ZTreeNode.class);
@@ -79,7 +79,7 @@ public class OperateDaoImpl extends BaseDaoSupport implements OperateDao {
 	@SuppressWarnings("unchecked")
 	public List<RoleRight> getRightsByRoleId(String roleId)
 			throws BaseException {
-		String sql = "select * from sys_roleright t where t.roleid = ? ";
+		String sql = "select * from dc_sys_roleright t where t.roleid = ? ";
 		return (List<RoleRight>) super.findForListBySql(sql,
 				new Object[] { roleId }, RoleRight.class);
 	}
@@ -91,7 +91,7 @@ public class OperateDaoImpl extends BaseDaoSupport implements OperateDao {
 
 	@SuppressWarnings("unchecked")
 	public List<Operate> getNoCheckOperateList() throws BaseException {
-		String sql = "select * from sys_operate t where t.ischeck = 'N' ";
+		String sql = "select * from dc_sys_operate t where t.ischeck = 'N' ";
 		return (List<Operate>) super.findForListBySql(sql, null, Operate.class);
 	}
 }

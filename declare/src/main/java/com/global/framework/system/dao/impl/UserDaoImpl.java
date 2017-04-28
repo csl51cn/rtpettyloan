@@ -42,7 +42,7 @@ public class UserDaoImpl extends BaseDaoSupport implements UserDao {
 	}
 
 	public void updateUserPwd(User user) throws BaseException {
-		String sql = "update sys_user set password = ? where usercode = ? ";
+		String sql = "update dc_sys_user set password = ? where usercode = ? ";
 		super.updateBySql(sql,
 				new Object[] { user.getPassword(), user.getUserCode() });
 	}
@@ -53,7 +53,7 @@ public class UserDaoImpl extends BaseDaoSupport implements UserDao {
 	}
 
 	public boolean checkUserExist(String userCode) throws BaseException {
-		String sql = "select count(1) from sys_user where userCode = ? ";
+		String sql = "select count(1) from dc_sys_user where userCode = ? ";
 		int count = super.findForIntBySql(sql, new Object[] { userCode });
 		return count > 0 ? true : false;
 	}
@@ -62,8 +62,8 @@ public class UserDaoImpl extends BaseDaoSupport implements UserDao {
 			throws BaseException {
 		StringBuilder sql = new StringBuilder(256);
 		sql.append("SELECT t.*,"
-				+ "(select orgName from sys_org where orgId=t.orgId) orgName "
-				+ "FROM sys_user t WHERE 1 = 1 ");
+				+ "(select orgName from dc_sys_org where orgId=t.orgId) orgName "
+				+ "from dc_sys_user t WHERE 1 = 1 ");
 		List<Object> args = new ArrayList<Object>();
 		if (StringUtils.isNotBlank(user.getOrgId())) {
 			sql.append(" and t.orgId = ? ");
@@ -87,7 +87,7 @@ public class UserDaoImpl extends BaseDaoSupport implements UserDao {
 
 	@SuppressWarnings("unchecked")
 	public List<UserRole> getRolesByUserId(String userId) throws BaseException {
-		String sql = "select t.*,(select roleName from sys_role where roleid=t.roleid) roleName from sys_userrole t where t.userid = ? ";
+		String sql = "select t.*,(select roleName from dc_sys_role where roleid=t.roleid) roleName from dc_sys_userrole t where t.userid = ? ";
 		List<Object> args = new ArrayList<Object>();
 		args.add(userId);
 		return (List<UserRole>) super.findForListBySql(sql, args.toArray(),
@@ -95,7 +95,7 @@ public class UserDaoImpl extends BaseDaoSupport implements UserDao {
 	}
 
 	public void deleteUserRoleByUserId(String userId) throws BaseException {
-		String sql = "delete from sys_userrole t where t.userid = ? ";
+		String sql = "delete from dc_sys_userrole t where t.userid = ? ";
 		super.delete(sql, new Object[] { userId });
 	}
 
@@ -109,22 +109,22 @@ public class UserDaoImpl extends BaseDaoSupport implements UserDao {
 	}
 
 	public void deleteDataRightByUserId(String userId) throws BaseException {
-		String sql = "delete from sys_dataright t where t.userid = ?　";
+		String sql = "delete from dc_sys_dataright t where t.userid = ?　";
 		super.delete(sql, new Object[] { userId });
 	}
 
 	public void batchUpdateUser(List<Object[]> list) {
-		String sql = "update sys_user set status=? where userid = ? ";
+		String sql = "update dc_sys_user set status=? where userid = ? ";
 		super.batchUpdateBySql(sql, list);
 	}
 
 	public void batchUpdateUserPwd(List<Object[]> list) {
-		String sql = "update sys_user set password=? where userid = ? ";
+		String sql = "update dc_sys_user set password=? where userid = ? ";
 		super.batchUpdateBySql(sql, list);
 	}
-	
+
 	public User findUserByUserCode(String userCode) throws BaseException {
-		String sql = "select * from sys_user where usercode=?";
+		String sql = "select * from dc_sys_user where usercode=?";
 		return super.findForObjectBySql(sql, new Object[]{userCode}, User.class);
 	}
 }

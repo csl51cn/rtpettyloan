@@ -23,7 +23,7 @@ public class SafeExRateDaoImpl extends BaseDaoSupport implements SafeExRateDao {
 		if (StringUtils.isBlank(yearMonth)) {
 			throw new BaseException("年月不允许为空");
 		}
-		String sql = "select * from PA_SAFEEXRATE t where t.year_month=? and t.currency_code=? and t.isvalid=? ";
+		String sql = "select * from c_PA_SAFEEXRATE t where t.year_month=? and t.currency_code=? and t.isvalid=? ";
 		return super.findForObjectBySql(sql, new Object[]{yearMonth, curr, "Y"}, SafeExRate.class);
 	}
 
@@ -33,7 +33,7 @@ public class SafeExRateDaoImpl extends BaseDaoSupport implements SafeExRateDao {
 		if (StringUtils.isBlank(yearMonth)) {
 			throw new BaseException("年月不允许为空");
 		}
-		String sql = "select * from PA_SAFEEXRATE t where t.year_month=? ";
+		String sql = "select * from dc_PA_SAFEEXRATE t where t.year_month=? ";
 		return (List<SafeExRate>) super.findForListBySql(sql, new Object[]{yearMonth}, SafeExRate.class);
 	}
 
@@ -45,12 +45,12 @@ public class SafeExRateDaoImpl extends BaseDaoSupport implements SafeExRateDao {
 		if (StringUtils.isBlank(isValid)) {
 			throw new BaseException("生效标识不允许为空");
 		}
-		String sql = "update PA_SAFEEXRATE t set t.isvalid=? where t.year_month=? ";
+		String sql = "update dc_PA_SAFEEXRATE t set t.isvalid=? where t.year_month=? ";
 		super.updateBySql(sql, new Object[]{isValid, yearMonth});
 	}
 	
 	public void deleteByYearMonth(String yearMonth) throws BaseException {
-		String sql = "delete from PA_SAFEEXRATE where year_month = ?";
+		String sql = "delete from dc_PA_SAFEEXRATE where year_month = ?";
 		if (StringUtils.isBlank(yearMonth)) {
 			throw new BaseException("年月不允许为空");
 		}
@@ -65,7 +65,7 @@ public class SafeExRateDaoImpl extends BaseDaoSupport implements SafeExRateDao {
 	public PageBean queryForPage(String currencyCode, String yearMonth,
 			PageBean page) throws BaseException {
 		List<String> args = new ArrayList<String>();
-		String sql = "select * from PA_SAFEEXRATE t where 1=1 ";
+		String sql = "select * from dc_PA_SAFEEXRATE t where 1=1 ";
 		if (StringUtils.isNotBlank(yearMonth)) {
 			sql += " and t.year_month=?";
 			args.add(yearMonth);

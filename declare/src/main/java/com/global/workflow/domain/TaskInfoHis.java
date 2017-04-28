@@ -11,7 +11,7 @@ import com.global.framework.dbutils.support.Entity;
  * @version v1.0
  */
 @SuppressWarnings("serial")
-@TableMapping(primaryKey = "txnSerialNo", primaryKeyType = "Single", tableName = "wfl_taskinfo_HIS")
+@TableMapping(primaryKey = "txnSerialNo", primaryKeyType = "Single", tableName = "dc_wfl_taskinfo_HIS")
 public class TaskInfoHis extends Entity {
 
 	@ColumnMapping(columnName = "txnSerialNo", columnType = "String")

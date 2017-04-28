@@ -19,19 +19,19 @@ public class MenuDaoImpl extends BaseDaoSupport implements MenuDao {
 
 	@SuppressWarnings("unchecked")
 	public List<Menu> getMenuGroupList() throws BaseException {
-		String sql = "select menuId,menuName,sortNo from sys_menu where parentMenuId='-1' order by sortno asc ";
+		String sql = "select menuId,menuName,sortNo from dc_sys_menu where parentMenuId='-1' order by sortno asc ";
 		return (List<Menu>) super.findForListBySql(sql, null, Menu.class);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<Menu> getMenuList() throws BaseException {
-		String sql = "SELECT t.menuid,t.menuname,t.parentmenuid,t.isfunction,t.accessurl,t.sortno from sys_menu t where t.parentMenuId <> '-1' order by sortno asc";
+		String sql = "SELECT t.menuid,t.menuname,t.parentmenuid,t.isfunction,t.accessurl,t.sortno from dc_sys_menu t where t.parentMenuId <> '-1' order by sortno asc";
 		return (List<Menu>) super.findForListBySql(sql, null, Menu.class);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<Menu> getMenuAll() throws BaseException {
-		String sql = "select t.*,COALESCE((select menuname from sys_menu where menuid=t.parentMenuId),'-') parentMenuName from sys_menu t order by sortNo asc";
+		String sql = "select t.*,COALESCE((select menuname from dc_sys_menu where menuid=t.parentMenuId),'-') parentMenuName from dc_sys_menu t order by sortNo asc";
 		return (List<Menu>) super.findForListBySql(sql, null, Menu.class);
 	}
 
@@ -40,19 +40,19 @@ public class MenuDaoImpl extends BaseDaoSupport implements MenuDao {
 	}
 
 	public void updateMenuBySql(Menu menu) throws BaseException {
-		String sql = "update sys_menu set isFunction='N', accessUrl='' where menuId=?";
+		String sql = "update dc_sys_menu set isFunction='N', accessUrl='' where menuId=?";
 		super.updateBySql(sql, new Object[]{menu.getParentMenuId()});
 	}
 
 	public void deleteMenu(Menu menu) throws BaseException {
 		//查询该菜单是否有下级菜单
-		String sql1 = "select count(0) from sys_menu where parentMenuId = ? ";
+		String sql1 = "select count(0) from dc_sys_menu where parentMenuId = ? ";
 		int count = super.findForIntBySql(sql1, new Object[]{menu.getMenuId()});
 		if (count > 0) {
 			throw new BaseException("该菜单存在下级菜单，不允许删除!");
 		}
 		//查询该菜单是否被分配
-		String sql2 = "select count(0) from sys_roleright r where r.rightid=?";
+		String sql2 = "select count(0) from dc_sys_roleright r where r.rightid=?";
 		int count2 = super.findForIntBySql(sql2, new Object[]{menu.getMenuId()});
 		if(count2 > 0) {
 			throw new BaseException("该菜单已使用，不允许删除");
@@ -61,7 +61,7 @@ public class MenuDaoImpl extends BaseDaoSupport implements MenuDao {
 	}
 	
 	public Menu getMenuById(Menu menu) throws BaseException {
-		String sql = "select m.*, (select menuname from sys_menu where menuid=m.parentmenuid) parentMenuName from sys_menu m where m.menuid = ? ";
+		String sql = "select m.*, (select menuname from dc_sys_menu where menuid=m.parentmenuid) parentMenuName from dc_sys_menu m where m.menuid = ? ";
 		return super.findForObjectBySql(sql, new Object[]{menu.getMenuId()}, Menu.class);
 	}
 	
@@ -70,9 +70,9 @@ public class MenuDaoImpl extends BaseDaoSupport implements MenuDao {
 	}
 
 	public List<Menu> getMenuByRoleID(String roleIds) throws BaseException {
-		String sql = "select * from sys_menu m where m.menuid in (select r.rightid from sys_roleright r where r.roleid in ("+roleIds+") and r.righttype='1') and not exists (select 1 from wfl_tradeprivilege p where p.menuid=m.menuid) " + 
+		String sql = "select * from dc_sys_menu m where m.menuid in (select r.rightid from dc_sys_roleright r where r.roleid in ("+roleIds+") and r.righttype='1') and not exists (select 1 from dc_wfl_tradeprivilege p where p.menuid=m.menuid) " +
 						"union "+
-						"select * from sys_menu m where m.menuid in (select p.menuid from wfl_tradeprivilege p where p.privid in (select r.rightid from sys_roleright r where r.roleid in ("+roleIds+") and r.righttype='3') and p.opeid='1')";
+						"select * from dc_sys_menu m where m.menuid in (select p.menuid from dc_wfl_tradeprivilege p where p.privid in (select r.rightid from dc_sys_roleright r where r.roleid in ("+roleIds+") and r.righttype='3') and p.opeid='1')";
 		return (List<Menu>) super.findForListBySql(sql, null, Menu.class);
 	}
 }

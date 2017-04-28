@@ -59,7 +59,7 @@ public class SysCommonDaoImpl extends BaseDaoSupport implements SysCommonDao {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Property getProperty(String key) throws BaseException {
-		String sql = "select * from SYS_PROPERTY where key=?";
+		String sql = "select * from dc_sys_PROPERTY where key=?";
 		return (Property)super.getJdbcTemplate().queryForObject(sql, new Object[]{key}, new BeanPropertyRowMapper(Property.class));
 	}
 	
@@ -69,7 +69,7 @@ public class SysCommonDaoImpl extends BaseDaoSupport implements SysCommonDao {
 	
 	@SuppressWarnings("unchecked")
 	public List<Property> getPropertyList(String[] args) throws BaseException {
-		StringBuffer sql = new StringBuffer("select * from sys_property s where 1=1 ");
+		StringBuffer sql = new StringBuffer("select * from dc_sys_property s where 1=1 ");
 		if (args != null) {
 			sql.append(" and s.key in (");
 			for (int i = 0; i < args.length; i++) {
@@ -86,7 +86,7 @@ public class SysCommonDaoImpl extends BaseDaoSupport implements SysCommonDao {
 		if (StringUtils.isBlank(operNo)) {
 			throw new BaseException("柜员员不允许为空");
 		}
-		String sql = "select * from PA_COMMON_ORG_USER t where t.operno = ? ";
+		String sql = "select * from dc_PA_COMMON_ORG_USER t where t.operno = ? ";
 		return super.findForObjectBySql(sql, new Object[]{operNo}, CommonOrgUser.class);
 	}
 	
@@ -103,7 +103,7 @@ public class SysCommonDaoImpl extends BaseDaoSupport implements SysCommonDao {
 	public PageBean queryCommonOrgUserForPage(CommonOrgUser user, PageBean page)
 			throws BaseException {
 		StringBuilder sql = new StringBuilder(256);
-		sql.append("SELECT c.* FROM PA_COMMON_ORG_USER c WHERE 1 = 1");
+		sql.append("SELECT c.* FROM dc_PA_COMMON_ORG_USER c WHERE 1 = 1");
 		List<Object> args = new ArrayList<Object>();
 		
 		if(StringUtils.isNotBlank(user.getOPERNO())) {
@@ -120,7 +120,7 @@ public class SysCommonDaoImpl extends BaseDaoSupport implements SysCommonDao {
 	
 	public void delCommonOrgUser(String operNo)
 			throws BaseException {
-		String sql = "delete from PA_COMMON_ORG_USER where OPERNO=? ";
+		String sql = "delete from dc_PA_COMMON_ORG_USER where OPERNO=? ";
 		super.delete(sql, new Object[]{operNo});
 	}
 	

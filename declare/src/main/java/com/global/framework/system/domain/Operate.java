@@ -10,7 +10,7 @@ import com.global.framework.dbutils.support.Entity;
  * @date 2011-11-15 下午3:07:03
  * @version v1.0
  */
-@TableMapping(primaryKey = "operateId", primaryKeyType = "Single", tableName = "sys_operate")
+@TableMapping(primaryKey = "operateId", primaryKeyType = "Single", tableName = "dc_sys_operate")
 public class Operate extends Entity {
 
 	private static final long serialVersionUID = -4389771240618068526L;

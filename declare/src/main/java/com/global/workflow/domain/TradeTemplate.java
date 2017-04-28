@@ -12,7 +12,7 @@ import com.global.framework.dbutils.support.Entity;
  * @version v1.0
  */
 @SuppressWarnings("serial")
-@TableMapping(primaryKey = "tradeNo", primaryKeyType = "Single", tableName = "wfl_tradetemplate")
+@TableMapping(primaryKey = "tradeNo", primaryKeyType = "Single", tableName = "dc_wfl_tradetemplate")
 public class TradeTemplate extends Entity {
 
 	@ColumnMapping(columnName = "tradeNo", columnType = "String")

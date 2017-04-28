@@ -21,7 +21,7 @@ public class RoleDaoImpl extends BaseDaoSupport implements RoleDao {
 
 	public PageBean queryRoleForPage(Role role, PageBean pageBean, String userId) throws BaseException {
 		StringBuilder sql = new StringBuilder(256);
-		sql.append("SELECT t.* FROM sys_role t WHERE 1 = 1 ");
+		sql.append("SELECT t.* FROM dc_sys_role t WHERE 1 = 1 ");
 		if (!"admin".equals(userId)) {//不是超级管理员不允许操作超级管理员这个角色信息
 			sql.append(" and t.isfix = 'N'");
 		}
@@ -39,7 +39,7 @@ public class RoleDaoImpl extends BaseDaoSupport implements RoleDao {
 
 	public void deleteRole(Role role) throws BaseException {
 		//查询该角色是否被分配
-		String sql = "select count(1) from sys_userrole ur where ur.roleid=? ";
+		String sql = "select count(1) from dc_sys_userrole ur where ur.roleid=? ";
 		int count = super.findForIntBySql(sql, new Object[]{role.getRoleId()});
 		if (count > 0) {
 			throw new BaseException("该角色已被分配，不允许删除，请先取消用户角色分配！");
@@ -47,16 +47,16 @@ public class RoleDaoImpl extends BaseDaoSupport implements RoleDao {
 		super.delete(role);
 		
 		//删除角色权限关系表
-		String sql2 = "delete from sys_roleright r where r.roleid=?";
+		String sql2 = "delete from dc_sys_roleright r where r.roleid=?";
 		super.delete(sql2, new Object[]{role.getRoleId()});
 		
-		String sql3 = "delete from sys_roledataright r where r.roleid=?";
+		String sql3 = "delete from dc_sys_roledataright r where r.roleid=?";
 		super.delete(sql3, new Object[]{role.getRoleId()});
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<RoleRight> getRightsByRole(List<UserRole> roles) throws BaseException {
-		StringBuffer sql = new StringBuffer("select * from sys_roleright t where t.roleid in (");
+		StringBuffer sql = new StringBuffer("select * from dc_sys_roleright t where t.roleid in (");
 		Object[] obj = new Object[roles.size()];
 		boolean done = false;
 		for (int i = 0; i < roles.size(); i++) {
@@ -100,7 +100,7 @@ public class RoleDaoImpl extends BaseDaoSupport implements RoleDao {
 	}
 
 	public void deleteRoleRightByRoleId(String roleId) throws BaseException {
-		String sql = "delete from sys_roleright t where t.roleid = ? ";
+		String sql = "delete from dc_sys_roleright t where t.roleid = ? ";
 		super.delete(sql, new Object[] { roleId });
 	}
 	

@@ -11,7 +11,7 @@ import com.global.framework.dbutils.support.Entity;
  * @author Administrator
  * 
  */
-@TableMapping(primaryKey = "channelId", primaryKeyType = "Single", tableName = "pa_channel")
+@TableMapping(primaryKey = "channelId", primaryKeyType = "Single", tableName = "dc_pa_channel")
 public class Channel extends Entity {
 	@ColumnMapping(columnName = "channelId", columnType = "String")
 	private String channelId;

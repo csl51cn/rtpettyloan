@@ -5,7 +5,7 @@ import com.global.framework.dbutils.annotation.TableMapping;
 import com.global.framework.dbutils.support.Entity;
 import com.global.framework.util.SysUtils;
 
-@TableMapping(primaryKey = "SEQNO", primaryKeyType = "Single", tableName = "bu_spfe_mkup")
+@TableMapping(primaryKey = "SEQNO", primaryKeyType = "Single", tableName = "dc_bu_spfe_mkup")
 public class SpfeMkUp extends Entity{
 
 	@ColumnMapping(columnName = "SEQNO", columnType = "String")

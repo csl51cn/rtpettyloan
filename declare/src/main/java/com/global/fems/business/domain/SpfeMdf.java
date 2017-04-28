@@ -11,7 +11,7 @@ import com.global.framework.util.SysUtils;
  *
  */
 @SuppressWarnings("serial")
-@TableMapping(primaryKey = "SEQNO", primaryKeyType = "Single", tableName = "BU_spfe_mdf")
+@TableMapping(primaryKey = "SEQNO", primaryKeyType = "Single", tableName = "dc_BU_spfe_mdf")
 public class SpfeMdf extends Entity {
 
 	@ColumnMapping(columnName = "SEQNO", columnType = "String")

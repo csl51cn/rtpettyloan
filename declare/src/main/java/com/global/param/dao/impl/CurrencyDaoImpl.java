@@ -19,7 +19,7 @@ public class CurrencyDaoImpl extends BaseDaoSupport implements CurrencyDao {
 
 	@SuppressWarnings("unchecked")
 	public List<Currency> getCurrencyList() throws BaseException {
-		String sql = "select * from pa_currency_info where cursign <> 'CNY'";
+		String sql = "select * from dc_pa_currency_info where cursign <> 'CNY'";
 		return (List<Currency>) super.findForListBySql(sql, null, Currency.class);
 	}
 
