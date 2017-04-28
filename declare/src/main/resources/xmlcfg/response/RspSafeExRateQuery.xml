@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<msg className="com.global.fems.message.domain.business.response.RspSafeExRateQuery" fieldName="dataStores" nodeName="DataStores" type="Single" extends="Msg" extendsfield="Msg.Body" isHide="N">
+  	<field fieldName="PAGESIZE" nodeName="PAGESIZE" type = "Integer" required = "Y" length="[1,4]"/>
+  	<field fieldName="PAGENUMBER" nodeName="PAGENUMBER" type = "Integer" required = "Y" length="[1,2]"/>
+  	<field fieldName="totalCount" nodeName="TOTALCOUNT" type = "Integer" required = "Y" length="[1,10]"/>
+  	<field fieldName="rec" nodeName="REC" type="Group" className="java.util.ArrayList" subNodeName="REC" isHide="H">
+	  	<field className="com.global.fems.message.domain.business.response.RspSafeExRateQueryRec" type="Single" fieldName="rec" nodeName="REC" isHide="N">
+		  	<field fieldName="YEAR_MONTH" nodeName="YEAR_MONTH"  type = "Date" required = "Y" format="yyyyMM"/>
+		  	<field fieldName="CURRENCY_CODE" nodeName="CURRENCY_CODE" type = "String" required = "Y" length="[3]"/>
+		  	<field fieldName="EXCHANGE" nodeName="EXCHANGE" type = "Double" required = "Y" length="[16]" format="#.##########"/>
+	  	</field>
+  	</field>
+</msg>

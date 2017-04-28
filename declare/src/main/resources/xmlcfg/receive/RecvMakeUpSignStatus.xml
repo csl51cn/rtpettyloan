@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<msg className="com.global.fems.message.domain.business.receive.RecvMakeUpSignStatus" fieldName="dataStores" nodeName="DataStores" type="Single" extends="Msg" extendsfield="Msg.Body" isHide="N">
+  	<field fieldName="IDTYPE_CODE" nodeName="IDTYPE_CODE" text="证件类型代码" type = "String" required = "Y" length="[2]"/>
+  	<field fieldName="IDCODE" nodeName="IDCODE"  text="证件号码" type = "String" required = "Y" length="[1,50]"/>
+  	<field fieldName="CTYCODE" nodeName="CTYCODE"  text="国家/地区代码" type = "String" required = "Y" length="[3]"/>
+  	<field fieldName="PERSON_NAME" nodeName="PERSON_NAME"  text="姓名" type = "String" required = "Y" length="[1,128]"/>
+</msg>

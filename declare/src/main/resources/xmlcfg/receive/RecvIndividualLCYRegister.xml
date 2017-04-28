@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<msg className="com.global.fems.message.domain.business.receive.RecvIndividualLCYRegister" fieldName="dataStores" nodeName="DataStores" type="Single" extends="Msg" extendsfield="Msg.Body" isHide="N">
+  	<field fieldName="TRADE_TYPE" nodeName="TRADE_TYPE" text="交易类型" type = "String" required = "Y" length="[2]"/>
+  	<field fieldName="OCCUPY_LMT_STATUS" nodeName="OCCUPY_LMT_STATUS" text="是否占用额度" type = "String" required = "Y" length="[1]"/>
+  	<field fieldName="BIZ_TYPE_CODE" nodeName="BIZ_TYPE_CODE" text="业务类型代码" type = "String" required = "Y" length="[2]"/>
+  	<field fieldName="IDTYPE_CODE" nodeName="IDTYPE_CODE" text="证件类型代码" type = "String" required = "Y" length="[2]"/>
+  	<field fieldName="IDCODE" nodeName="IDCODE" text="证件号码" type = "String" required = "Y" length="[1,50]"/>
+  	<field fieldName="CTYCODE" nodeName="CTYCODE" text="国家/地区代码" type = "String" required = "Y" length="[3]"/>
+  	<field fieldName="ADD_IDCODE" nodeName="ADD_IDCODE" text="补充证件号码" type = "String" required = "N" length="[0,50]"/>
+  	<field fieldName="PERSON_NAME" nodeName="PERSON_NAME" text="姓名" type = "String" required = "Y" length="[1,128]"/>
+  	<field fieldName="TX_CODE" nodeName="TX_CODE" text="结售汇资金属性代码" type = "String" required = "Y" length="[3,4]"/>
+  	<field fieldName="SALEFX_SETTLE_CODE" nodeName="SALEFX_SETTLE_CODE" text="结汇资金形态代码" type = "String" required = "N" length="[2]"/>
+  	<field fieldName="TXCCY" nodeName="TXCCY" text="币种" type = "String" required = "Y" length="[3]"/>
+  	<field fieldName="TXAMT" nodeName="TXAMT" text="结售汇金额" type = "Double" required = "Y" length="[15]" format="#.##"/>
+  	<field fieldName="PURFX_CASH_AMT" nodeName="PURFX_CASH_AMT" text="购汇提钞金额" type = "Double" required = "N" length="[15]" format="#.##"/>
+  	<field fieldName="FCY_REMIT_AMT" nodeName="FCY_REMIT_AMT" text="汇出资金（包括外汇票据）金额" type = "Double" required = "N" length="[15]" format="#.##"/>
+  	<field fieldName="FCY_ACCT_AMT" nodeName="FCY_ACCT_AMT" text="存入个人外汇账户金额" type = "Double" required = "N" length="[15]" format="#.##"/>
+  	<field fieldName="TCHK_AMT" nodeName="TCHK_AMT" text="旅行支票金额" type = "Double" required = "N" length="[15]" format="#.##"/>
+  	<field fieldName="LCY_ACCTNO_CNY" nodeName="LCY_ACCTNO_CNY" text="结售汇人民币账户" type = "String" required = "N" length="[0,32]"/>
+  	<field fieldName="LCY_ACCT_NO" nodeName="LCY_ACCT_NO" text="个人外汇账户账号" type = "String" required = "N" length="[0,32]"/>
+  	<field fieldName="SIGNSTATUS" nodeName="SIGNSTATUS" text="客户是否同意预关注风险提示/关注名单告知" type = "String" required = "Y" length="[1]"/>
+  	<field fieldName="AGENT_CORP_CODE" nodeName="AGENT_CORP_CODE" text="代理企业组织机构代码" type = "String" required = "N" length="[9|18]"/>
+  	<field fieldName="AGENT_CORP_NAME" nodeName="AGENT_CORP_NAME" text="代理企业名称" type = "String" required = "N" length="[0,128]"/>
+  	<field fieldName="INDIV_ORG_CODE" nodeName="INDIV_ORG_CODE" text="个体工商户组织机构代码" type = "String" required = "N" length="[9|18]"/>
+  	<field fieldName="INDIV_ORG_NAME" nodeName="INDIV_ORG_NAME" text="个体工商户名称" type = "String" required = "N" length="[0,128]"/>
+  	<field fieldName="PAY_ORG_CODE" nodeName="PAY_ORG_CODE" text="支付机构组织机构代码" type = "String" required = "N" length="[9|18]"/>
+  	<field fieldName="CAPITALNO" nodeName="CAPITALNO" text="外汇局批件号/备案表号/业务编号" type = "String" required = "N" length="[0,20]"/>
+  	<field fieldName="BIZ_TX_TIME" nodeName="BIZ_TX_TIME" text="业务办理时间" type = "String" required = "Y" length="[19]" format="yyyy-MM-dd HH:mm:ss"/>
+  	<field fieldName="REMARK" nodeName="REMARK" text="备注" type = "String" required = "N" length="[0,256]"/>
+</msg>

@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<msg className="com.global.fems.message.domain.business.response.RspMakeUpSignStatus" fieldName="dataStores" nodeName="DataStores" type="Single" extends="Msg" extendsfield="Msg.Body" isHide="N">
+</msg>

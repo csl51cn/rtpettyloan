@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<msg className="com.global.fems.message.domain.business.receive.RecvSafeExRateQuery" fieldName="dataStores" nodeName="DataStores" type="Single" extends="Msg" extendsfield="Msg.Body" isHide="N">
+  	<field fieldName="PAGESIZE" nodeName="PAGESIZE" text="每页显示多少条" type = "String" required = "Y" length="[1,4]"/>
+  	<field fieldName="PAGENUMBER" nodeName="PAGENUMBER" text="当前页码" type = "String" required = "Y" length="[1,2]"/>
+  	<field fieldName="CURRENCY_CODE" nodeName="CURRENCY_CODE" text="币种代码" type = "String" required = "N" length="[3]"/>
+  	<field fieldName="YEAR_MONTH" nodeName="YEAR_MONTH"  text="年月" type = "Date" required = "N" format="yyyyMM"/>
+</msg>

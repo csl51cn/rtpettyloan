@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+	<field txCode="000001" txName="个人结售汇额度查询"
+		recvEntity="com.global.fems.message.domain.business.receive.RecvIndividualLCYQuery"
+		rspEntity="com.global.fems.message.domain.business.response.RspIndividualLCYQuery"
+		recvXmlMapping="RecvIndividualLCYQuery" rspXmlMapping="RspIndividualLCYQuery"
+		serviceMethod="doIndividualLCYQuery" isValid="Y" version="2015070101" />
+	<field txCode="000002" txName="个人结售汇额度登记指令查询"
+		recvEntity="com.global.fems.message.domain.business.receive.RecvIndividualLCYRegQuery"
+		rspEntity="com.global.fems.message.domain.business.response.RspIndividualLCYRegQuery"
+		recvXmlMapping="RecvIndividualLCYRegQuery" rspXmlMapping="RspIndividualLCYRegQuery"
+		serviceMethod="doIndividualLCYRegQuery" isValid="Y"
+		version="2015070101" />
+	<field txCode="000003" txName="美元折算率查询"
+		recvEntity="com.global.fems.message.domain.business.receive.RecvSafeExRateQuery"
+		rspEntity="com.global.fems.message.domain.business.response.RspSafeExRateQuery"
+		recvXmlMapping="RecvSafeExRateQuery" rspXmlMapping="RspSafeExRateQuery"
+		serviceMethod="doSafeExRateQuery" isValid="Y" version="2015070101" />
+	<field txCode="000004" txName="个人结售汇额度登记"
+		recvEntity="com.global.fems.message.domain.business.receive.RecvIndividualLCYRegister"
+		rspEntity="com.global.fems.message.domain.business.response.RspIndividualLCYRegister"
+		recvXmlMapping="RecvIndividualLCYRegister" rspXmlMapping="RspIndividualLCYRegister"
+		serviceMethod="doIndividualLCYRegister" isValid="Y"
+		version="2015070101" />
+	<field txCode="000005" txName="个人结售汇信息撤消"
+		recvEntity="com.global.fems.message.domain.business.receive.RecvIndividualLCYCancel"
+		rspEntity="com.global.fems.message.domain.business.response.RspIndividualLCYCancel"
+		recvXmlMapping="RecvIndividualLCYCancel" rspXmlMapping="RspIndividualLCYCancel"
+		serviceMethod="doIndividualLCYCancel" isValid="Y"
+		version="2015070101" />
+	<field txCode="000006" txName="个人结售汇信息修改"
+		recvEntity="com.global.fems.message.domain.business.receive.RecvIndividualLCYModify"
+		rspEntity="com.global.fems.message.domain.business.response.RspIndividualLCYModify"
+		recvXmlMapping="RecvIndividualLCYModify" rspXmlMapping="RspIndividualLCYModify"
+		serviceMethod="doIndividualLCYModify" isValid="Y"
+		version="2015070101" />
+	<field txCode="000007" txName="结售汇额度登记指令同步核对接口"
+		recvEntity="com.global.fems.message.domain.business.receive.RecvIndividualLCYRegCheck"
+		rspEntity="com.global.fems.message.domain.business.response.RspIndividualLCYRegCheck"
+		recvXmlMapping="RecvIndividualLCYRegCheck" rspXmlMapping="RspIndividualLCYRegCheck"
+		serviceMethod="doIndividualLCYRegCheck" isValid="Y"
+		version="2015070101" />
+	<field txCode="000008" txName="个人结售汇信息补录接口"
+		recvEntity="com.global.fems.message.domain.business.receive.RecvIndividualLCYMakeUp"
+		rspEntity="com.global.fems.message.domain.business.response.RspIndividualLCYMakeUp"
+		recvXmlMapping="RecvIndividualLCYMakeUp" rspXmlMapping="RspIndividualLCYMakeUp"
+		serviceMethod="doIndividualLCYMakeUp" isValid="Y"
+		version="2015070101" />
+	<field txCode="000009" txName="个人结售汇明细信息查询接口"
+		recvEntity="com.global.fems.message.domain.business.receive.RecvQueryIndividualFXSEAInfo"
+		rspEntity="com.global.fems.message.domain.business.response.RspQueryIndividualFXSEAInfo"
+		recvXmlMapping="RecvQueryIndividualFXSEAInfo" rspXmlMapping="RspQueryIndividualFXSEAInfo"
+		serviceMethod="doQueryIndividualFXSEAInfo" isValid="Y"
+		version="2015070101" />
+	<field txCode="000010" txName="预关注风险提示/关注名单告知接口"
+		recvEntity="com.global.fems.message.domain.business.receive.RecvMakeUpSignStatus"
+		rspEntity="com.global.fems.message.domain.business.response.RspMakeUpSignStatus"
+		recvXmlMapping="RecvMakeUpSignStatus" rspXmlMapping="RspMakeUpSignStatus"
+		serviceMethod="doMakeUpSignStatus" isValid="Y"
+		version="2015070101" />
+	<field txCode="000011" txName="外管登录用户信息更新接口"
+		recvEntity="com.global.fems.message.domain.business.receive.RecvCommonUser"
+		rspEntity="com.global.fems.message.domain.business.response.RspCommonUser"
+		recvXmlMapping="RecvCommonUser" rspXmlMapping="RspCommonUser"
+		serviceMethod="doUpdateCommonUser" isValid="Y"
+		version="2015070101" />
+</data>

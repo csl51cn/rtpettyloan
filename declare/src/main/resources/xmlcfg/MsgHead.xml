@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<msg class="com.global.fems.message.domain.ExceptionMsg" nodeName="Msg">
+	<field fieldName="head" nodeName="Head" type = "Single" className="com.global.fems.message.domain.MsgHead" isHide="N">
+	  <field fieldName="VerCode" nodeName="VerCode" type = "String" required = "Y" length="[1,20]"/>
+	  <field fieldName="ReqSysCode" nodeName="ReqSysCode" type = "String" required = "Y" length="[2]"/>
+	  <field fieldName="TxMode" nodeName="TxMode"  type = "String" required = "Y" length="[1]"/>
+	  <field fieldName="TxCode" nodeName="TxCode"  type = "String" required = "Y" length="[6]"/>
+	  <field fieldName="ReqDateTime" nodeName="ReqDateTime"  type = "Date" required = "Y" format="yyyy-MM-dd HH:mm:ss"/>
+	  <field fieldName="ReqSeqNo" nodeName="ReqSeqNo"  type = "String" required = "Y" length="[1,30]"/>
+	  <field fieldName="SvrDateTime" nodeName="SvrDateTime"  type = "Date" required = "N" format="yyyy-MM-dd HH:mm:ss"/>
+	  <field fieldName="SvrSeqNo" nodeName="SvrSeqNo"  type = "String" required = "N" length="[19]"/>
+	  <field fieldName="ChanlNo" nodeName="ChanlNo"  type = "String" required = "N" length="[1,6]"/>
+	  <field fieldName="OrgNo" nodeName="OrgNo"  type = "String" required = "N" length="[1,20]"/>
+	  <field fieldName="TermNo" nodeName="TermNo"  type = "String" required = "N" length="[1,10]"/>
+	  <field fieldName="OperNo" nodeName="OperNo"  type = "String" required = "Y" length="[1,20]"/>
+	</field>
+</msg>

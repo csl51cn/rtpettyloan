@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<msg className="com.global.fems.message.domain.business.receive.RecvIndividualLCYCancel" fieldName="dataStores" nodeName="DataStores" type="Single" extends="Msg" extendsfield="Msg.Body" isHide="N">
+  	<field fieldName="SEQNO" nodeName="SEQNO" text="业务流水号" type = "String" required = "Y" length="[1,19]"/>
+  	<field fieldName="TRADE_TYPE" nodeName="TRADE_TYPE" text="交易类型"  type = "String" required = "Y" length="[2]"/>
+  	<field fieldName="CANCEL_REASON" nodeName="CANCEL_REASON" text="撤销原因"  type = "String" required = "Y" length="[2]"/>
+  	<field fieldName="CANCEL_REMARK" nodeName="CANCEL_REMARK" text="撤销说明"  type = "String" required = "N" length="[0,256]"/>
+</msg>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<msg className="com.global.fems.message.domain.business.response.RspQueryIndividualFXSEAInfo" fieldName="dataStores" nodeName="DataStores" type="Single" extends="Msg" extendsfield="Msg.Body" isHide="N">
+	<field fieldName="PAGESIZE" nodeName="PAGESIZE" type = "Integer" required = "Y" length="[1,4]"/>
+  	<field fieldName="PAGENUMBER" nodeName="PAGENUMBER" type = "Integer" required = "Y" length="[1,2]"/>
+  	<field fieldName="totalCount" nodeName="TOTALCOUNT" type = "Integer" required = "Y" length="[1,10]"/>
+	<field fieldName="TRADE_TYPE" nodeName="TRADE_TYPE" type = "String" required = "Y" length="[2]"/>
+	<field fieldName="rec" nodeName="REC" type="Group" className="java.util.ArrayList" subNodeName="REC" isHide="H">
+	  	<field className="com.global.fems.message.domain.business.response.RspQueryIndividualFXSEAInfoRec" type="Single" fieldName="rec" nodeName="REC" isHide="N">
+		  	<field fieldName="REFNO" nodeName="REFNO" type = "String" required = "N" length="[29]"/>
+			<field fieldName="BANK_SELF_NUM" nodeName="BANK_SELF_NUM" type = "String" required = "N" length="[0,50]"/>
+			<field fieldName="BIZ_TYPE_CODE" nodeName="BIZ_TYPE_CODE" type = "String" required = "N" length="[2]"/>
+			<field fieldName="IDTYPE_CODE" nodeName="IDTYPE_CODE" type = "String" required = "N" length="[2]"/>
+			<field fieldName="IDCODE" nodeName="IDCODE" type = "String" required = "N" length="[1,50]"/>
+			<field fieldName="ADD_IDCODE" nodeName="ADD_IDCODE" type = "String" required = "N" length="[0,50]"/>
+			<field fieldName="CTYCODE" nodeName="CTYCODE" type = "String" required = "N" length="[3]"/>
+			<field fieldName="PERSON_NAME" nodeName="PERSON_NAME" type = "String" required = "N" length="[1,128]"/>
+			<field fieldName="SPFE_TYPE_CODE" nodeName="SPFE_TYPE_CODE" type = "String" required = "N" length="[3,4]"/>
+			<field fieldName="TXCCY" nodeName="TXCCY" type = "String" required = "N" length="[3]"/>
+			<field fieldName="TXAMT" nodeName="TXAMT" type = "String" required = "N" length="[15]" format="#.##"/>
+			<field fieldName="TXAMT_USD" nodeName="TXAMT_USD" type = "String" required = "N" length="[15]" format="#.##"/>
+			<field fieldName="SPFE_ACCTNO_CNY" nodeName="SPFE_ACCTNO_CNY" type = "String" required = "N" length="[0,32]"/>
+			<field fieldName="SALEFX_SETTLE_CODE" nodeName="SALEFX_SETTLE_CODE" type = "String" required = "N" length="[3]"/>
+			<field fieldName="LCY_ACCT_NO" nodeName="LCY_ACCT_NO" type = "String" required = "N" length="[0,32]"/>
+			<field fieldName="AGENT_CORP_NAME" nodeName="AGENT_CORP_NAME" type = "String" required = "N" length="[1,128]"/>
+			<field fieldName="AGENT_CORP_CODE" nodeName="AGENT_CORP_CODE" type = "String" required = "N" length="[9|18]"/>
+			<field fieldName="INDIV_ORG_CODE" nodeName="INDIV_ORG_CODE" type = "String" required = "N" length="[9|18]"/>
+			<field fieldName="INDIV_ORG_NAME" nodeName="INDIV_ORG_NAME" type = "String" required = "N" length="[1,128]"/>
+			<field fieldName="PAY_ORG_NAME" nodeName="PAY_ORG_NAME" type = "String" required = "N" length="[1,128]"/>
+			<field fieldName="PAY_ORG_CODE" nodeName="PAY_ORG_CODE" type = "String" required = "N" length="[9|18]"/>
+			<field fieldName="CAPITALNO" nodeName="CAPITALNO" type = "String" required = "N" length="[0,20]"/>
+			<field fieldName="PURFX_CASH_AMT" nodeName="PURFX_CASH_AMT" type = "String" required = "N" length="[15]" format="#.##"/>
+			<field fieldName="PURFX_CASH_AMT_USD" nodeName="PURFX_CASH_AMT_USD" type = "String" required = "N" length="[15]" format="#.##"/>
+			<field fieldName="FCY_REMIT_AMT" nodeName="FCY_REMIT_AMT" type = "String" required = "N" length="[15]" format="#.##"/>
+			<field fieldName="FCY_REMIT_AMT_USD" nodeName="FCY_REMIT_AMT_USD" type = "String" required = "N" length="[15]" format="#.##"/>
+			<field fieldName="FCY_ACCT_AMT" nodeName="FCY_ACCT_AMT" type = "String" required = "N" length="[15]" format="#.##"/>
+			<field fieldName="FCY_ACCT_AMT_USD" nodeName="FCY_ACCT_AMT_USD" type = "String" required = "N" length="[15]" format="#.##"/>
+			<field fieldName="TCHK_AMT" nodeName="TCHK_AMT" type = "String" required = "N" length="[15]" format="#.##"/>
+			<field fieldName="TCHK_AMT_USD" nodeName="TCHK_AMT_USD" type = "String" required = "N" length="[15]" format="#.##"/>
+			<field fieldName="BIZ_TX_CHNL_CODE" nodeName="BIZ_TX_CHNL_CODE" type = "String" required = "N" length="[2]"/>
+			<field fieldName="BIZ_TX_TIME" nodeName="BIZ_TX_TIME" type = "String" required = "N" length="[10]" format="yyyy-MM-dd"/>
+			<field fieldName="BRANCH_CODE" nodeName="BRANCH_CODE" type = "String" required = "N" length="[12]"/>
+			<field fieldName="BRANCH_NAME" nodeName="BRANCH_NAME" type = "String" required = "N" length="[1,128]"/>
+			<field fieldName="OPERCODE" nodeName="OPERCODE" type = "String" required = "N" length="[1,10]"/>
+			<field fieldName="ACTIONTYPE" nodeName="ACTIONTYPE" type = "String" required = "N" length="[1]"/>
+			<field fieldName="REMARK" nodeName="REMARK" type = "String" required = "N" length="[0,256]"/>
+	  	</field>
+  	</field>
+</msg>
