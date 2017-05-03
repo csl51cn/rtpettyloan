@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>欢迎登录个人外汇业务前置监测系统</title>
+    <title>欢迎登录润通贷款业务申报系统</title>
     <link href="resources/css/style.css" rel="stylesheet" type="text/css"/>
     <script language="JavaScript" src="resources/js/jquery-1.8.0.min.js"></script>
     <script src="resources/js/cloud.js" type="text/javascript"></script>
@@ -47,7 +47,7 @@
 
 
 <div class="logintop">
-    <span>个人外汇业务前置监测系统</span>
+    <span>润通贷款业务申报系统</span>
     <ul>
         <li><a href="#">帮助</a></li>
         <li><a href="#">关于</a></li>
@@ -75,7 +75,7 @@
 </div>
 
 
-<div class="loginbm">版权所有 2015 北京文思海辉金信软件有限公司</div>
+<div class="loginbm">版权所有 2017 重庆两江新区润通小额贷款有限公司</div>
 
 
 </body>
