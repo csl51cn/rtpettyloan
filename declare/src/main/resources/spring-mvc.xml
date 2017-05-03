@@ -15,8 +15,10 @@
 	<mvc:annotation-driven />
 
 	<!-- 自动扫描controller包下的所有类，使其认为spring mvc的控制器 -->
-	<!-- 加载controller的时候,不加载service,因为此时事物并未生效,若此时加载了service,那么事物无法对service进行拦截 -->
-	<context:component-scan base-package="com.global.**.controller.">
+	<!-- 加载controller的时候,不加载service,因为此时事物并未生效,若此时加载了service,那么事物无法对service进行拦截
+		扫描domain包是为了使用时间类型转换注解
+	-->
+	<context:component-scan base-package="com.global.**.controller,com.global.fems.business.domain">
 		<context:exclude-filter type="annotation"
 			expression="org.springframework.stereotype.Service" />
 	</context:component-scan>
@@ -44,8 +46,10 @@
 			</list>
 		</property> -->
 		<property name="messageConverters" ref="messageConverters" />
+
 	</bean>
-	
+
+
 	<!-- 默认的视图解析器 在上边的解析错误时使用 (默认使用html)- -->
 	<bean id="defaultViewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
@@ -102,5 +106,6 @@
 		</property>
 	</bean>
 	<mvc:view-controller view-name="redirect:/logon.do" path="/"/>
-	
+
+
 </beans>
