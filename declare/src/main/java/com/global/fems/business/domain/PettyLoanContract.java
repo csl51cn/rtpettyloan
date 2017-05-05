@@ -3,12 +3,10 @@ package com.global.fems.business.domain;
 import com.global.framework.dbutils.annotation.ColumnMapping;
 import com.global.framework.dbutils.annotation.TableMapping;
 import com.global.framework.dbutils.support.Entity;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.jdbc.core.RowMapper;
 
 import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
 
 /**
@@ -20,20 +18,26 @@ public class PettyLoanContract extends Entity  {
 
     @ColumnMapping(columnName = "id", columnType = "String")
     private String id; // 主键
+    @NotEmpty(message = "PettyLoanContract.contractNo.null")
     @ColumnMapping(columnName = "contractNo", columnType = "String")
     private String contractNo; //合同编号
+    @NotEmpty(message = "PettyLoanContract.loanCate.null")
     @ColumnMapping(columnName = "loanCate", columnType = "String")
     private String loanCate;//贷款类型
+    @NotEmpty(message = "PettyLoanContract.customerType.null")
     @ColumnMapping(columnName = "customerType", columnType = "String")
-    private String customerType;//借款人类型
+    private String customerType;//借款人类别
+    @NotEmpty(message = "PettyLoanContract.customerName.null")
     @ColumnMapping(columnName = "customerName", columnType = "String")
     private String customerName;//借款人名称
+    @NotEmpty(message="PettyLoanContract.certificateType.null")
     @ColumnMapping(columnName = "certificateType", columnType = "String")
     private String certificateType;//借款人证件类型
+    @NotEmpty(message="PettyLoanContract.certificateNo.null")
     @ColumnMapping(columnName = "certificateNo", columnType = "String")
     private String certificateNo;//证件号码
     @ColumnMapping(columnName = "conCustomerType", columnType = "String")
-    private String conCustomerType;//委托人类型
+    private String conCustomerType;//委托人类别
     @ColumnMapping(columnName = "conCustomerName", columnType = "String")
     private String conCustomerName;//委托人姓名
     @ColumnMapping(columnName = "conCertificateType", columnType = "String")
@@ -41,11 +45,14 @@ public class PettyLoanContract extends Entity  {
     @ColumnMapping(columnName = "conCertificateNo", columnType = "String")
     private String conCertificateNo;//委托人证件号码
     @ColumnMapping(columnName = "conFee", columnType = "BigDecimal")
-    private BigDecimal conFee;//委托代理费
+    private Double conFee;//委托代理费
+    @NotEmpty(message = "PettyLoanContract.contractAmount.null")
     @ColumnMapping(columnName = "contractAmount", columnType = "BigDecimal")
-    private BigDecimal contractAmount;//合同金额
+    private Double contractAmount;//合同金额
+    @NotEmpty(message = "PettyLoanContract.intRate.null")
     @ColumnMapping(columnName = "intRate", columnType = "BigDecimal")
-    private BigDecimal intRate;//月利率
+    private Double intRate;//月利率
+    @NotEmpty(message = "PettyLoanContract.contractSignDate.null")
     @ColumnMapping(columnName = "contractSignDate", columnType = "Date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date contractSignDate;//合同签订日期
@@ -143,27 +150,27 @@ public class PettyLoanContract extends Entity  {
         this.conCertificateNo = conCertificateNo;
     }
 
-    public BigDecimal getConFee() {
+    public Double getConFee() {
         return conFee;
     }
 
-    public void setConFee(BigDecimal conFee) {
+    public void setConFee(Double conFee) {
         this.conFee = conFee;
     }
 
-    public BigDecimal getContractAmount() {
+    public Double getContractAmount() {
         return contractAmount;
     }
 
-    public void setContractAmount(BigDecimal contractAmount) {
+    public void setContractAmount(Double contractAmount) {
         this.contractAmount = contractAmount;
     }
 
-    public BigDecimal getIntRate() {
+    public Double getIntRate() {
         return intRate;
     }
 
-    public void setIntRate(BigDecimal intRate) {
+    public void setIntRate(Double intRate) {
         this.intRate = intRate;
     }
 

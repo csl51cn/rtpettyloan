@@ -4,12 +4,17 @@ import com.global.fems.business.domain.PettyLoanContract;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 
-import java.util.Date;
-
+/**
+ * 小额贷款合同管理Dao接口
+ */
 public interface PettyLoanContractDao {
-        void  insert(PettyLoanContract contract) throws BaseException;
 
-    PageBean findForPage(String startDate, String endDate,PageBean pageBean);
 
-    PettyLoanContract findpettyLoanContractById(String id);
+    PageBean findPettyLoanContractByDate(String startDate, String endDate, PageBean pageBean) throws BaseException;
+
+    PettyLoanContract findpettyLoanContractById(String id) throws BaseException;
+
+    void saveOrUpdate(PettyLoanContract contract) throws BaseException;
+
+    PageBean findPettyLoanContractBySendStatus(Integer sendStatus, String insertStartDate, String insertEndDate, PageBean pageBean) throws BaseException;
 }

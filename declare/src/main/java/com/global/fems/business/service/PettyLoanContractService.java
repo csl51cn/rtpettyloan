@@ -4,15 +4,15 @@ import com.global.fems.business.domain.PettyLoanContract;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 
-import java.util.Date;
-
 /**
- * Created by senlin.deng on 2017/5/2.
+ * 小额贷款合同管理Service接口
  */
 public interface PettyLoanContractService {
-      void  savePettyLoanContract(PettyLoanContract contract) throws BaseException;
+    void saveOrUpdatePettyLoanContract(PettyLoanContract contract) throws BaseException;
 
-     PageBean findPettyLoanContractByDate(String startDate, String endDate, PageBean pageBean);
+    PageBean findPettyLoanContractByDate(String startDate, String endDate, PageBean pageBean) throws BaseException;
 
-    PettyLoanContract findpettyLoanContractById(String id);
+    PettyLoanContract findpettyLoanContractById(String id) throws BaseException;
+
+    PageBean findPettyLoanContractBySendStatus(Integer sendStatus, String insertStartDate, String insertEndDate, PageBean pageBean) throws BaseException;
 }
