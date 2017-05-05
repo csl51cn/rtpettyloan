@@ -6,12 +6,14 @@ import com.global.framework.dbutils.support.BaseDaoSupport;
 import com.global.framework.dbutils.support.Entity;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
-import com.global.framework.util.StringUtil;
+import com.global.framework.util.DateTimeUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -141,6 +143,12 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
         if (StringUtils.isNotEmpty(insertStartDate) && StringUtils.isNotEmpty(insertEndDate)) {
             sql.append(" AND insertdate BETWEEN ? AND ?");
             list.add(insertStartDate);
+            //传入截至时间为yyyy-MM-dd格式字符串，将截至时间+1天，避免当天数据查询不到
+            Date strToDate = DateTimeUtil.getStrToDate(insertEndDate, "yyyy-MM-dd");
+            Calendar endDate = Calendar.getInstance();
+            endDate.setTime(strToDate);
+            endDate.add(endDate.DATE, 1);
+            insertEndDate = DateTimeUtil.getDateToStr(endDate.getTime(),"yyyy-MM-dd");
             list.add(insertEndDate);
         }
 

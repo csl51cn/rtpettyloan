@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -45,32 +46,38 @@ public class PettyLoanContractController {
     }
 
     /**
-     * 保存或更新小额贷款合同
-     *
+     *保存或更新小额贷款合同
      * @param contract 从页面接收参数，填充实体类
-     * @return 操作是否成功的信息
+     * @param result 数据验证的错误返回
+     * @param model
+     * @return
      */
     @RequestMapping(params = "method=savePettyLoanContract")
-    @ResponseBody
-    public ResultModel savePettyLoanContract(@Valid PettyLoanContract contract, BindingResult result, Model model ) {
+    public String savePettyLoanContract(@Valid PettyLoanContract contract, BindingResult result, Model model) {
         try {
-
+            //校验PettyLoanContract对象的数据是否完整
+            if (result.hasErrors() && result.getFieldErrorCount() > 0){
+                Map<String, String> err = new HashMap<String, String>();
+                List<FieldError> list = result.getFieldErrors();
+                for (FieldError error: list) {
+                    err.put(error.getField(), error.getDefaultMessage());
+                }
+                model.addAttribute("errors", err);
+                throw new BaseException("保存或更新合同记录时，数据校验未通过");
+            }
             if (StringUtil.isNullOrEmpty(contract.getSendStatus())) {
                 contract.setSendStatus(0);//设置发送状态,0表示未发送，1表示已发送
                 contract.setInsertDate(new Date());
             }
             contractService.saveOrUpdatePettyLoanContract(contract);
-            return ResultModel.ok();
+            model.addAttribute("msg","1");//返回操作成功标志
+
         } catch (BaseException e) {
             e.printStackTrace();
-            if(result.hasErrors()){
-
-                System.out.println( result.getFieldErrors());
-                System.out.println( result.getGlobalErrors());
-            }
-            return ResultModel.fail();//保存失败
-
+            model.addAttribute("msg","0");//返回操作失败标志
         }
+        model.addAttribute("model", contract);
+        return "business/pettyLoanContract/fillPettyLoanContract";
 
     }
 
@@ -102,10 +109,11 @@ public class PettyLoanContractController {
      * @return 返回小额贷款合同记录
      */
     @RequestMapping(params = "method=findpettyLoanContractById")
-    @ResponseBody
-    public PettyLoanContract findpettyLoanContractById(String id, Model model) throws BaseException {
+    public String findpettyLoanContractById(String id,Model model) throws BaseException {
         PettyLoanContract pettyLoanContract = contractService.findpettyLoanContractById(id);
-        return pettyLoanContract;
+        model.addAttribute("model",pettyLoanContract);
+        model.addAttribute("disabled",true);
+        return "business/pettyLoanContract/fillPettyLoanContract";
     }
 
 
