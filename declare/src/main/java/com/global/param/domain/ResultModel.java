@@ -52,4 +52,11 @@ public class ResultModel extends Entity {
         model.setSucesss(false);
         return  model;
     }
+
+    public  static ResultModel fail(Object obj){
+        ResultModel model =  new ResultModel();
+        model.setSucesss(false);
+        model.setEntity(obj);
+        return  model;
+    }
 }

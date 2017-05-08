@@ -12,7 +12,9 @@ public interface PettyLoanContractService {
 
     PageBean findPettyLoanContractByDate(String startDate, String endDate, PageBean pageBean) throws BaseException;
 
-    PettyLoanContract findpettyLoanContractById(String id) throws BaseException;
+    PettyLoanContract findPettyLoanContractById(String id) throws BaseException;
 
     PageBean findPettyLoanContractBySendStatus(Integer sendStatus, String insertStartDate, String insertEndDate, PageBean pageBean) throws BaseException;
+
+    PettyLoanContract findPettyLoanContractByWorkInfoId(String id) throws BaseException;
 }

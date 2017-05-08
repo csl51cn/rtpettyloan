@@ -120,7 +120,9 @@
 	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basenames">
 			<list>
-				<value>messages</value>
+				<!--此处无错误，idea报红-->
+				<value>classpath:messages</value>
+				<value>classpath:org/hibernate/validator/ValidationMessages</value>
 			</list>
 		</property>
 		<property name="useCodeAsDefaultMessage" value="false"/>
