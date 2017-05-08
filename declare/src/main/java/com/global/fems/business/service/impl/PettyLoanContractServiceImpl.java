@@ -49,12 +49,13 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
      * @param id
      * @return
      */
-    public PettyLoanContract findpettyLoanContractById(String id) throws BaseException {
-        return pettyLoanContractDao.findpettyLoanContractById(id);
+    public PettyLoanContract findPettyLoanContractById(String id) throws BaseException {
+        return pettyLoanContractDao.findPettyLoanContractById(id);
     }
 
     /**
-     * @param sendStatus
+     * 根据申报状态查询小额贷款合同记录
+     * @param sendStatus 申报状态0:未申报，1：已申报
      * @param insertStartDate
      * @param insertEndDate
      * @param pageBean
@@ -62,5 +63,15 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
      */
     public PageBean findPettyLoanContractBySendStatus(Integer sendStatus, String insertStartDate, String insertEndDate, PageBean pageBean) throws BaseException {
         return pettyLoanContractDao.findPettyLoanContractBySendStatus(sendStatus, insertStartDate, insertEndDate, pageBean);
+    }
+
+    /**
+     * 根据业务数据id查询小额贷款合同
+     * @param id
+     * @return
+     */
+    public PettyLoanContract findPettyLoanContractByWorkInfoId(String id) throws BaseException {
+
+        return pettyLoanContractDao.findPettyLoanContractByWorkInfoId(id);
     }
 }

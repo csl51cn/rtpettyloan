@@ -2,7 +2,6 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@taglib prefix="ebills" uri="/WEB-INF/tld/dicitem.tld" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -15,23 +14,18 @@
         //点击“手工填写"按钮触发，解除锁定
         function manualFill() {
             $("#fo input[type=text]").removeProp("disabled");
-            $("#loanCate").combogrid({disabled: false});
-            $("#customerType").combogrid({disabled: false});
-            $("#certificateType").combogrid({disabled: false});
-            $("#conCustomerType").combogrid({disabled: false});
-            $("#concertificatetype").combogrid({disabled: false});
-            $("#conFee").numberbox("enable", true);
-            $("#contractAmount").numberbox("enable", true);
         }
 
         //保存记录
         function doSave() {
+
             $("#fo").submit();
         }
 
         $(function () {
+            //保存或更新时根据返回值给出提示
             var msg = "${msg}";
-            if (msg !== null) {
+            if (msg !== "") {
                 if (msg == '1') {
                     $.messager.alert("提示消息", "操作成功", "info");
                 } else if (msg == '0') {
@@ -39,16 +33,72 @@
                 }
             }
 
-            //双击某条数据后，返回详细信息，设置不可编辑状态，点"手动录入"按钮后解除锁定
-            if("${disabled}"){
-                $("#loanCate").combogrid({disabled: false});
-                $("#customerType").combogrid({disabled: false});
-                $("#certificateType").combogrid({disabled: false});
-                $("#conCustomerType").combogrid({disabled: false});
-                $("#concertificatetype").combogrid({disabled: false});
+            //双击某条数据后，返回详细信息，根据返回的值，设置不可编辑状态，点"手动录入"按钮后解除锁定
+            if ("${disabled}") {
                 $("#fo input[type=text]").prop("disabled", "disabled");
             }
+
+            //默认委托人相关项隐藏,如果是查询会数据且贷款类型为委托贷款：530002，展示相关项
+            var loanCate = "${model.loanCate}";
+            if(loanCate == "" || loanCate == "530001") {
+                $("#conFee").parent().hide();
+                $("#conFee").parent().prev("th").hide();
+                $("#conCertificateType").parent().hide();
+                $("#conCertificateType").parent().prev("th").hide();
+                $("#conCertificateNo").parent().hide();
+                $("#conCertificateNo").parent().prev("th").hide();
+                $("#conCustomerType").parent().hide();
+                $("#conCustomerType").parent().prev("th").hide();
+                $("#conCustomerName").parent().hide();
+                $("#conCustomerName").parent().prev("th").hide();
+                $("#fo").prop("action","${basepath}/pettyLoanContract.do?method=savePettyLoanContract");
+            }else if(loanCate == "530002"){
+                $("#conFee").parent().show();
+                $("#conFee").parent().prev("th").show();
+                $("#conCertificateType").parent().show();
+                $("#conCertificateType").parent().prev("th").show();
+                $("#conCertificateNo").parent().show();
+                $("#conCertificateNo").parent().prev("th").show();
+                $("#conCustomerType").parent().show();
+                $("#conCustomerType").parent().prev("th").show();
+                $("#conCustomerName").parent().show();
+                $("#conCustomerName").parent().prev("th").show();
+                $("#fo").prop("action","${basepath}/pettyLoanContract.do?method=saveEntrustPettyLoanContract");
+            }
+
+
         })
+
+        function isEntrustedLoan(value) {
+
+            if (value == "530001") {
+                $("#conFee").parent().hide();
+                $("#conFee").parent().prev("th").hide();
+                $("#conCertificateType").parent().hide();
+                $("#conCertificateType").parent().prev("th").hide();
+                $("#conCertificateNo").parent().hide();
+                $("#conCertificateNo").parent().prev("th").hide();
+                $("#conCustomerType").parent().hide();
+                $("#conCustomerType").parent().prev("th").hide();
+                $("#conCustomerName").parent().hide();
+                $("#conCustomerName").parent().prev("th").hide();
+                $("#fo").prop("action","${basepath}/pettyLoanContract.do?method=savePettyLoanContract");
+            } else if (value == "530002") {
+                $("#conFee").parent().show();
+                $("#conFee").parent().prev("th").show();
+                $("#conCertificateType").parent().show();
+                $("#conCertificateType").parent().prev("th").show();
+                $("#conCertificateNo").parent().show();
+                $("#conCertificateNo").parent().prev("th").show();
+                $("#conCustomerType").parent().show();
+                $("#conCustomerType").parent().prev("th").show();
+                $("#conCustomerName").parent().show();
+                $("#conCustomerName").parent().prev("th").show();
+                $("#fo").prop("action","${basepath}/pettyLoanContract.do?method=saveEntrustPettyLoanContract");
+            }
+        }
+
+
         //检查结束时间是否大于等于开始时间
         function checkEndTime(dateId1, dateId2) {
             var startDate = $("#" + dateId1).val();
@@ -62,15 +112,11 @@
         }
 
         function openBusinessQueryWindow() {
-            //打开窗口时默认查询前五天至当天的数据
-            var today = new Date();//当天日期
-            var temp = today.getTime() - 1000 * 60 * 60 * 24 * 5;//前五天
-            var fiveDaysAgo = new Date(temp);
+
             //初始化业务查询的datagrid
             $("#businessQueryResultTb").datagrid({
                 url: '',
                 singleSelect: true,
-                queryParams: {"startDate": fiveDaysAgo, "endDate": today},
                 pagination: true,
                 pageSize: 15,
                 pageList: [5, 10, 15, 20, 30],
@@ -102,7 +148,7 @@
 
                 onDblClickRow: function (rowIndex, rowData) {
 
-                    queryBusinessById(rowData.id);
+                    queryContractByWorkInfoId(rowData.id);
                     $('#businessQueryWindow').window('close');
                 }
             })
@@ -119,8 +165,10 @@
                 $("#businessCheckMsg").html("结束时间必须晚于开始时间！");
                 return;
             } else {
-                $("#businessQueryResultTb").datagrid({queryParams: form2Json("businessQueryForm"),
-                "url":"${basepath}/pettyLoanContract.do?method=findPettyLoanContractByDate"});
+                $("#businessQueryResultTb").datagrid({
+                    queryParams: form2Json("businessQueryForm"),
+                    "url": "${basepath}/pettyLoanContract.do?method=findPettyLoanContractByDate"
+                });
             }
         }
 
@@ -174,55 +222,23 @@
             return dt.format("yyyy-MM-dd"); //扩展的Date的format方法
         }
 
+        //根据小额贷款合同id查询记录
+        function queryContractByContractId(id) {
+            window.location.href = "${basepath}/pettyLoanContract.do?method=findPettyLoanContractById&id=" + id;
+        }
 
-        function queryBusinessById(id) {
-            window.location.href="${basepath}/pettyLoanContract.do?method=findpettyLoanContractById&id="+id;
-
-            <%--$.ajax({--%>
-                <%--type: "post",--%>
-                <%--url: "${basepath}/pettyLoanContract.do?method=findpettyLoanContractById",--%>
-                <%--data: {"id": id},--%>
-                <%--dataType: "json",--%>
-                <%--success: function (data) {--%>
-                    <%--$("#id").val(data.id);--%>
-                    <%--$("#contractNo").val(data.contractNo);--%>
-                    <%--$("#loanCate").combogrid("setValue", data.loanCate);--%>
-                    <%--$("#customerType").combogrid("setValue", data.customerType);--%>
-                    <%--$("#customerName").val(data.customerName);--%>
-                    <%--$("#certificateType").combogrid("setValue", data.certificateType);--%>
-                    <%--$("#certificateNo").val(data.certificateNo);--%>
-                    <%--$("#conCustomerType").combogrid("setValue", data.conCustomerType);--%>
-                    <%--$("#conCustomerName").val(data.conCustomerName);--%>
-                    <%--$("#conCertificateType").combogrid("setValue", data.conCertificateType);--%>
-                    <%--$("#conCertificateNo").val(data.conCertificateNo);--%>
-                    <%--$("#conFee").val(data.conFee);--%>
-                    <%--$("#contractAmount").val(data.contractAmount);--%>
-                    <%--$("#intRate").val(data.intRate);--%>
-                    <%--$("#contractSignDate").val(formatDatebox(data.contractSignDate));--%>
-
-                    <%--//请求数据成功后，设置不可编辑状态，点"手动录入"按钮后解除锁定--%>
-                    <%--$("#loanCate").combogrid({disabled: false});--%>
-                    <%--$("#customerType").combogrid({disabled: false});--%>
-                    <%--$("#certificateType").combogrid({disabled: false});--%>
-                    <%--$("#conCustomerType").combogrid({disabled: false});--%>
-                    <%--$("#concertificatetype").combogrid({disabled: false});--%>
-                    <%--$("#fo input[type=text]").prop("disabled", "disabled");--%>
-                <%--}--%>
-
-            <%--});--%>
+        //
+        function queryContractByWorkInfoId(id) {
+            window.location.href = "${basepath}/pettyLoanContract.do?method=findPettyLoanContractByWorkInfoId&id=" + id;
         }
 
 
         function openDeclareQueryWindow() {
-            //打开窗口时默认查询前五天至当天的未申报的数据
-            var today = new Date();//当天日期
-            var temp = today.getTime() - 1000 * 60 * 60 * 24 * 5;//前五天
-            var fiveDaysAgo = new Date(temp);
+
             //初始化申报查询的datagrid
             $("#declareQueryResultTb").datagrid({
                 url: '',
                 singleSelect: true,
-                queryParams: {"insertStartDate": fiveDaysAgo, "insertEndDate": today, "sendStatusCode": "0"},
                 pagination: true,
                 pageSize: 15,
                 pageList: [5, 10, 15, 20, 30],
@@ -264,9 +280,9 @@
                     }
                 }
                 ]],
-
+                //
                 onDblClickRow: function (rowIndex, rowData) {
-                    queryBusinessById(rowData.id);
+                    queryContractByContractId(rowData.id);
                     $('#declareQueryWindow').window('close');
                 }
             })
@@ -284,16 +300,27 @@
                 return;
             }
             if (flag) {
-                $("#declareQueryResultTb").datagrid({queryParams: form2Json("declareQueryForm"),
-                    url:"${basepath}/pettyLoanContract.do?method=findPettyLoanContractBySendStatus"});
+                $("#declareQueryResultTb").datagrid({
+                    queryParams: form2Json("declareQueryForm"),
+                    url: "${basepath}/pettyLoanContract.do?method=findPettyLoanContractBySendStatus"
+                });
             }
 
+        }
+        //刷新当前页，
+        function doReset() {
+//            $(':input', '#fo')
+//                .not(':button, :submit, :reset, :hidden')
+//                .val('')
+//                .removeAttr('checked')
+//                .removeAttr('selected');
+            window.location.href="${basepath}/pettyLoanContract.do?method=showPettyLoanContract";
         }
 
     </script>
 </head>
 <body>
-<form id="fo" action="${basepath}/pettyLoanContract.do?method=savePettyLoanContract" method="post">
+<form id="fo" action="" method="post">
 
     <div region="north" style="overflow: hidden;" border="false"
          data-options=" collapsed:false">
@@ -353,7 +380,10 @@
 										{field:'dictName',title:'贷款名称',width:195}
 									]],
 									fitColumns: true,
-									nowrap:false">
+									nowrap:false,
+                                    onChange:function(newValue,oldValue){
+                                          isEntrustedLoan(newValue);
+                                        }">
                         <span class="warning">${errors['loanCate']}</span>
                     </td>
                 </tr>
@@ -410,10 +440,46 @@
                     </td>
                 </tr>
                 <tr>
+                    <th width="15%"><span class="warning">*</span>月利率(‰)</th>
+                    <td width="32%">
+                        <input type="text" id="intRate" name="intRate" style="border:1px solid #95B8E7;
+                        *color:#007fca;width:245px;padding:4px 2px;" value="${model.intRate}" class="easyui-numberbox"
+                               precision="2">
+                        <span class="warning">${errors['intRate']}</span>
+                    </td>
+                    <th width="15%"><span class="warning">*</span>合同签订日期</th>
+                    <td>
+                        <input type="text" id="contractSignDate" name="contractSignDate"
+                               value="<fmt:formatDate pattern="yyyy-MM-dd"
+                                                value="${model.contractSignDate }" /> " onclick="WdatePicker()"
+                               class="inputText"/>
+                        <span class="warning">${errors['contractSignDate']}</span>
+                    </td>
+                </tr>
+                <tr>
+
+                    <th width="15%"><span class="warning">*</span>合同金额(元)</th>
+                    <td width="32%">
+                        <input type="text" id="contractAmount" name="contractAmount" precision="2" style="border:1px solid #95B8E7;
+                        *color:#007fca;width:245px;padding:4px 2px;" value="${model.contractAmount}"
+                               class="easyui-numberbox"/>
+                        <span class="warning">${errors['contractAmount']}</span>
+                    </td>
+                    <span id="conFeeSpan">
+                    <th width="15%"><span class='warning'>*</span>委托人代理费(元)</th>
+                    <td width="32%">
+                        <input type="text" id="conFee" name="conFee" precision="2" style="border:1px solid #95B8E7;
+                        *color:#007fca;width:245px;padding:4px 2px;" value="${model.conFee}" class="easyui-numberbox">
+                        <span class="warning">${errors['conFee']}</span>
+                    </td>
+                    </span>
+                </tr>
+
+                <tr>
                     <th width="15%"><span class='warning'>*</span>委托人类别</th>
                     <td width="32%">
-
-                        <input class="easyui-combogrid" id="conCustomerType" name="conCustomerType" style="width:251px;"
+                        <input class="easyui-combogrid" id="conCustomerType" name="conCustomerType"
+                               style="width:251px;"
                                value="${model.conCustomerType}"
                                data-options="
 									panelWidth: 255,
@@ -459,38 +525,6 @@
                         <input type="text" id="conCertificateNo" name="conCertificateNo"
                                value="${model.conCertificateNo}" class="inputText"/>
                         <span class="warning">${errors['conCertificateNo']}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <th width="15%"><span class='warning'>*</span>委托人代理费(元)</th>
-                    <td width="32%">
-                        <input type="text" id="conFee" name="conFee" precision="2" style="border:1px solid #95B8E7;
-                        *color:#007fca;width:245px;padding:4px 2px;" value="${model.conFee}" class="easyui-numberbox">
-                        <span class="warning">${errors['conFee']}</span>
-                    </td>
-                    <th width="15%"><span class="warning">*</span>合同金额(元)</th>
-                    <td>
-                        <input type="text" id="contractAmount" name="contractAmount" precision="2" style="border:1px solid #95B8E7;
-                        *color:#007fca;width:245px;padding:4px 2px;" value="${model.contractAmount}"
-                               class="easyui-numberbox"/>
-                        <span class="warning">${errors['contractAmount']}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <th width="15%"><span class="warning">*</span>月利率(‰)</th>
-                    <td width="32%">
-                        <input type="text" id="intRate" name="intRate" style="border:1px solid #95B8E7;
-                        *color:#007fca;width:245px;padding:4px 2px;" value="${model.intRate}" class="easyui-numberbox"
-                               precision="2">
-                        <span class="warning">${errors['intRate']}</span>
-                    </td>
-                    <th width="15%"><span class="warning">*</span>合同签订日期</th>
-                    <td>
-                        <input type="text" id="contractSignDate" name="contractSignDate"
-                               value="<fmt:formatDate pattern="yyyy-MM-dd"
-                                                value="${model.contractSignDate }" /> " onclick="WdatePicker()"
-                               class="inputText"/>
-                        <span class="warning">${errors['contractSignDate']}</span>
                     </td>
                 </tr>
                 </tbody>

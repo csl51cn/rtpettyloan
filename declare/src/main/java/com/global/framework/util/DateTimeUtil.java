@@ -128,6 +128,16 @@ public class DateTimeUtil {
         return (new SimpleDateFormat("EEEE")).format(c.getTime());
     }
 
+    //修改日期，默认yyyy-MM-dd格式
+    public static String dayAdd(String date, Integer days) {
+
+        Date strToDate = DateTimeUtil.getStrToDate(date, defaultDatePattern);
+        Calendar endTime = Calendar.getInstance();
+        endTime.setTime(strToDate);
+        endTime.add(endTime.DATE, days);
+        date = DateTimeUtil.getDateToStr(endTime.getTime(), defaultDatePattern);
+        return date;
+    }
     public static void main(String[] args) {
         System.out.println(getNowDateTime("yyyy年M月dd日"));
         System.out.println(getWeek(getNowDateTime("yyyy-M-dd")));

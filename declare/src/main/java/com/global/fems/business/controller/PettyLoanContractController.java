@@ -2,21 +2,20 @@ package com.global.fems.business.controller;
 
 import com.global.fems.business.domain.PettyLoanContract;
 import com.global.fems.business.service.PettyLoanContractService;
+import com.global.fems.interfaces.validator.First;
+import com.global.fems.interfaces.validator.Second;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 import com.global.framework.util.StringUtil;
-import com.global.param.domain.ResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.validation.Valid;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -46,14 +45,50 @@ public class PettyLoanContractController {
     }
 
     /**
-     *保存或更新小额贷款合同
+     *保存或更新小额贷款合同---委托贷款
+     * @param contract 从页面接收参数，填充实体类
+     * @param result 数据验证的错误返回
+     * @param model
+     * @return
+     */
+    @RequestMapping(params = "method=saveEntrustPettyLoanContract")
+    public String saveEntrustPettyLoanContract(@Validated( { First.class ,Second.class}) PettyLoanContract contract, BindingResult result, Model model) {
+        try {
+            //校验PettyLoanContract对象的数据是否完整
+            if (result.hasErrors() && result.getFieldErrorCount() > 0){
+                Map<String, String> err = new HashMap<String, String>();
+                List<FieldError> list = result.getFieldErrors();
+                for (FieldError error: list) {
+                    err.put(error.getField(), error.getDefaultMessage());
+                }
+                model.addAttribute("errors", err);
+                throw new BaseException("保存或更新合同记录时，数据校验未通过");
+            }
+            if (StringUtil.isNullOrEmpty(contract.getSendStatus())) {
+                contract.setSendStatus(0);//设置发送状态,0表示未发送，1表示已发送
+                contract.setInsertDate(new Date());
+            }
+            contractService.saveOrUpdatePettyLoanContract(contract);
+            model.addAttribute("msg","1");//返回操作成功标志
+
+        } catch (BaseException e) {
+            e.printStackTrace();
+            model.addAttribute("msg","0");//返回操作失败标志
+        }
+        model.addAttribute("model", contract);
+        return "business/pettyLoanContract/fillPettyLoanContract";
+
+    }
+
+    /**
+     *保存或更新小额贷款合同---自营贷款
      * @param contract 从页面接收参数，填充实体类
      * @param result 数据验证的错误返回
      * @param model
      * @return
      */
     @RequestMapping(params = "method=savePettyLoanContract")
-    public String savePettyLoanContract(@Valid PettyLoanContract contract, BindingResult result, Model model) {
+    public String savePettyLoanContract(@Validated( { First.class }) PettyLoanContract contract, BindingResult result, Model model) {
         try {
             //校验PettyLoanContract对象的数据是否完整
             if (result.hasErrors() && result.getFieldErrorCount() > 0){
@@ -103,14 +138,29 @@ public class PettyLoanContractController {
     }
 
     /**
-     * 根据id查询小额贷款合同记录
+     * 根据小额贷款合同记录id记录
      *
-     * @param id 小额贷款合同主键
+     * @param id 小额贷款合同记录主键
      * @return 返回小额贷款合同记录
      */
-    @RequestMapping(params = "method=findpettyLoanContractById")
-    public String findpettyLoanContractById(String id,Model model) throws BaseException {
-        PettyLoanContract pettyLoanContract = contractService.findpettyLoanContractById(id);
+    @RequestMapping(params = "method=findPettyLoanContractById")
+    public String findPettyLoanContractById(String id, Model model) throws BaseException {
+        PettyLoanContract pettyLoanContract = contractService.findPettyLoanContractById(id);
+        model.addAttribute("model",pettyLoanContract);
+        model.addAttribute("disabled",true);
+        return "business/pettyLoanContract/fillPettyLoanContract";
+    }
+    /**
+     * 根据业务数据的id查询合同记录
+     *
+     * @param id 业务数据的id主键
+     * @return 返回小额贷款合同记录
+     */
+    @RequestMapping(params = "method=findPettyLoanContractByWorkInfoId")
+    public String findPettyLoanContractByWorkInfoId(String id,Model model) throws BaseException {
+        PettyLoanContract pettyLoanContract = contractService.findPettyLoanContractByWorkInfoId(id);
+        //当前查询的业务数据都是自营贷款，委托贷款未走业务系统，设置贷款类型为自营贷款
+        pettyLoanContract.setLoanCate("");
         model.addAttribute("model",pettyLoanContract);
         model.addAttribute("disabled",true);
         return "business/pettyLoanContract/fillPettyLoanContract";

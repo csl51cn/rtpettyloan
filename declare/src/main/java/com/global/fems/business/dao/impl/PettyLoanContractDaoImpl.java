@@ -3,11 +3,15 @@ package com.global.fems.business.dao.impl;
 import com.global.fems.business.dao.PettyLoanContractDao;
 import com.global.fems.business.domain.PettyLoanContract;
 import com.global.framework.dbutils.support.BaseDaoSupport;
+import com.global.framework.dbutils.support.DAOException;
 import com.global.framework.dbutils.support.Entity;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 import com.global.framework.util.DateTimeUtil;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -21,6 +25,7 @@ import java.util.List;
  */
 @Repository("PettyLoanContractDao")
 public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoanContractDao {
+    private static final Logger logger = LoggerFactory.getLogger(PettyLoanContractDaoImpl.class);
 
 
     /**
@@ -35,7 +40,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
 
 
     /**
-     * 根据起止时间分页查询贷款合同
+     * 根据签约时间的指定时间段从表Data_WorkInfo分页查询业务数据
      *
      * @param startDate
      * @param endDate
@@ -43,12 +48,14 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
      * @return
      */
     public PageBean findPettyLoanContractByDate(String startDate, String endDate, PageBean pageBean) throws BaseException {
-
-        StringBuilder sql = new StringBuilder("SELECT id,contractno,customername,contractamount,contractsigndate FROM DC_PETTY_LOAN_CONTRACT WHERE 1=1 ");
+       // SELECT id, 合同编号 as contractno, 客户名称 as customername,  批核金额 as contractamount,签约时间 as contractsigndate FROM Data_WorkInfo
+        StringBuilder sql = new StringBuilder("SELECT id, 合同编号 as contractno, 客户名称 as customername,  批核金额 as contractamount,签约时间 as contractsigndate FROM Data_WorkInfo WHERE 1=1 ");
         List<Object> list = new ArrayList<Object>();
         if (StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
-            sql.append(" AND contractsigndate >= ? AND contractsigndate <= ?");
+            sql.append(" AND 签约时间 >= ? AND 签约时间 <= ?");
             list.add(startDate);
+            //传入截至时间为yyyy-MM-dd格式字符串，数据库中时间格式是datetime，将截至时间+1天，避免当天数据查询不到
+            endDate = DateTimeUtil.dayAdd(endDate,1);
             list.add(endDate);
         }
         PageBean forPage = findForPage(sql.toString(), pageBean, PettyLoanContract.class, list);
@@ -56,6 +63,8 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
 
 
     }
+
+
 
     /**
      * 分页查询
@@ -72,26 +81,32 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
             sql = sql + " ORDER BY " + pageBean.getSort() + " " + pageBean.getOrder();
             flag = false;
         }
-
-        //查询总记录数
-        Long totalRows = getTotalRows(sql.toString(), args.toArray());
-        //查询记录
-        List dataList = null;
-        if (totalRows.longValue() > 0L) {
-            pageBean.setTotalRows(totalRows);
-            Integer startIndex = Integer.valueOf((pageBean.getPage().intValue() - 1) * pageBean.getRows().intValue());
-            if (flag) {
-                sql = sql + " ORDER BY contractsigndate  OFFSET ? row fetch next ? rows only";
-            } else {
-                sql = sql + " OFFSET ? row fetch next ? rows only";
+        logger.debug("Executing SQL query [{}], params: [{}]", sql, args);
+        try {
+            //查询总记录数
+            Long totalRows = getTotalRows(sql.toString(), args.toArray());
+            //查询记录
+            if (totalRows.longValue() > 0L) {
+                pageBean.setTotalRows(totalRows);
+                Integer startIndex = Integer.valueOf((pageBean.getPage().intValue() - 1) * pageBean.getRows().intValue());
+                if (flag) {
+                    sql = sql + " ORDER BY contractsigndate  OFFSET ? row fetch next ? rows only";
+                } else {
+                    sql = sql + " OFFSET ? row fetch next ? rows only";
+                }
+                args.add(startIndex);
+                args.add(pageBean.getRows());
+                logger.debug("Executing SQL query [{}], params: [{}]", sql, args);
+                List dataList = super.getJdbcTemplate().query(sql, args.toArray(), new BeanPropertyRowMapper(clazz));
+                pageBean.setDataList(dataList);
             }
-            args.add(startIndex);
-            args.add(pageBean.getRows());
-            dataList = super.getJdbcTemplate().query(sql, args.toArray(), new BeanPropertyRowMapper(clazz));
-        }
-        pageBean.setDataList(dataList);
 
-        return pageBean;
+            return pageBean;
+
+        } catch (DataAccessException e) {
+            logger.error("Executing SQL query error: " + e.getMessage(), e);
+            throw new DAOException("Executing SQL query error: " + e.getMessage(), e);
+        }
     }
 
     /**
@@ -108,13 +123,14 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
     }
 
     /**
-     * 根据id查询合同记录
+     * 根据id从表DC_PETTY_LOAN_CONTRACT查询合同记录
      *
      * @param id
      * @return
      */
-    public PettyLoanContract findpettyLoanContractById(String id) throws BaseException {
+    public PettyLoanContract findPettyLoanContractById(String id) throws BaseException {
         String sql = "select * from DC_PETTY_LOAN_CONTRACT where id = ? ";
+
         List list = super.getJdbcTemplate().query(sql, new Object[]{id}, new BeanPropertyRowMapper(PettyLoanContract.class));
         if (list != null && list.size() > 0) {
             return (PettyLoanContract) list.get(0);
@@ -124,7 +140,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
 
 
     /**
-     * 根据申报状态查询小额贷款合同记录
+     * 根据申报状态从表DC_PETTY_LOAN_CONTRACT查询小额贷款合同记录
      *
      * @param sendStatus      0表示未申报，1表示已申报
      * @param insertStartDate
@@ -143,18 +159,36 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
         if (StringUtils.isNotEmpty(insertStartDate) && StringUtils.isNotEmpty(insertEndDate)) {
             sql.append(" AND insertdate BETWEEN ? AND ?");
             list.add(insertStartDate);
-            //传入截至时间为yyyy-MM-dd格式字符串，将截至时间+1天，避免当天数据查询不到
-            Date strToDate = DateTimeUtil.getStrToDate(insertEndDate, "yyyy-MM-dd");
-            Calendar endDate = Calendar.getInstance();
-            endDate.setTime(strToDate);
-            endDate.add(endDate.DATE, 1);
-            insertEndDate = DateTimeUtil.getDateToStr(endDate.getTime(),"yyyy-MM-dd");
+            //传入截至时间为yyyy-MM-dd格式字符串，数据库中时间格式是datetime，将截至时间+1天，避免当天数据查询不到
+            insertEndDate = DateTimeUtil.dayAdd(insertEndDate,1);
             list.add(insertEndDate);
         }
 
         PageBean forPage = findForPage(sql.toString(), pageBean, PettyLoanContract.class, list);
 
         return forPage;
+    }
+
+    /**
+     * 根据业务数据id查询小额贷款合同
+     * @param id  业务数据id
+     * @return
+     * @throws BaseException
+     */
+    public PettyLoanContract findPettyLoanContractByWorkInfoId(String id) throws BaseException {
+        String sql = "select w.合同编号 as contractno, w.客户名称 as customername , w.批核金额 " +
+                "as contractamount , w.签约时间 as contractsigndate , w.利率 as intrate ," +
+                " ISNULL ( case w.授信主体类型 WHEN 1 then m.身份证号码 when 2 then c.组织机构代码证号 ,'') AS " +
+                "certificateno,ISNULL ( case w.授信主体类型 WHEN 1 then 480001 when 2 then 480002 ,'') AS " +
+                "customertype from Data_WorkInfo w LEFT JOIN Data_CompanyInfo c ON w.CompanyId = c.Id " +
+                "LEFT JOIN Data_MemberInfo m ON w.MemberId = m.ID WHERE w.id = ?";
+
+        List list = super.getJdbcTemplate().query(sql, new Object[]{id}, new BeanPropertyRowMapper(PettyLoanContract.class));
+        if (list != null && list.size() > 0) {
+            return (PettyLoanContract) list.get(0);
+        }
+        return null;
+
     }
 
 
