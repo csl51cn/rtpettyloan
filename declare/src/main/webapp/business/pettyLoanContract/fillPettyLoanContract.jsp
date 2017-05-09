@@ -51,7 +51,7 @@
                 $("#conCustomerType").parent().prev("th").hide();
                 $("#conCustomerName").parent().hide();
                 $("#conCustomerName").parent().prev("th").hide();
-                $("#fo").prop("action","${basepath}/pettyLoanContract.do?method=savePettyLoanContract");
+                $("#fo").prop("action","${basePath}/pettyLoanContract.do?method=savePettyLoanContract");
             }else if(loanCate == "530002"){
                 $("#conFee").parent().show();
                 $("#conFee").parent().prev("th").show();
@@ -63,7 +63,7 @@
                 $("#conCustomerType").parent().prev("th").show();
                 $("#conCustomerName").parent().show();
                 $("#conCustomerName").parent().prev("th").show();
-                $("#fo").prop("action","${basepath}/pettyLoanContract.do?method=saveEntrustPettyLoanContract");
+                $("#fo").prop("action","${basePath}/pettyLoanContract.do?method=saveEntrustPettyLoanContract");
             }
 
 
@@ -82,7 +82,7 @@
                 $("#conCustomerType").parent().prev("th").hide();
                 $("#conCustomerName").parent().hide();
                 $("#conCustomerName").parent().prev("th").hide();
-                $("#fo").prop("action","${basepath}/pettyLoanContract.do?method=savePettyLoanContract");
+                $("#fo").prop("action","${basePath}/pettyLoanContract.do?method=savePettyLoanContract");
             } else if (value == "530002") {
                 $("#conFee").parent().show();
                 $("#conFee").parent().prev("th").show();
@@ -94,7 +94,7 @@
                 $("#conCustomerType").parent().prev("th").show();
                 $("#conCustomerName").parent().show();
                 $("#conCustomerName").parent().prev("th").show();
-                $("#fo").prop("action","${basepath}/pettyLoanContract.do?method=saveEntrustPettyLoanContract");
+                $("#fo").prop("action","${basePath}/pettyLoanContract.do?method=saveEntrustPettyLoanContract");
             }
         }
 
@@ -167,7 +167,7 @@
             } else {
                 $("#businessQueryResultTb").datagrid({
                     queryParams: form2Json("businessQueryForm"),
-                    "url": "${basepath}/pettyLoanContract.do?method=findPettyLoanContractByDate"
+                    "url": "${basePath}/pettyLoanContract.do?method=findPettyLoanContractByDate"
                 });
             }
         }
@@ -224,12 +224,12 @@
 
         //根据小额贷款合同id查询记录
         function queryContractByContractId(id) {
-            window.location.href = "${basepath}/pettyLoanContract.do?method=findPettyLoanContractById&id=" + id;
+            window.location.href = "${basePath}/pettyLoanContract.do?method=findPettyLoanContractById&id=" + id;
         }
 
         //
         function queryContractByWorkInfoId(id) {
-            window.location.href = "${basepath}/pettyLoanContract.do?method=findPettyLoanContractByWorkInfoId&id=" + id;
+            window.location.href = "${basePath}/pettyLoanContract.do?method=findPettyLoanContractByWorkInfoId&id=" + id;
         }
 
 
@@ -302,7 +302,7 @@
             if (flag) {
                 $("#declareQueryResultTb").datagrid({
                     queryParams: form2Json("declareQueryForm"),
-                    url: "${basepath}/pettyLoanContract.do?method=findPettyLoanContractBySendStatus"
+                    url: "${basePath}/pettyLoanContract.do?method=findPettyLoanContractBySendStatus"
                 });
             }
 
@@ -314,7 +314,7 @@
 //                .val('')
 //                .removeAttr('checked')
 //                .removeAttr('selected');
-            window.location.href="${basepath}/pettyLoanContract.do?method=showPettyLoanContract";
+            window.location.href="${basePath}/pettyLoanContract.do?method=showPettyLoanContract";
         }
 
     </script>

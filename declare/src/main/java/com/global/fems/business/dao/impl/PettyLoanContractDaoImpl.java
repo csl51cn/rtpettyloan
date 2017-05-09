@@ -49,7 +49,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
      */
     public PageBean findPettyLoanContractByDate(String startDate, String endDate, PageBean pageBean) throws BaseException {
        // SELECT id, 合同编号 as contractno, 客户名称 as customername,  批核金额 as contractamount,签约时间 as contractsigndate FROM Data_WorkInfo
-        StringBuilder sql = new StringBuilder("SELECT id, 合同编号 as contractno, 客户名称 as customername,  批核金额 as contractamount,签约时间 as contractsigndate FROM Data_WorkInfo WHERE 1=1 ");
+        StringBuilder sql = new StringBuilder("SELECT id, 合同编号 as contractno, 客户名称 as customername,  批核金额 as contractamount,签约时间 as contractsigndate FROM Data_WorkInfo WHERE 1=1 AND 是否放款 = 485 ");
         List<Object> list = new ArrayList<Object>();
         if (StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
             sql.append(" AND 签约时间 >= ? AND 签约时间 <= ?");
@@ -176,13 +176,42 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
      * @throws BaseException
      */
     public PettyLoanContract findPettyLoanContractByWorkInfoId(String id) throws BaseException {
-        String sql = "select w.合同编号 as contractno, w.客户名称 as customername , w.批核金额 " +
-                "as contractamount , w.签约时间 as contractsigndate , w.利率 as intrate ," +
-                " ISNULL ( case w.授信主体类型 WHEN 1 then m.身份证号码 when 2 then c.组织机构代码证号 ,'') AS " +
-                "certificateno,ISNULL ( case w.授信主体类型 WHEN 1 then 480001 when 2 then 480002 ,'') AS " +
-                "customertype from Data_WorkInfo w LEFT JOIN Data_CompanyInfo c ON w.CompanyId = c.Id " +
-                "LEFT JOIN Data_MemberInfo m ON w.MemberId = m.ID WHERE w.id = ?";
-
+        String sql = "SELECT w.合同编号 AS contractno,w.客户名称 AS customername," +
+                "w.批核金额 AS contractamount,w.签约时间 AS contractsigndate," +
+                "w.利率 AS intrate," +
+                "ISNULL(" +
+                "CASE w.授信主体类型 " +
+                "WHEN 1 THEN " +
+                " m.身份证号码 " +
+                "WHEN 2 THEN " +
+                " c.组织机构代码证号 " +
+                " END, " +
+                " '' " +
+                " ) AS certificateno, " +
+                "  ISNULL( " +
+                "  CASE w.授信主体类型 " +
+                "  WHEN 1 THEN " +
+                "    480001 " +
+                "  WHEN 2 THEN " +
+                "    480002 " +
+                "  END, " +
+                "  '' " +
+                " ) AS customertype " +",  " +
+                "  ISNULL(  " +
+                "    CASE w.授信主体类型  " +
+                "    WHEN 1 THEN  " +
+                "      150001  " +
+                "    WHEN 2 THEN  " +
+                "      150002  " +
+                "    END,  " +
+                "    ''  " +
+                "  ) AS certificateType " +
+                "FROM " +
+                " Data_WorkInfo w " +
+                "LEFT JOIN Data_CompanyInfo c ON w.CompanyId = c.Id " +
+                "LEFT JOIN Data_MemberInfo m ON w.MemberId = m.ID " +
+                "WHERE w.id = ? " ;
+        logger.debug("Executing SQL query [{}], params: [{}]", sql, id);
         List list = super.getJdbcTemplate().query(sql, new Object[]{id}, new BeanPropertyRowMapper(PettyLoanContract.class));
         if (list != null && list.size() > 0) {
             return (PettyLoanContract) list.get(0);

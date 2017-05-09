@@ -53,30 +53,8 @@ public class PettyLoanContractController {
      */
     @RequestMapping(params = "method=saveEntrustPettyLoanContract")
     public String saveEntrustPettyLoanContract(@Validated( { First.class ,Second.class}) PettyLoanContract contract, BindingResult result, Model model) {
-        try {
-            //校验PettyLoanContract对象的数据是否完整
-            if (result.hasErrors() && result.getFieldErrorCount() > 0){
-                Map<String, String> err = new HashMap<String, String>();
-                List<FieldError> list = result.getFieldErrors();
-                for (FieldError error: list) {
-                    err.put(error.getField(), error.getDefaultMessage());
-                }
-                model.addAttribute("errors", err);
-                throw new BaseException("保存或更新合同记录时，数据校验未通过");
-            }
-            if (StringUtil.isNullOrEmpty(contract.getSendStatus())) {
-                contract.setSendStatus(0);//设置发送状态,0表示未发送，1表示已发送
-                contract.setInsertDate(new Date());
-            }
-            contractService.saveOrUpdatePettyLoanContract(contract);
-            model.addAttribute("msg","1");//返回操作成功标志
 
-        } catch (BaseException e) {
-            e.printStackTrace();
-            model.addAttribute("msg","0");//返回操作失败标志
-        }
-        model.addAttribute("model", contract);
-        return "business/pettyLoanContract/fillPettyLoanContract";
+        return saveOrUpdate(contract, result, model);
 
     }
 
@@ -89,6 +67,11 @@ public class PettyLoanContractController {
      */
     @RequestMapping(params = "method=savePettyLoanContract")
     public String savePettyLoanContract(@Validated( { First.class }) PettyLoanContract contract, BindingResult result, Model model) {
+        return saveOrUpdate(contract, result, model);
+
+    }
+
+    private String saveOrUpdate( PettyLoanContract contract, BindingResult result, Model model) {
         try {
             //校验PettyLoanContract对象的数据是否完整
             if (result.hasErrors() && result.getFieldErrorCount() > 0){
@@ -113,7 +96,6 @@ public class PettyLoanContractController {
         }
         model.addAttribute("model", contract);
         return "business/pettyLoanContract/fillPettyLoanContract";
-
     }
 
     /**
@@ -159,8 +141,8 @@ public class PettyLoanContractController {
     @RequestMapping(params = "method=findPettyLoanContractByWorkInfoId")
     public String findPettyLoanContractByWorkInfoId(String id,Model model) throws BaseException {
         PettyLoanContract pettyLoanContract = contractService.findPettyLoanContractByWorkInfoId(id);
-        //当前查询的业务数据都是自营贷款，委托贷款未走业务系统，设置贷款类型为自营贷款
-        pettyLoanContract.setLoanCate("");
+        //当前查询的业务数据都是自营贷款，委托贷款未走业务系统，设置贷款类型为自营贷款530001
+        pettyLoanContract.setLoanCate("530001");
         model.addAttribute("model",pettyLoanContract);
         model.addAttribute("disabled",true);
         return "business/pettyLoanContract/fillPettyLoanContract";
