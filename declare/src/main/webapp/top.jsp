@@ -35,7 +35,7 @@ function setTitle(s, url) {
 <body style="background:url(resources/images/topbg.gif) repeat-x;">
 
     <div class="topleft">
-    <a ><img src="resources/images/logo.png" /></a>
+    <a ></a>
     </div>
     <div class="topright">    
     <ul>
