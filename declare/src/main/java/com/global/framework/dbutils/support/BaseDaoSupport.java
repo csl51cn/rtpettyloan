@@ -584,9 +584,9 @@ public abstract class BaseDaoSupport {
         try {
             StringBuilder e = new StringBuilder(sql.length() + 512);
             e.append("SELECT RRRRR_.* ");
-            e.append("FROM (SELECT ROW_.*, ROWNUM ROWNUM_ FROM (");
+            e.append("FROM (SELECT * FROM (SELECT ROW_.*, row_number () OVER (ORDER BY (SELECT 1)) AS ROWNUM FROM (");
             e.append(sql);
-            e.append(") ROW_ ");
+            e.append(") ROW_) ROW__ ");
             if(endIndex.intValue() > 0) {
                 e.append("WHERE ROWNUM <= ").append(endIndex);
             }
