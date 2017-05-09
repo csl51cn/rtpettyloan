@@ -505,6 +505,7 @@ public abstract class BaseDaoSupport {
                 Integer startIndex = Integer.valueOf((page.getPage().intValue() - 1) * page.getRows().intValue());
                 Integer endIndex = Integer.valueOf(page.getPage().intValue() * page.getRows().intValue());
                 sql = this.getPageSql(sql, startIndex, endIndex);
+                logger.debug("Executing SQL query [{}], params: [{}]", sql, args);
                 List dataList = this.jdbcTemplate.query(sql, args, new BeanPropertyRowMapper(clazz));
                 e = new PageBean(totalRows, dataList, page.getPage(), page.getRows());
             } else {
@@ -593,7 +594,7 @@ public abstract class BaseDaoSupport {
 
             e.append(") RRRRR_ ");
             if(startIndex.intValue() > 0) {
-                e.append("WHERE RRRRR_.ROWNUM_ >= ").append(startIndex.intValue() + 1);
+                e.append("WHERE RRRRR_.ROWNUM  >= ").append(startIndex.intValue() + 1);
             }
 
             return e.toString();

@@ -52,49 +52,31 @@
             //默认委托人相关项隐藏,如果是查询会数据且贷款类型为委托贷款：530002，展示相关项
             var loanCate = "${model.loanCate}";
             if (loanCate == "" || loanCate == "530001") {
-                $("#conFee").parent().hide();
-                $("#conFee").parent().prev("th").hide();
-                $("#conCertificateType").parent().hide();
-                $("#conCertificateType").parent().prev("th").hide();
-                $("#conCertificateNo").parent().hide();
-                $("#conCertificateNo").parent().prev("th").hide();
-                $("#conCustomerType").parent().hide();
-                $("#conCustomerType").parent().prev("th").hide();
-                $("#conCustomerName").parent().hide();
-                $("#conCustomerName").parent().prev("th").hide();
+                setDisplayStatus(false);
                 $("#fo").prop("action", "${basePath}/pettyLoanContract.do?method=savePettyLoanContract");
             } else if (loanCate == "530002") {
-                $("#conFee").parent().show();
-                $("#conFee").parent().prev("th").show();
-                $("#conCertificateType").parent().show();
-                $("#conCertificateType").parent().prev("th").show();
-                $("#conCertificateNo").parent().show();
-                $("#conCertificateNo").parent().prev("th").show();
-                $("#conCustomerType").parent().show();
-                $("#conCustomerType").parent().prev("th").show();
-                $("#conCustomerName").parent().show();
-                $("#conCustomerName").parent().prev("th").show();
+                setDisplayStatus(true);
                 $("#fo").prop("action", "${basePath}/pettyLoanContract.do?method=saveEntrustPettyLoanContract");
             }
 
 
         })
 
+        //判断是否为委托贷款，530001代表自营贷款，530002代表委托贷款
         function isEntrustedLoan(value) {
-
             if (value == "530001") {
-                $("#conFee").parent().hide();
-                $("#conFee").parent().prev("th").hide();
-                $("#conCertificateType").parent().hide();
-                $("#conCertificateType").parent().prev("th").hide();
-                $("#conCertificateNo").parent().hide();
-                $("#conCertificateNo").parent().prev("th").hide();
-                $("#conCustomerType").parent().hide();
-                $("#conCustomerType").parent().prev("th").hide();
-                $("#conCustomerName").parent().hide();
-                $("#conCustomerName").parent().prev("th").hide();
+                setDisplayStatus(false);
                 $("#fo").prop("action", "${basePath}/pettyLoanContract.do?method=savePettyLoanContract");
             } else if (value == "530002") {
+                setDisplayStatus(true);
+                $("#fo").prop("action", "${basePath}/pettyLoanContract.do?method=saveEntrustPettyLoanContract");
+            }
+        }
+
+        //设置委托贷款相关项的显示状态
+        function  setDisplayStatus(flag){
+            //true 代表显示，false 代表隐藏
+            if(flag){
                 $("#conFee").parent().show();
                 $("#conFee").parent().prev("th").show();
                 $("#conCertificateType").parent().show();
@@ -105,10 +87,21 @@
                 $("#conCustomerType").parent().prev("th").show();
                 $("#conCustomerName").parent().show();
                 $("#conCustomerName").parent().prev("th").show();
-                $("#fo").prop("action", "${basePath}/pettyLoanContract.do?method=saveEntrustPettyLoanContract");
+            }else{
+                $("#conFee").parent().hide();
+                $("#conFee").parent().prev("th").hide();
+                $("#conCertificateType").parent().hide();
+                $("#conCertificateType").parent().prev("th").hide();
+                $("#conCertificateNo").parent().hide();
+                $("#conCertificateNo").parent().prev("th").hide();
+                $("#conCustomerType").parent().hide();
+                $("#conCustomerType").parent().prev("th").hide();
+                $("#conCustomerName").parent().hide();
+                $("#conCustomerName").parent().prev("th").hide();
             }
-        }
 
+
+        }
 
         //检查结束时间是否大于等于开始时间
         function checkEndTime(dateId1, dateId2) {

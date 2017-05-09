@@ -58,7 +58,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
             list.add(startDate);
             list.add(endDate);
         }
-        PageBean forPage = findForPage(sql.toString(), pageBean, PettyLoanContract.class, list);
+        PageBean forPage = super.findForPage(sql.toString(), list.toArray(), pageBean, PettyLoanContract.class);
         return forPage;
 
 
@@ -164,8 +164,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
             list.add(insertEndDate);
         }
 
-        PageBean forPage = findForPage(sql.toString(), pageBean, PettyLoanContract.class, list);
-
+        PageBean forPage = super.findForPage(sql.toString(), list.toArray(), pageBean, PettyLoanContract.class);
         return forPage;
     }
 
