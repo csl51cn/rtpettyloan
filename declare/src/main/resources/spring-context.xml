@@ -28,7 +28,7 @@
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
 		scope="singleton" destroy-method="close">
 		<property name="driverClass" value="${datasource.driverClassName}"/>
-		<property name="jdbcUrl" value="${datasource.url}" />
+		<property name="jdbcUrl" value="jdbc:sqlserver://10.200.1.20:1433;DatabaseName=AutoSet_RunTongTest" />
 		<property name="user" value="${datasource.username}" />
 		<property name="password" value="${datasource.password}"/>
 

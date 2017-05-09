@@ -7,6 +7,7 @@ import com.global.fems.interfaces.validator.Second;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 import com.global.framework.util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -99,7 +100,7 @@ public class PettyLoanContractController {
     }
 
     /**
-     * 根据合同签订的时间段查询小额贷款合同记录
+     * 根据放款时间的时间段查询小额贷款合同记录
      *
      * @param startDate 合同签订时间的起始时间
      * @param endDate   合同签订时间的终止时间
@@ -133,16 +134,15 @@ public class PettyLoanContractController {
         return "business/pettyLoanContract/fillPettyLoanContract";
     }
     /**
-     * 根据业务数据的id查询合同记录
+     * 根据业务数据的date_id从表Data_WorkInfo查询合同记录
      *
-     * @param id 业务数据的id主键
+     * @param id 业务数据的date_id
      * @return 返回小额贷款合同记录
      */
     @RequestMapping(params = "method=findPettyLoanContractByWorkInfoId")
     public String findPettyLoanContractByWorkInfoId(String id,Model model) throws BaseException {
         PettyLoanContract pettyLoanContract = contractService.findPettyLoanContractByWorkInfoId(id);
-        //当前查询的业务数据都是自营贷款，委托贷款未走业务系统，设置贷款类型为自营贷款530001
-        pettyLoanContract.setLoanCate("530001");
+
         model.addAttribute("model",pettyLoanContract);
         model.addAttribute("disabled",true);
         return "business/pettyLoanContract/fillPettyLoanContract";
