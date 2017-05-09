@@ -61,7 +61,7 @@ public class UserDaoImpl extends BaseDaoSupport implements UserDao {
 	public PageBean queryUserForPage(User user, PageBean page)
 			throws BaseException {
 		StringBuilder sql = new StringBuilder(256);
-		sql.append("SELECT t.*,"
+		sql.append("SELECT TOP (100) PERCENT t.*,"
 				+ "(select orgName from dc_sys_org where orgId=t.orgId) orgName "
 				+ "from dc_sys_user t WHERE 1 = 1 ");
 		List<Object> args = new ArrayList<Object>();
