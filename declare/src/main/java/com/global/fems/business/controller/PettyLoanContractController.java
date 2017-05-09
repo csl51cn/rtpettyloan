@@ -159,8 +159,8 @@ public class PettyLoanContractController {
     @RequestMapping(params = "method=findPettyLoanContractByWorkInfoId")
     public String findPettyLoanContractByWorkInfoId(String id,Model model) throws BaseException {
         PettyLoanContract pettyLoanContract = contractService.findPettyLoanContractByWorkInfoId(id);
-        //当前查询的业务数据都是自营贷款，委托贷款未走业务系统，设置贷款类型为自营贷款
-        pettyLoanContract.setLoanCate("");
+        //当前查询的业务数据都是自营贷款，委托贷款未走业务系统，设置贷款类型为自营贷款530001
+        pettyLoanContract.setLoanCate("530001");
         model.addAttribute("model",pettyLoanContract);
         model.addAttribute("disabled",true);
         return "business/pettyLoanContract/fillPettyLoanContract";
