@@ -40,7 +40,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
 
 
     /**
-     * 根据签约时间的指定时间段从表Data_WorkInfo分页查询业务数据
+     * 根据放款时间的指定时间段从视图“已放款客户表”分页查询业务数据
      *
      * @param startDate
      * @param endDate
@@ -49,13 +49,13 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
      */
     public PageBean findPettyLoanContractByDate(String startDate, String endDate, PageBean pageBean) throws BaseException {
        // SELECT id, 合同编号 as contractno, 客户名称 as customername,  批核金额 as contractamount,签约时间 as contractsigndate FROM Data_WorkInfo
-        StringBuilder sql = new StringBuilder("SELECT id, 合同编号 as contractno, 客户名称 as customername,  批核金额 as contractamount,签约时间 as contractsigndate FROM Data_WorkInfo WHERE 1=1 AND 是否放款 = 485 ");
+        StringBuilder sql = new StringBuilder("SELECT Date_Id AS id, 合同编号 AS contractno, 业务号 AS  businessNum," +
+                " 客户名称 AS customername, 放款金额 AS contractamount, 放款日期 AS contractsigndate FROM 已放款客户表 " +
+                "WHERE 1 = 1");
         List<Object> list = new ArrayList<Object>();
         if (StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
-            sql.append(" AND 签约时间 >= ? AND 签约时间 <= ?");
+            sql.append(" AND 放款日期 >= ? AND 放款日期 <= ?");
             list.add(startDate);
-            //传入截至时间为yyyy-MM-dd格式字符串，数据库中时间格式是datetime，将截至时间+1天，避免当天数据查询不到
-            endDate = DateTimeUtil.dayAdd(endDate,1);
             list.add(endDate);
         }
         PageBean forPage = findForPage(sql.toString(), pageBean, PettyLoanContract.class, list);
@@ -170,14 +170,14 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
     }
 
     /**
-     * 根据业务数据id查询小额贷款合同
+     * 根据业务数据date_id查询小额贷款合同
      * @param id  业务数据id
      * @return
      * @throws BaseException
      */
     public PettyLoanContract findPettyLoanContractByWorkInfoId(String id) throws BaseException {
-        String sql = "SELECT w.合同编号 AS contractno,w.客户名称 AS customername," +
-                "w.批核金额 AS contractamount,w.签约时间 AS contractsigndate," +
+        String sql = "SELECT w.合同编号 AS contractno,y.客户名称 AS customername," +
+                "y.放款金额 AS contractamount,w.签约时间 AS contractsigndate," +
                 "w.利率 AS intrate," +
                 "ISNULL(" +
                 "CASE w.授信主体类型 " +
@@ -208,9 +208,10 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
                 "  ) AS certificateType " +
                 "FROM " +
                 " Data_WorkInfo w " +
-                "LEFT JOIN Data_CompanyInfo c ON w.CompanyId = c.Id " +
-                "LEFT JOIN Data_MemberInfo m ON w.MemberId = m.ID " +
-                "WHERE w.id = ? " ;
+                "LEFT JOIN Data_CompanyInfo c ON w.授信主体编号= c.Id " +
+                "LEFT JOIN Data_MemberInfo m ON w.授信主体编号 = m.ID " +
+                "LEFT JOIN [已放款客户表] y ON w.date_id = y.date_id " +
+                "WHERE w.date_id = ? " ;
         logger.debug("Executing SQL query [{}], params: [{}]", sql, id);
         List list = super.getJdbcTemplate().query(sql, new Object[]{id}, new BeanPropertyRowMapper(PettyLoanContract.class));
         if (list != null && list.size() > 0) {

@@ -5,6 +5,7 @@ import com.global.fems.business.domain.PettyLoanContract;
 import com.global.fems.business.service.PettyLoanContractService;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,12 +67,20 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
     }
 
     /**
-     * 根据业务数据id查询小额贷款合同
-     * @param id
+     * 根据业务数据date_id查询小额贷款合同
+     * @param id 业务数据date_id
      * @return
      */
     public PettyLoanContract findPettyLoanContractByWorkInfoId(String id) throws BaseException {
-
-        return pettyLoanContractDao.findPettyLoanContractByWorkInfoId(id);
+        PettyLoanContract pettyLoanContract = pettyLoanContractDao.findPettyLoanContractByWorkInfoId(id);
+        //将以百分之一为单位的月利率转换为以千分之一为单位的月利率，接口文档要求千分之一为单位的利率
+        pettyLoanContract.setIntRate(pettyLoanContract.getIntRate() * 10 );
+        //当前查询的业务数据贷款类型都是自营贷款，委托贷款未走业务系统，设置贷款类型为自营贷款530001
+        if (StringUtils.isEmpty(pettyLoanContract.getConCustomerName())) {
+            pettyLoanContract.setLoanCate("530001");
+        }else{
+            pettyLoanContract.setLoanCate("530002");
+        }
+        return pettyLoanContract;
     }
 }

@@ -14,6 +14,12 @@
         //点击“手工填写"按钮触发，解除锁定
         function manualFill() {
             $("#fo input[type=text]").removeProp("disabled");
+            $("#loanCate").combogrid({disabled: false});
+            $("#customerType").combogrid({disabled: false});
+            $("#certificateType").combogrid({disabled: false});
+            $("#conCustomerType").combogrid({disabled: false});
+            $("#concertificatetype").combogrid({disabled: false});
+
         }
 
         //保存记录
@@ -36,11 +42,16 @@
             //双击某条数据后，返回详细信息，根据返回的值，设置不可编辑状态，点"手动录入"按钮后解除锁定
             if ("${disabled}") {
                 $("#fo input[type=text]").prop("disabled", "disabled");
+                $("#loanCate").combogrid({disabled: true});
+                $("#customerType").combogrid({disabled: true});
+                $("#certificateType").combogrid({disabled: true});
+                $("#conCustomerType").combogrid({disabled: true});
+                $("#concertificatetype").combogrid({disabled: true});
             }
 
             //默认委托人相关项隐藏,如果是查询会数据且贷款类型为委托贷款：530002，展示相关项
             var loanCate = "${model.loanCate}";
-            if(loanCate == "" || loanCate == "530001") {
+            if (loanCate == "" || loanCate == "530001") {
                 $("#conFee").parent().hide();
                 $("#conFee").parent().prev("th").hide();
                 $("#conCertificateType").parent().hide();
@@ -51,8 +62,8 @@
                 $("#conCustomerType").parent().prev("th").hide();
                 $("#conCustomerName").parent().hide();
                 $("#conCustomerName").parent().prev("th").hide();
-                $("#fo").prop("action","${basePath}/pettyLoanContract.do?method=savePettyLoanContract");
-            }else if(loanCate == "530002"){
+                $("#fo").prop("action", "${basePath}/pettyLoanContract.do?method=savePettyLoanContract");
+            } else if (loanCate == "530002") {
                 $("#conFee").parent().show();
                 $("#conFee").parent().prev("th").show();
                 $("#conCertificateType").parent().show();
@@ -63,7 +74,7 @@
                 $("#conCustomerType").parent().prev("th").show();
                 $("#conCustomerName").parent().show();
                 $("#conCustomerName").parent().prev("th").show();
-                $("#fo").prop("action","${basePath}/pettyLoanContract.do?method=saveEntrustPettyLoanContract");
+                $("#fo").prop("action", "${basePath}/pettyLoanContract.do?method=saveEntrustPettyLoanContract");
             }
 
 
@@ -82,7 +93,7 @@
                 $("#conCustomerType").parent().prev("th").hide();
                 $("#conCustomerName").parent().hide();
                 $("#conCustomerName").parent().prev("th").hide();
-                $("#fo").prop("action","${basePath}/pettyLoanContract.do?method=savePettyLoanContract");
+                $("#fo").prop("action", "${basePath}/pettyLoanContract.do?method=savePettyLoanContract");
             } else if (value == "530002") {
                 $("#conFee").parent().show();
                 $("#conFee").parent().prev("th").show();
@@ -94,7 +105,7 @@
                 $("#conCustomerType").parent().prev("th").show();
                 $("#conCustomerName").parent().show();
                 $("#conCustomerName").parent().prev("th").show();
-                $("#fo").prop("action","${basePath}/pettyLoanContract.do?method=saveEntrustPettyLoanContract");
+                $("#fo").prop("action", "${basePath}/pettyLoanContract.do?method=saveEntrustPettyLoanContract");
             }
         }
 
@@ -124,6 +135,11 @@
                     field: "id",
                     title: "主键",
                     hidden: true
+                }, {
+
+                    field: "businessNum",
+                    title: "业务号",
+                    width: 100
                 }, {
                     field: "contractNo",
                     title: "合同编号",
@@ -314,7 +330,7 @@
 //                .val('')
 //                .removeAttr('checked')
 //                .removeAttr('selected');
-            window.location.href="${basePath}/pettyLoanContract.do?method=showPettyLoanContract";
+            window.location.href = "${basePath}/pettyLoanContract.do?method=showPettyLoanContract";
         }
 
     </script>
@@ -542,21 +558,24 @@
     <form action="" method="post" id="businessQueryForm">
 
         <tr>
-            <th width="15%">业务办理日期：</th>
+            <th width="15%">放款日期：</th>
             <td>
                 <input type="text" id="startDate" name="startDate" data-options="required:true"
                        class="easyui-validatebox"
+                       style="border:1px solid #95B8E7;*color:#007fca;width:245px;padding:4px 2px;"
                        onclick="WdatePicker()"/>
             </td>
             至
             <td>
-                <input type="text" id="endDate" name="endDate" data-options="required:true"
-                       onclick="WdatePicker()" class="easyui-validatebox"/>
+                <input type="text" id="endDate" name="endDate" data-options="required:true" style="border:1px solid #95B8E7;
+                        *color:#007fca;width:245px;padding:4px 2px;" onclick="WdatePicker()"
+                       class="easyui-validatebox"/>
                 <input id="businessQueryBtn" type="button" class="inputButton" onclick="doBusinessQuery();" value="查询"/>
             </td>
         </tr>
     </form>
     <span id="businessCheckMsg" style="color:red;"></span>
+    <br/>
     <table id="businessQueryResultTb">
     </table>
 </div>
@@ -583,19 +602,22 @@
             <th width="15%">合同录入日期：</th>
             <td>
                 <input type="text" id="insertStartDate" name="insertStartDate" data-options="required:true"
-                       class="easyui-validatebox"
+                       class="easyui-validatebox" style="border:1px solid #95B8E7;
+                        *color:#007fca;width:245px;padding:4px 2px;"
                        onclick="WdatePicker()" class="inputText"/>
             </td>
             至
             <td>
                 <input type="text" id="insertEndDate" name="insertEndDate" data-options="required:true"
-                       class="easyui-validatebox"
+                       class="easyui-validatebox" style="border:1px solid #95B8E7;
+                        *color:#007fca;width:245px;padding:4px 2px;"
                        onclick="WdatePicker()" class="inputText"/>
             </td>
         </tr>
         <input id="declareQueryBtn" type="button" class="inputButton" onclick="doDeclareQuery();" value="查询"/>
     </form>
     <span id="declarebusinessCheckMsg" style="color:red;"></span>
+    <br/>
     <table id="declareQueryResultTb">
     </table>
 </div>
