@@ -49,7 +49,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
      */
     public PageBean findPettyLoanContractByDate(String startDate, String endDate, PageBean pageBean) throws BaseException {
        // SELECT id, 合同编号 as contractno, 客户名称 as customername,  批核金额 as contractamount,签约时间 as contractsigndate FROM Data_WorkInfo
-        StringBuilder sql = new StringBuilder("SELECT id, 合同编号 as contractno, 客户名称 as customername,  批核金额 as contractamount,签约时间 as contractsigndate FROM Data_WorkInfo WHERE 1=1 ");
+        StringBuilder sql = new StringBuilder("SELECT id, 合同编号 as contractno, 客户名称 as customername,  批核金额 as contractamount,签约时间 as contractsigndate FROM Data_WorkInfo WHERE 1=1 AND 是否放款 = 485 ");
         List<Object> list = new ArrayList<Object>();
         if (StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
             sql.append(" AND 签约时间 >= ? AND 签约时间 <= ?");
