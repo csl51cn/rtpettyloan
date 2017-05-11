@@ -8,7 +8,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>交易查询</title>
     <jsp:include page="../../common/include.jsp"></jsp:include>
-    <script type="text/javascript" src="${basePath }/resources/business/spfeValidator.js"></script>
     <script type="text/javascript">
 
         //点击“手工填写"按钮触发，解除锁定
@@ -74,9 +73,9 @@
         }
 
         //设置委托贷款相关项的显示状态
-        function  setDisplayStatus(flag){
+        function setDisplayStatus(flag) {
             //true 代表显示，false 代表隐藏
-            if(flag){
+            if (flag) {
                 $("#conFee").parent().show();
                 $("#conFee").parent().prev("th").show();
                 $("#conCertificateType").parent().show();
@@ -87,7 +86,7 @@
                 $("#conCustomerType").parent().prev("th").show();
                 $("#conCustomerName").parent().show();
                 $("#conCustomerName").parent().prev("th").show();
-            }else{
+            } else {
                 $("#conFee").parent().hide();
                 $("#conFee").parent().prev("th").hide();
                 $("#conCertificateType").parent().hide();
@@ -120,16 +119,19 @@
             //初始化业务查询的datagrid
             $("#businessQueryResultTb").datagrid({
                 url: '',
-                singleSelect: true,
                 pagination: true,
+                checkOnSelect:true,
                 pageSize: 15,
                 pageList: [5, 10, 15, 20, 30],
                 columns: [[{
                     field: "id",
                     title: "主键",
-                    hidden: true
+                    checkbox: true
                 }, {
-
+                    field: "dateId",
+                    title: "Date_Id",
+                    hidden: true
+                },{
                     field: "businessNum",
                     title: "业务号",
                     width: 100
@@ -157,7 +159,7 @@
 
                 onDblClickRow: function (rowIndex, rowData) {
 
-                    queryContractByWorkInfoId(rowData.id);
+                    queryContractByWorkInfoId(rowData.dateId);
                     $('#businessQueryWindow').window('close');
                 }
             })
@@ -181,6 +183,28 @@
             }
         }
 
+        //批量从业务系统导出数据到申报系统
+        function doBatchSave(){
+            var ids = [];
+            var rows = $("#businessQueryResultTb").datagrid("getSelections");
+            for(var i=0; i<rows.length; i++){
+                ids.push(rows[i].dateId);
+            }
+
+            $.ajax({
+                type: "GET",
+                url:"${basePath}/pettyLoanContract.do?method=batchSavePettyLoanContract",
+                data: {"ids":ids.toString()},
+                dataType: "json",
+                success: function(data){
+                   if(data == "1"){
+                       $.messager.alert("提示消息", "操作成功", "info");
+                   }else{
+                       $.messager.alert("提示消息", "操作失败", "warning");
+                   }
+                }
+            });
+        }
         //将表单数据转为json
         function form2Json(id) {
 
@@ -238,7 +262,7 @@
 
         //
         function queryContractByWorkInfoId(id) {
-            window.location.href = "${basePath}/pettyLoanContract.do?method=findPettyLoanContractByWorkInfoId&id=" + id;
+            window.location.href = "${basePath}/pettyLoanContract.do?method=findPettyLoanContractByWorkInfoId&dateId=" + id;
         }
 
 
@@ -256,6 +280,10 @@
                     title: "主键",
                     hidden: true
                 }, {
+                    field: "dateId",
+                    title: "Date_Id",
+                    hidden: true
+                },{
                     field: "contractNo",
                     title: "合同编号",
                     width: 100
@@ -549,23 +577,27 @@
      style="width:900px;height:600px;padding:10px;">
 
     <form action="" method="post" id="businessQueryForm">
+        <table>
+            <tr>
+                <th width="15%">签约日期：</th>
+                <td>
+                    <input type="text" id="startDate" name="startDate" data-options="required:true"
+                           class="easyui-validatebox"
+                           style="border:1px solid #95B8E7;*color:#007fca;width:245px;padding:4px 2px;"
+                           onclick="WdatePicker()"/>至
+                </td>
 
-        <tr>
-            <th width="15%">放款日期：</th>
-            <td>
-                <input type="text" id="startDate" name="startDate" data-options="required:true"
-                       class="easyui-validatebox"
-                       style="border:1px solid #95B8E7;*color:#007fca;width:245px;padding:4px 2px;"
-                       onclick="WdatePicker()"/>
-            </td>
-            至
-            <td>
-                <input type="text" id="endDate" name="endDate" data-options="required:true" style="border:1px solid #95B8E7;
+                <td>
+                    <input type="text" id="endDate" name="endDate" data-options="required:true" style="border:1px solid #95B8E7;
                         *color:#007fca;width:245px;padding:4px 2px;" onclick="WdatePicker()"
-                       class="easyui-validatebox"/>
-                <input id="businessQueryBtn" type="button" class="inputButton" onclick="doBusinessQuery();" value="查询"/>
-            </td>
-        </tr>
+                           class="easyui-validatebox"/>
+                    <input id="businessQueryBtn" type="button" class="inputButton" onclick="doBusinessQuery();"
+                           value="查询"/>
+                    <input id="batchSaveBtn" type="button" class="inputButton" onclick="doBatchSave();"
+                           value="保存"/>
+                </td>
+            </tr>
+        </table>
     </form>
     <span id="businessCheckMsg" style="color:red;"></span>
     <br/>
@@ -579,35 +611,36 @@
      style="width:900px;height:600px;padding:10px;">
 
     <form action="" method="post" id="declareQueryForm">
+        <table>
+            <tr>
+                <th width="15%">是否已申报：</th>
+                <td width="25%">
+                    <select id="sendStatusCode" name="sendStatusCode" class="easyui-combobox" style="width:75px;">
+                        <option value="">--请选择--</option>
+                        <option value="0">否</option>
+                        <option value="1">是</option>
+                    </select>
+                </td>
+            </tr>
+            <br/>
+            <tr>
+                <th width="15%">签约日期：</th>
+                <td>
+                    <input type="text" id="insertStartDate" name="insertStartDate" data-options="required:true"
+                           class="easyui-validatebox" style="border:1px solid #95B8E7;
+                        *color:#007fca;width:180px;padding:4px 2px;"
+                           onclick="WdatePicker()" class="inputText"/> 至
+                </td>
 
-        <tr>
-            <th width="15%">是否已申报：</th>
-            <td width="25%">
-                <select id="sendStatusCode" name="sendStatusCode" class="easyui-combobox" style="width:75px;">
-                    <option value="">--请选择--</option>
-                    <option value="0">否</option>
-                    <option value="1">是</option>
-                </select>
-            </td>
-        </tr>
-        <br/>
-        <tr>
-            <th width="15%">合同录入日期：</th>
-            <td>
-                <input type="text" id="insertStartDate" name="insertStartDate" data-options="required:true"
-                       class="easyui-validatebox" style="border:1px solid #95B8E7;
-                        *color:#007fca;width:245px;padding:4px 2px;"
-                       onclick="WdatePicker()" class="inputText"/>
-            </td>
-            至
-            <td>
-                <input type="text" id="insertEndDate" name="insertEndDate" data-options="required:true"
-                       class="easyui-validatebox" style="border:1px solid #95B8E7;
-                        *color:#007fca;width:245px;padding:4px 2px;"
-                       onclick="WdatePicker()" class="inputText"/>
-            </td>
-        </tr>
-        <input id="declareQueryBtn" type="button" class="inputButton" onclick="doDeclareQuery();" value="查询"/>
+                <td>
+                    <input type="text" id="insertEndDate" name="insertEndDate" data-options="required:true"
+                           class="easyui-validatebox" style="border:1px solid #95B8E7;
+                        *color:#007fca;width:180px;padding:4px 2px;"
+                           onclick="WdatePicker()" class="inputText"/>
+                    <input id="declareQueryBtn" type="button" class="inputButton" onclick="doDeclareQuery();" value="查询"/>
+                </td>
+            </tr>
+        </table>
     </form>
     <span id="declarebusinessCheckMsg" style="color:red;"></span>
     <br/>

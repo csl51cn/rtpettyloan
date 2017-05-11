@@ -6,8 +6,6 @@ import com.global.fems.interfaces.validator.First;
 import com.global.fems.interfaces.validator.Second;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
-import com.global.framework.util.StringUtil;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +15,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +39,26 @@ public class PettyLoanContractController {
     public String showPettyLoanContract() {
 
         return "business/pettyLoanContract/fillPettyLoanContract";
+
+    }
+
+    /**
+     * 从Data_WorkInfo表中查询合同数据，批量保存到小额贷款合同表中
+     * @param ids Data_WorkInfo表中的Date_Id
+     * @return  是否操作成功：1保存成功，0保存失败
+     */
+    @RequestMapping(params = "method=batchSavePettyLoanContract")
+    @ResponseBody
+    public String batchSavePettyLoanContract(String ids) {
+        System.out.println(ids);
+        try {
+            contractService.batchSavePettyLoanContract(ids);
+            return "1";
+        } catch (BaseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+
 
     }
 
@@ -72,6 +89,13 @@ public class PettyLoanContractController {
 
     }
 
+    /**
+     * 保存或更新小额贷款合同的通用方法
+     * @param contract
+     * @param result
+     * @param model
+     * @return
+     */
     private String saveOrUpdate( PettyLoanContract contract, BindingResult result, Model model) {
         try {
             //校验PettyLoanContract对象的数据是否完整
@@ -84,10 +108,7 @@ public class PettyLoanContractController {
                 model.addAttribute("errors", err);
                 throw new BaseException("保存或更新合同记录时，数据校验未通过");
             }
-            if (StringUtil.isNullOrEmpty(contract.getSendStatus())) {
-                contract.setSendStatus(0);//设置发送状态,0表示未发送，1表示已发送
-                contract.setInsertDate(new Date());
-            }
+
             contractService.saveOrUpdatePettyLoanContract(contract);
             model.addAttribute("msg","1");//返回操作成功标志
 
@@ -100,7 +121,7 @@ public class PettyLoanContractController {
     }
 
     /**
-     * 根据放款时间的时间段查询小额贷款合同记录
+     * 根据签约日期的时间段查询小额贷款合同记录
      *
      * @param startDate 合同签订时间的起始时间
      * @param endDate   合同签订时间的终止时间
@@ -136,13 +157,12 @@ public class PettyLoanContractController {
     /**
      * 根据业务数据的date_id从表Data_WorkInfo查询合同记录
      *
-     * @param id 业务数据的date_id
+     * @param dateId 业务数据的date_id
      * @return 返回小额贷款合同记录
      */
     @RequestMapping(params = "method=findPettyLoanContractByWorkInfoId")
-    public String findPettyLoanContractByWorkInfoId(String id,Model model) throws BaseException {
-        PettyLoanContract pettyLoanContract = contractService.findPettyLoanContractByWorkInfoId(id);
-
+    public String findPettyLoanContractByWorkInfoId(Integer dateId,Model model) throws BaseException {
+        PettyLoanContract pettyLoanContract = contractService.findPettyLoanContractByWorkInfoId(dateId);
         model.addAttribute("model",pettyLoanContract);
         model.addAttribute("disabled",true);
         return "business/pettyLoanContract/fillPettyLoanContract";
@@ -153,15 +173,15 @@ public class PettyLoanContractController {
      * 根据申报状态查询小额贷款合同记录
      *
      * @param sendStatusCode  申报状态，0未申报，1已申报
-     * @param insertStartDate 录入时间起始时间
-     * @param insertEndDate   录入时间终止时间
-     * @param pageBean        接收分页参数
+     * @param startDate 签约时间起始时间
+     * @param endDate   签约时间终止时间
+     * @param pageBean    接收分页参数
      * @return 返回根据申报状态查询的分页后小额贷款合同记录
      */
     @RequestMapping(params = "method=findPettyLoanContractBySendStatus")
     @ResponseBody
-    public Map<String, Object> findPettyLoanContractBySendStatus(Integer sendStatusCode, String insertStartDate, String insertEndDate, PageBean pageBean) throws BaseException {
-        pageBean = contractService.findPettyLoanContractBySendStatus(sendStatusCode, insertStartDate, insertEndDate, pageBean);
+    public Map<String, Object> findPettyLoanContractBySendStatus(Integer sendStatusCode, String startDate, String endDate, PageBean pageBean) throws BaseException {
+        pageBean = contractService.findPettyLoanContractBySendStatus(sendStatusCode, startDate, endDate, pageBean);
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("total", pageBean.getTotalRows());
         map.put("rows", pageBean.getDataList());

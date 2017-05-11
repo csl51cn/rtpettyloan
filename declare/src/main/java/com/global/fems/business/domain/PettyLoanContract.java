@@ -22,6 +22,8 @@ public class PettyLoanContract extends Entity {
 
     @ColumnMapping(columnName = "id", columnType = "String")
     private String id; // 主键
+    @ColumnMapping(columnName = "dateid", columnType = "Integer")
+    private Integer dateId; // Data_WorkInfo中的Date_Id
     @NotBlank(message = "{PettyLoanContract.contractNo.null}", groups = {First.class, Second.class})
     @ColumnMapping(columnName = "contractNo", columnType = "String")
     private String contractNo; //合同编号
@@ -72,16 +74,8 @@ public class PettyLoanContract extends Entity {
     @ColumnMapping(columnName = "sendDate", columnType = "Date")
     private Date sendDate;//记录保存日期
 
-    public String getBusinessNum() {
-        return businessNum;
-    }
 
-    public void setBusinessNum(String businessNum) {
-        this.businessNum = businessNum;
-    }
-
-    @ColumnMapping(columnName = "业务编号", columnType = "String")
-    private String businessNum;
+    private String businessNum;//业务编号，查询时会使用，DC_PETTY_LOAN_CONTRACT表中没有
 
     public String getId() {
         return id;
@@ -225,6 +219,22 @@ public class PettyLoanContract extends Entity {
 
     public void setSendDate(Date sendDate) {
         this.sendDate = sendDate;
+    }
+
+    public String getBusinessNum() {
+        return businessNum;
+    }
+
+    public void setBusinessNum(String businessNum) {
+        this.businessNum = businessNum;
+    }
+
+    public Integer getDateId() {
+        return dateId;
+    }
+
+    public void setDateId(Integer dateId) {
+        this.dateId = dateId;
     }
 
 
