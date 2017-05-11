@@ -95,7 +95,7 @@ public class TaskInfoDaoImpl extends BaseDaoSupport implements TaskInfoDao {
 						"tt.transstate,"+
 						"(select username from dc_sys_user where userid = tt.createUser) as createUser, " +
 						"(select tradename from dc_wfl_tradecode where tradeno = tt.tradeno) as tradename, " +
-						"case  tt.transstate when '0' then '新建 when '1' then '待复核' when '2' then '待授权' when '3' then '授权' when '5' then '经办更正' end  as transstatename, " +
+						"case WHEN tt.transstate = '0' then '新建' WHEN tt.transstate = '1' then '待复核' WHEN tt.transstate = '2' then '待授权' WHEN tt.transstate = '3' then '授权' WHEN tt.transstate = '5' then '经办更正' end  as transstatename, " +
 						"(select accessurl from dc_sys_menu m where menuid=(select distinct menuid from dc_wfl_tradeprivilege where tradeno = tt.tradeno)) url " +
 					 "from (";
 		// 查询当前用户保存或经办更正的任务列表
