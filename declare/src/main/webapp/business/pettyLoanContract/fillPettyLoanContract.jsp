@@ -120,7 +120,7 @@
             $("#businessQueryResultTb").datagrid({
                 url: '',
                 pagination: true,
-                checkOnSelect:true,
+                checkOnSelect: true,
                 pageSize: 15,
                 pageList: [5, 10, 15, 20, 30],
                 columns: [[{
@@ -131,7 +131,7 @@
                     field: "dateId",
                     title: "Date_Id",
                     hidden: true
-                },{
+                }, {
                     field: "businessNum",
                     title: "业务号",
                     width: 100
@@ -184,24 +184,24 @@
         }
 
         //批量从业务系统导出数据到申报系统
-        function doBatchSave(){
+        function doBatchSave() {
             var ids = [];
             var rows = $("#businessQueryResultTb").datagrid("getSelections");
-            for(var i=0; i<rows.length; i++){
+            for (var i = 0; i < rows.length; i++) {
                 ids.push(rows[i].dateId);
             }
 
             $.ajax({
                 type: "GET",
-                url:"${basePath}/pettyLoanContract.do?method=batchSavePettyLoanContract",
-                data: {"ids":ids.toString()},
+                url: "${basePath}/pettyLoanContract.do?method=batchSavePettyLoanContract",
+                data: {"ids": ids.toString()},
                 dataType: "json",
-                success: function(data){
-                   if(data == "1"){
-                       $.messager.alert("提示消息", "操作成功", "info");
-                   }else{
-                       $.messager.alert("提示消息", "操作失败", "warning");
-                   }
+                success: function (data) {
+                    if (data == "1") {
+                        $.messager.alert("提示消息", "操作成功", "info");
+                    } else {
+                        $.messager.alert("提示消息", "操作失败", "warning");
+                    }
                 }
             });
         }
@@ -283,7 +283,7 @@
                     field: "dateId",
                     title: "Date_Id",
                     hidden: true
-                },{
+                }, {
                     field: "contractNo",
                     title: "合同编号",
                     width: 100
@@ -626,18 +626,19 @@
             <tr>
                 <th width="15%">签约日期：</th>
                 <td>
-                    <input type="text" id="insertStartDate" name="insertStartDate" data-options="required:true"
+                    <input type="text" id="insertStartDate" name="signStartDate" data-options="required:true"
                            class="easyui-validatebox" style="border:1px solid #95B8E7;
                         *color:#007fca;width:180px;padding:4px 2px;"
                            onclick="WdatePicker()" class="inputText"/> 至
                 </td>
 
                 <td>
-                    <input type="text" id="insertEndDate" name="insertEndDate" data-options="required:true"
+                    <input type="text" id="insertEndDate" name="signEndDate" data-options="required:true"
                            class="easyui-validatebox" style="border:1px solid #95B8E7;
                         *color:#007fca;width:180px;padding:4px 2px;"
                            onclick="WdatePicker()" class="inputText"/>
-                    <input id="declareQueryBtn" type="button" class="inputButton" onclick="doDeclareQuery();" value="查询"/>
+                    <input id="declareQueryBtn" type="button" class="inputButton" onclick="doDeclareQuery();"
+                           value="查询"/>
                 </td>
             </tr>
         </table>
@@ -647,6 +648,5 @@
     <table id="declareQueryResultTb">
     </table>
 </div>
-
 </body>
 </html>

@@ -173,15 +173,15 @@ public class PettyLoanContractController {
      * 根据申报状态查询小额贷款合同记录
      *
      * @param sendStatusCode  申报状态，0未申报，1已申报
-     * @param startDate 签约时间起始时间
-     * @param endDate   签约时间终止时间
+     * @param signStartDate 签约时间起始时间
+     * @param signEndDate   签约时间终止时间
      * @param pageBean    接收分页参数
      * @return 返回根据申报状态查询的分页后小额贷款合同记录
      */
     @RequestMapping(params = "method=findPettyLoanContractBySendStatus")
     @ResponseBody
-    public Map<String, Object> findPettyLoanContractBySendStatus(Integer sendStatusCode, String startDate, String endDate, PageBean pageBean) throws BaseException {
-        pageBean = contractService.findPettyLoanContractBySendStatus(sendStatusCode, startDate, endDate, pageBean);
+    public Map<String, Object> findPettyLoanContractBySendStatus(Integer sendStatusCode,  String signStartDate, String signEndDate, PageBean pageBean) throws BaseException {
+        pageBean = contractService.findPettyLoanContractBySendStatus(sendStatusCode, signStartDate, signEndDate, pageBean);
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("total", pageBean.getTotalRows());
         map.put("rows", pageBean.getDataList());
