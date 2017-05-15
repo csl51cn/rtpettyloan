@@ -28,7 +28,7 @@ public class OrgDaoImpl extends BaseDaoSupport implements OrgDao {
 	public PageBean queryOrgForPage(Org org, PageBean page)
 			throws BaseException {
 		StringBuilder sql = new StringBuilder(256);
-		sql.append("SELECT t.*,(select orgName from dc_sys_org where orgId=t.parentOrgId) parentOrgName FROM dc_sys_org t WHERE 1 = 1 ");
+		sql.append("SELECT TOP (100) PERCENT t.*,(select orgName from dc_sys_org where orgId=t.parentOrgId) parentOrgName FROM dc_sys_org t WHERE 1 = 1 ");
 		List<Object> args = new ArrayList<Object>();
 		if (StringUtils.isNotBlank(org.getOrgName())) {
 			sql.append(" and t.orgName like ? ");

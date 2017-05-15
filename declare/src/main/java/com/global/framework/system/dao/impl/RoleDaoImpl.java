@@ -21,7 +21,7 @@ public class RoleDaoImpl extends BaseDaoSupport implements RoleDao {
 
 	public PageBean queryRoleForPage(Role role, PageBean pageBean, String userId) throws BaseException {
 		StringBuilder sql = new StringBuilder(256);
-		sql.append("SELECT t.* FROM dc_sys_role t WHERE 1 = 1 ");
+		sql.append("SELECT TOP (100) PERCENT t.* FROM dc_sys_role t WHERE 1 = 1 ");
 		if (!"admin".equals(userId)) {//不是超级管理员不允许操作超级管理员这个角色信息
 			sql.append(" and t.isfix = 'N'");
 		}
@@ -100,7 +100,7 @@ public class RoleDaoImpl extends BaseDaoSupport implements RoleDao {
 	}
 
 	public void deleteRoleRightByRoleId(String roleId) throws BaseException {
-		String sql = "delete from dc_sys_roleright t where t.roleid = ? ";
+		String sql = "delete from dc_sys_roleright where roleid = ? ";
 		super.delete(sql, new Object[] { roleId });
 	}
 	
