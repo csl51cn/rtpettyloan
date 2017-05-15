@@ -9,25 +9,46 @@
     <title>实时报文发送</title>
     <jsp:include page="../../common/include.jsp"></jsp:include>
     <script type="text/javascript">
+        function doDeclare() {
+            $("#dateCheckMsg").html("");
+            if (!checkEndTime("startDate", "endDate")) {
+                $("#dateCheckMsg").html("结束时间必须晚于开始时间！");
+                return;
+            } else {
 
+                $("#fo").submit();
+            }
+        }
+        //检查结束时间是否大于等于开始时间
+        function checkEndTime(dateId1, dateId2) {
+            var startDate = $("#" + dateId1).val();
+            var start = new Date(startDate.replace("-", "/").replace("-", "/"));
+            var endDate = $("#" + dateId2).val();
+            var end = new Date(endDate.replace("-", "/").replace("-", "/"));
+            if (end < start) {
+                return false;
+            }
+            return true;
+        }
 
     </script>
 </head>
 <body>
 
-<form action="" method="post">
+<form id="fo" method="post" action="${basePath}/realTimeDeclare.do?method=sendRealTimeDeclare">
     <div region="center" border="false">
         <div class="editBlock">
             <table>
                 <tr>
                     <th>类型：</th>
                     <td>
-                       实时网签
+                        实时网签 &nbsp <span id="dateCheckMsg" style="color:red;"/>
                     </td>
+
                 </tr>
                 <tr>
                     <th width="15%">签约日期：</th>
-                    <td >
+                    <td>
                         <input type="text" id="startDate" name="startDate" data-options="required:true"
                                class="easyui-validatebox"
                                style="border:1px solid #95B8E7;*color:#007fca;width:245px;padding:4px 2px;"
@@ -37,14 +58,11 @@
                                class="easyui-validatebox"/>
                         <input id="businessQueryBtn" type="button" class="inputButton" onclick="doDeclare();"
                                value="报文发送"/>
-                    </td >
-
+                    </td>
                 </tr>
             </table>
         </div>
     </div>
-
-
 </form>
 </body>
 </html>

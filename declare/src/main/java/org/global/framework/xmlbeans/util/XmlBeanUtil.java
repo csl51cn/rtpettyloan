@@ -71,7 +71,8 @@ public class XmlBeanUtil {
         }
 
         String nodeName1 = root.attribute("nodeName").getText().trim();
-        alias.put(filename + ".class", root.attribute("class").getText().trim());
+        //alias.put(filename + ".class", root.attribute("class").getText().trim());
+        alias.put(filename + ".class", root.attribute("className").getText().trim());//aliasFieldOfElement()中用的是className,xml中没有class属性
         alias.put(filename + ".nodename", nodeName1);
         aliasFieldOfElement(filename, nodeName1, root.elements(), alias);
         return alias;

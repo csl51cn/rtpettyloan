@@ -111,8 +111,6 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
         if (StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
             sql.append(" AND contractsigndate >= ? AND contractsigndate <= ?");
             list.add(startDate);
-            //传入截至时间为yyyy-MM-dd格式字符串，数据库中时间格式是datetime，将截至时间+1天，避免当天数据查询不到
-            endDate = DateTimeUtil.dayAdd(endDate, 1);
             list.add(endDate);
         }
 

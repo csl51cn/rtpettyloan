@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transaction className="com.pactera.fems.message.jrb.domain.business.request.RealTimeOnlineContract" fieldName="gettx"
+             nodeName="gettx" type="Single" extends="JRBReqMsg" extendsfield="transaction.body" isHide="N">
+    <field fieldName="contractno" nodeName="contractno" text="合同编号" type = "String" required = "Y" length="[1,100]"/>
+    <field fieldName="loancate" nodeName="loancate" text="贷款类型" type = "String" required = "Y" length="[6]"/>
+    <field fieldName="customertype" nodeName="customertype" text="借款人类别" type = "String" required = "Y" length="[6]"/>
+    <field fieldName="customername" nodeName="customername" text="借款人名称" type = "String" required = "Y" length="[1,100]"/>
+    <field fieldName="certificatetype" nodeName="certificatetype" text="借款人证件类型" type = "String" required = "Y" length="[6]"/>
+    <field fieldName="certificateno" nodeName="certificateno" text="借款人证件号码" type = "String" required = "Y" length="[1,50]"/>
+    <field fieldName="concustomertype" nodeName="concustomertype" text="委托人类别" type = "String" required = "Y" length="[0,6]"/>
+    <field fieldName="concustomername" nodeName="concustomername" text="委托人" type = "String" required = "Y" length="[0,100]"/>
+    <field fieldName="concertificatetype" nodeName="concertificatetype" text="委托人证件类型" type = "String" required = "Y" length="[0,6]"/>
+    <field fieldName="concertificateno" nodeName="concertificateno" text="委托人证件号码" type = "String" required = "Y" length="[0,50]" />
+    <field fieldName="confee" nodeName="confee" text="委托费用" type = "Double" required = "Y" length="[0,16]" format="#.##"/>
+    <field fieldName="contractamount" nodeName="contractamount" text="合同金额" type = "Double" required = "Y" length="[1,16]" format="#.##"/>
+    <field fieldName="intrate" nodeName="intrate" text="月利率" type = "Double" required = "Y" length="[1,14]" format="#.########"/>
+    <field fieldName="contractsigndate" nodeName="contractsigndate" text="合同签订日期" type = "Date" required = "Y"  format="yyyyMMdd"/>
+</transaction>

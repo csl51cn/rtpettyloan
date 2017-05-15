@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<msg class="com.pactera.fems.message.wg.domain.WGReqMsg" nodeName="MSG">
+	<field fieldName="head" nodeName="HEAD" type = "Single" className="com.pactera.fems.message.wg.domain.WGReqMsgHead" isHide="N">
+	  <field fieldName="VER" nodeName="VER" text="报文版本号" type = "String" required = "Y" length="[1,4]"/>
+	  <field fieldName="COMMON_ORG_TYPE" text="机构类型" nodeName="COMMON_ORG_TYPE" type = "String" required = "Y" length="[1,4]"/>
+	  <field fieldName="SRC" nodeName="SRC" text="发起节点代码" type = "String" required = "Y" length="[4]"/>
+	  <field fieldName="DES" nodeName="DES" text="接收节点代码" type = "String" required = "Y" length="[6]"/>
+	  <field fieldName="SRCAPP" nodeName="SRCAPP" text="发送端应用代码" type = "String" required = "N" length="[1,100]"/>
+	  <field fieldName="DESAPP" nodeName="DESAPP" text="接收端应用代码" type = "String" required = "Y" length="[1,100]"/>
+	  <field fieldName="SENDTIME" nodeName="SENDTIME" text="发送时间" type = "Date" required = "Y" format="yyyy-MM-dd HH:mm:ss"/>
+	  <field fieldName="COMMON_ORG_CODE" nodeName="COMMON_ORG_CODE" text="机构代码" type = "String" required = "Y" length="[1,12]"/>
+	  <field fieldName="COMMON_USER_CODE" nodeName="COMMON_USER_CODE" text="用户代码" type = "String" required = "Y" length="[1,10]"/>
+	  <field fieldName="PASSWORD" nodeName="PASSWORD" text="密码" type = "String" required = "Y" length="[1,50]"/>
+	  <field fieldName="SERVICEPATH" nodeName="SERVICEPATH" text="访问服务信息" type = "String" required = "Y" length="[5,100]"/>
+	  <field fieldName="MSGNO" nodeName="MSGNO" text="报文参考号" type = "String" required = "Y" length="[1,33]"/>
+	</field>
+	<field fieldName="body" nodeName="BODY" type = "Single" className="com.pactera.fems.message.wg.domain.WGMsgBody" isHide="N">
+	  <field fieldName="dataStores" nodeName="DATASTORES" type = "Single" className="com.pactera.fems.message.wg.domain.WGDataStores" isHide="N">
+	 	 <field className="com.pactera.fems.message.wg.domain.WGReqPageDS" fieldName="ds" nodeName="DS" type="Single" isHide="N">
+			<field fieldName="PAGESIZE" nodeName="PAGESIZE" text="每页条数" type = "String" required = "Y" length="[1,10]"/>
+			<field fieldName="PAGENUMBER" nodeName="PAGENUMBER" text="页码" type = "String" required = "Y" length="[1,10]"/>
+		</field>
+	  </field>
+	</field>
+	<field fieldName="tail" nodeName="TAIL" type = "Single" className="com.pactera.fems.message.wg.domain.WGMsgTail" isHide="Y">
+	  <field fieldName="SIGNATURE" nodeName="SIGNATURE" text="数字签名" type = "String" required = "N" length="[0,300]"/>
+	  <field fieldName="CHECKSUM" nodeName="CHECKSUM" text="预留字段" type = "String" required = "N" length="[0,300]"/>
+	</field>
+</msg>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+<field serviceName="实时网签"
+       reqEntity="com.pactera.fems.message.jrb.domain.business.request.RealTimeOnlineContract"
+       rspEntity="com.global.fems.message.domain.business.response.RspIndividualLCYQuery"
+       reqXmlMapping="JRBReqRealTimeContract" rspXmlMapping="RspIndividualLCYQuery"
+       serviceMethod="JRBBizInfoDeclareService.realTimeDeclare" />
+</config>

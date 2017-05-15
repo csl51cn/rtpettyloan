@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<field serviceName="个人结汇额度和分类查询"
+		reqEntity="com.pactera.fems.message.wg.domain.business.request.WGReqQueryIndividualFXSEQuota"
+		rspEntity="com.pactera.fems.message.wg.domain.business.response.WGRspQueryIndividualFXSEQuota"
+		reqXmlMapping="WGReqQueryIndividualFXSEQuota" rspXmlMapping="WGRspQueryIndividualFXSEQuota"
+		serviceMethod="IndividualLCYService.doQueryIndividualFXSEQuota" />
+	<field serviceName="占用额度的个人结汇信息录入"
+		reqEntity="com.pactera.fems.message.wg.domain.business.request.WGReqAddLimitedIndividualFXSEInfo"
+		rspEntity="com.pactera.fems.message.wg.domain.business.response.WGRspAddLimitedIndividualFXSEInfo"
+		reqXmlMapping="WGReqAddLimitedIndividualFXSEInfo" rspXmlMapping="WGRspAddLimitedIndividualFXSEInfo"
+		serviceMethod="IndividualLCYService.doAddLimitedIndividualFXSEInfo" />
+	<field serviceName="不占额度的结汇信息录入"
+		reqEntity="com.pactera.fems.message.wg.domain.business.request.WGReqAddUnLimitedIndividualFXSEInfo"
+		rspEntity="com.pactera.fems.message.wg.domain.business.response.WGRspAddUnLimitedIndividualFXSEInfo"
+		reqXmlMapping="WGReqAddUnLimitedIndividualFXSEInfo" rspXmlMapping="WGRspAddUnLimitedIndividualFXSEInfo"
+		serviceMethod="IndividualLCYService.doAddUnLimitedIndividualFXSEInfo" />
+	<field serviceName="个人结汇信息查询"
+		reqEntity="com.pactera.fems.message.wg.domain.business.request.WGReqQueryIndividualFXSEInfo"
+		rspEntity="com.pactera.fems.message.wg.domain.business.response.WGRspQueryIndividualFXSEInfo"
+		reqXmlMapping="WGReqQueryIndividualFXSEInfo" rspXmlMapping="WGRspQueryIndividualFXSEInfo"
+		serviceMethod="IndividualLCYService.doQueryIndividualFXSEInfo" />
+	<field serviceName="个人结汇信息修改"
+		reqEntity="com.pactera.fems.message.wg.domain.business.request.WGReqModifyIndividualFXSEInfo"
+		rspEntity="com.pactera.fems.message.wg.domain.business.response.WGRspModifyIndividualFXSEInfo"
+		reqXmlMapping="WGReqModifyIndividualFXSEInfo" rspXmlMapping="WGRspModifyIndividualFXSEInfo"
+		serviceMethod="IndividualLCYService.doModifyIndividualFXSEInfo" />
+	<field serviceName="个人结汇信息撤销"
+		reqEntity="com.pactera.fems.message.wg.domain.business.request.WGReqDeleteIndividualFXSEInfo"
+		rspEntity="com.pactera.fems.message.wg.domain.business.response.WGRspDeleteIndividualFXSEInfo"
+		reqXmlMapping="WGReqDeleteIndividualFXSEInfo" rspXmlMapping="WGRspDeleteIndividualFXSEInfo"
+		serviceMethod="IndividualLCYService.doDeleteIndividualFXSEInfo" />
+	<field serviceName="占用额度的个人结汇信息补录"
+		reqEntity="com.pactera.fems.message.wg.domain.business.request.WGReqMakeUpOtherIndividualFXSEInfo"
+		rspEntity="com.pactera.fems.message.wg.domain.business.response.WGRspMakeUpOtherIndividualFXSEInfo"
+		reqXmlMapping="WGReqMakeUpOtherIndividualFXSEInfo" rspXmlMapping="WGRspMakeUpOtherIndividualFXSEInfo"
+		serviceMethod="IndividualLCYService.doMakeUpOtherIndividualFXSEInfo" />
+	<field serviceName="不占额度的结汇信息补录"
+		reqEntity="com.pactera.fems.message.wg.domain.business.request.WGReqMakeUpIndividualTradeFXSEInfo"
+		rspEntity="com.pactera.fems.message.wg.domain.business.response.WGRspMakeUpIndividualTradeFXSEInfo"
+		reqXmlMapping="WGReqMakeUpIndividualTradeFXSEInfo" rspXmlMapping="WGRspMakeUpIndividualTradeFXSEInfo"
+		serviceMethod="IndividualLCYService.doMakeUpIndividualTradeFXSEInfo" />
+	<field serviceName="个人购汇额度和分类查询"
+		reqEntity="com.pactera.fems.message.wg.domain.business.request.WGReqQueryIndividualFXSAQuota"
+		rspEntity="com.pactera.fems.message.wg.domain.business.response.WGRspQueryIndividualFXSAQuota"
+		reqXmlMapping="WGReqQueryIndividualFXSAQuota" rspXmlMapping="WGRspQueryIndividualFXSAQuota"
+		serviceMethod="IndividualFCYService.doQueryIndividualFXSAQuota" />
+	<field serviceName="占用额度的个人购汇信息录入"
+		reqEntity="com.pactera.fems.message.wg.domain.business.request.WGReqAddLimitedIndividualFXSAInfo"
+		rspEntity="com.pactera.fems.message.wg.domain.business.response.WGRspAddLimitedIndividualFXSAInfo"
+		reqXmlMapping="WGReqAddLimitedIndividualFXSAInfo" rspXmlMapping="WGRspAddLimitedIndividualFXSAInfo"
+		serviceMethod="IndividualFCYService.doAddLimitedIndividualFXSAInfo" />
+	<field serviceName="不占额度购汇信息录入"
+		reqEntity="com.pactera.fems.message.wg.domain.business.request.WGReqAddUnLimitedIndividualFXSAInfo"
+		rspEntity="com.pactera.fems.message.wg.domain.business.response.WGRspAddUnLimitedIndividualFXSAInfo"
+		reqXmlMapping="WGReqAddUnLimitedIndividualFXSAInfo" rspXmlMapping="WGRspAddUnLimitedIndividualFXSAInfo"
+		serviceMethod="IndividualFCYService.doAddUnLimitedIndividualFXSAInfo" />
+	<field serviceName="个人购汇数据查询"
+		reqEntity="com.pactera.fems.message.wg.domain.business.request.WGReqQueryIndividualFXSAInfo"
+		rspEntity="com.pactera.fems.message.wg.domain.business.response.WGRspQueryIndividualFXSAInfo"
+		reqXmlMapping="WGReqQueryIndividualFXSAInfo" rspXmlMapping="WGRspQueryIndividualFXSAInfo"
+		serviceMethod="IndividualFCYService.doQueryIndividualFXSAInfo" />
+   <field serviceName="个人购汇信息修改"
+		reqEntity="com.pactera.fems.message.wg.domain.business.request.WGReqModifyIndividualFXSAInfo"
+		rspEntity="com.pactera.fems.message.wg.domain.business.response.WGRspModifyIndividualFXSAInfo"
+		reqXmlMapping="WGReqModifyIndividualFXSAInfo" rspXmlMapping="WGRspModifyIndividualFXSAInfo"
+		serviceMethod="IndividualFCYService.doModifyIndividualFXSAInfo" />
+   <field serviceName="个人购汇信息撤销"
+		reqEntity="com.pactera.fems.message.wg.domain.business.request.WGReqDeleteIndividualFXSAInfo"
+		rspEntity="com.pactera.fems.message.wg.domain.business.response.WGRspDeleteIndividualFXSAInfo"
+		reqXmlMapping="WGReqDeleteIndividualFXSAInfo" rspXmlMapping="WGRspDeleteIndividualFXSAInfo"
+		serviceMethod="IndividualFCYService.doDeleteIndividualFXSAInfo" />
+  <field serviceName="占用额度的个人购汇信息补录"
+		reqEntity="com.pactera.fems.message.wg.domain.business.request.WGReqMakeUpOtherIndividualFXSAInfo"
+		rspEntity="com.pactera.fems.message.wg.domain.business.response.WGRspMakeUpOtherIndividualFXSAInfo"
+		reqXmlMapping="WGReqMakeUpOtherIndividualFXSAInfo" rspXmlMapping="WGRspMakeUpOtherIndividualFXSAInfo"
+		serviceMethod="IndividualFCYService.doMakeUpOtherIndividualFXSAInfo" />
+  <field serviceName="不占额度的购汇信息补录"
+		reqEntity="com.pactera.fems.message.wg.domain.business.request.WGReqMakeUpIndividualTradeFXSAInfo"
+		rspEntity="com.pactera.fems.message.wg.domain.business.response.WGRspMakeUpIndividualTradeFXSAInfo"
+		reqXmlMapping="WGReqMakeUpIndividualTradeFXSAInfo" rspXmlMapping="WGRspMakeUpIndividualTradeFXSAInfo"
+		serviceMethod="IndividualFCYService.doMakeUpIndividualTradeFXSAInfo" />
+  <field serviceName="重点关注对象确认书签署"
+		reqEntity="com.pactera.fems.message.wg.domain.business.request.WGReqMakeUpSignStatus"
+		rspEntity="com.pactera.fems.message.wg.domain.business.response.WGRspMakeUpSignStatus"
+		reqXmlMapping="WGReqMakeUpSignStatus" rspXmlMapping="WGRspMakeUpSignStatus"
+		serviceMethod="InfoQueryService.doMakeUpSignStatus" />
+  <field serviceName="美元折算率查询"
+		reqEntity="com.pactera.fems.message.wg.domain.business.request.WGReqQuerySafeExRate"
+		rspEntity="com.pactera.fems.message.wg.domain.business.response.WGRspQuerySafeExRate"
+		reqXmlMapping="WGReqQuerySafeExRate" rspXmlMapping="WGRspQuerySafeExRate"
+		serviceMethod="InfoQueryService.doQuerySafeExRate" />
+</config>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transaction fieldName="transaction" nodeName="transaction" className="com.pactera.fems.message.jrb.domain.JRBReqMsg" type = "Single" >
+	<field fieldName="header" nodeName="header" className = "com.pactera.fems.message.jrb.domain.JRBReqHeader" type = "Single" isHide="N">
+        <field fieldName="msg" nodeName="msg" className="com.pactera.fems.message.jrb.domain.JRBReqHeaderMsg"  type = "Single"  isHide="N">
+              <field fieldName="service_code" nodeName="service_code" text="服务代码" type = "String" required = "Y" length="[1,12]"/>
+              <field fieldName="tran_code"  nodeName="tran_code" text="交易码" type = "String" required = "Y" length="[1,8]"/>
+              <field fieldName="tran_type" nodeName="tran_type" text="交易类型" type = "String" required = "N" length="[1,4]"/>
+              <field fieldName="tran_mode" nodeName="tran_mode" text="交易模式" type = "String" required = "Y" length="[1,10]"/>
+              <field fieldName="branch_id" nodeName="branch_id" text="组织机构代码" type = "String" required = "Y" length="[1,20]"/>
+              <field fieldName="tran_date" nodeName="tran_date" text="交易日期" type = "Date" required = "Y" format="yyyyMMdd"/>
+              <field fieldName="tran_timestamp" nodeName="tran_timestamp" text="交易时间" type = "Date" required = "Y" format="HHmmssSSS"/>
+              <field fieldName="server_id" nodeName="server_id" text="服务器标识" type = "String" required = "N" length="[1,30]"/>
+              <field fieldName="ws_id" nodeName="ws_id" text="终端标识" type = "String" required = "N" length="[1,30]"/>
+              <field fieldName="user_lang" nodeName="user_lang" text="用户语言" type = "String" required = "Y" length="[1,20]"/>
+              <field fieldName="seq_no" nodeName="seq_no" text="渠道流水号" type = "String" required = "Y" length="[1,16]"/>
+              <field fieldName="source_branch_no" nodeName="source_branch_no" text="源节点编号" type = "String" required = "N" length="[1,12]"/>
+              <field fieldName="dest_branch_no" nodeName="dest_branch_no" text="目标节点编号" type = "String" required = "N" length="[1,12]"/>
+              <field fieldName="module_id" nodeName="module_id" text="模块标识" type = "String" required = "Y" length="[1,2]"/>
+              <field fieldName="message_type" nodeName="message_type" text="报文类型" type = "String" required = "Y" length="[1,4]"/>
+              <field fieldName="message_code" nodeName="message_code" text="报文代码" type = "String" required = "Y" length="[1,8]"/>
+                <!--文件报文使用文件路径,其他报文不使用-->
+              <field fieldName="file_path" nodeName="file_path" text="文件路径" type = "String" required = "Y" length="[1,200]"/>
+        </field>
+	</field>
+	<field fieldName="body" nodeName="body" type = "Single" classNameName="com.pactera.fems.message.jrb.domain.JRBReqBody" isHide="N">
+	  <field fieldName="gettx" nodeName="gettx" type = "Single" classNameName="com.pactera.fems.message.jrb.domain.JRBGetTx" isHide="N">
+	  </field>
+	</field>
+</transaction>
