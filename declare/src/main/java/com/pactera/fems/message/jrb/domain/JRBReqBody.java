@@ -5,21 +5,21 @@ import org.global.framework.xmlbeans.bean.SerialBean;
 public class JRBReqBody extends SerialBean {
 
 
-    private JRBGetTx getTx;
+    private JRBGetTx gettx;
 
     public JRBReqBody() {
 
     }
 
-    public JRBReqBody(JRBGetTx getTx) {
-        this.getTx = getTx;
+    public JRBReqBody(JRBGetTx gettx) {
+        this.gettx = gettx;
     }
 
-    public JRBGetTx getGetTx() {
-        return getTx;
+    public JRBGetTx getGettx() {
+        return gettx;
     }
 
-    public void setGetTx(JRBGetTx getTx) {
-        this.getTx = getTx;
+    public void setGettx(JRBGetTx gettx) {
+        this.gettx = gettx;
     }
 }

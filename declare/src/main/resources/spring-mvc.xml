@@ -23,6 +23,7 @@
 		<context:exclude-filter type="annotation"
 			expression="org.springframework.stereotype.Service" />
 	</context:component-scan>
+
 	
 	<!-- <mvc:default-servlet-handler/> -->
 	<mvc:resources location="/resources/" mapping="/resources/**" />
@@ -109,24 +110,6 @@
 	<mvc:view-controller view-name="redirect:/logon.do" path="/"/>
 
 
-	<!-- 以下 validator  ConversionService 在使用 mvc:annotation-driven 会 自动注册-->
-	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
-		<property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>
-		<!-- 如果不加默认到 使用classpath下的 ValidationMessages.properties -->
-		<property name="validationMessageSource" ref="messageSource"/>
-	</bean>
 
-	<!-- 国际化的消息资源文件（本系统中主要用于显示/错误消息定制） -->
-	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-		<property name="basenames">
-			<list>
-				<!--此处无错误，idea报红-->
-				<value>classpath:messages</value>
-				<value>classpath:org/hibernate/validator/ValidationMessages</value>
-			</list>
-		</property>
-		<property name="useCodeAsDefaultMessage" value="false"/>
-		<property name="defaultEncoding" value="UTF-8"/>
-		<property name="cacheSeconds" value="60"/>
-	</bean>
+
 </beans>

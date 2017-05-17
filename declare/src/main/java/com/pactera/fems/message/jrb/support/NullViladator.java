@@ -1,6 +1,8 @@
-/*      */ package com.pactera.fems.message.wg.support;
+/*      */ package com.pactera.fems.message.jrb.support;
 /*      */ 
-/*      */ import org.global.framework.xmlbeans.bean.DataCheckException;
+/*      */
+
+import org.global.framework.xmlbeans.bean.DataCheckException;
 import org.global.framework.xmlbeans.bean.MsgErrorCodeEnum;
 
 import java.util.HashMap;
@@ -12,15 +14,8 @@ import java.util.Map;
 /*      */
 /*      */
 /*      */
-/*      */
-/*      */
 
 /*      */
-/*      */
-/*      */
-/*      */
-/*      */
-/*      */
 /*      */ 
 /*      */ 
 /*      */ 
@@ -2329,12 +2324,12 @@ import java.util.Map;
 /*      */ 
 /*      */ 
 /*      */ 
-/*      */ class NullVilator
+/*      */ class NullViladator
 /*      */ {
 /*      */   private Map all;
 /*      */   private Map m;
 /*      */   
-/*      */   protected NullVilator()
+/*      */   protected NullViladator()
 /*      */   {
 /* 2325 */     this.m = new HashMap();
 /* 2326 */     this.all = new HashMap();

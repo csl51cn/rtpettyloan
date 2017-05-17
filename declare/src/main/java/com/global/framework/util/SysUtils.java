@@ -1,5 +1,7 @@
 package com.global.framework.util;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.File;
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -11,8 +13,6 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Random;
-
-import org.apache.commons.lang.StringUtils;
 
 /**
  * @author cqchenf@qq.com
@@ -61,6 +61,14 @@ public class SysUtils {
 		ParsePosition pos = new ParsePosition(0);
 		java.util.Date date = format.parse(value, pos);
 		return new Timestamp(date.getTime());
+	}
+
+	public static String formatDateStrToString(String  date , String pattern)  {
+
+		SimpleDateFormat format = new SimpleDateFormat(pattern);
+        Date strToDate = getStrToDate(date, null);
+        String formatedDate = format.format(strToDate);
+		return formatedDate;
 	}
 
 	public static String getTimeDiff(String maxTime, String minTime) {
@@ -373,7 +381,11 @@ public class SysUtils {
 	public static void main(String[] args) {
 		// System.out.println(getStrToTime("2012-04-05",
 		// "yyyy-MM-dd HH:mm:ss"));
-		System.out.println(getNowDateTime("yyyy年M月dd日"));
+
+        String yyyyMMdd = formatDateStrToString("2017-01-03 00:00:00", "yyyyMMdd");
+        System.out.println(yyyyMMdd);
+
+        System.out.println(getNowDateTime("yyyy年M月dd日"));
 		System.out.println(getWeek(getNowDateTime("yyyy-M-dd")));
 		getTimeDiff("2014-06-12 09:01:30", "2014-06-11 09:01:32");
 		Calendar c = Calendar.getInstance();

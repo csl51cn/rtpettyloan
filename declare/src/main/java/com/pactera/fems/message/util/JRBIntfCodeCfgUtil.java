@@ -25,10 +25,7 @@ public class JRBIntfCodeCfgUtil {
            // loadXmlCfg(filePath, elementCfgMap, "JRBRspMsg");
             String reqPath = filePath + "request/";
            // String rspPath = filePath + "response/";
-
-            int i = 0;
            for (Iterator iterator = set.iterator();iterator.hasNext();) {
-                System.out.println("-----------------"+i++);
                 String key = (String) iterator.next();
                 if (key.startsWith("serviceMethod:")) {
                     Map m = (Map) cfgCache.get(key.substring(key.indexOf("serviceMethod:")));

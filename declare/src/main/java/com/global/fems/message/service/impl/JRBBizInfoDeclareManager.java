@@ -7,12 +7,8 @@ import com.pactera.fems.message.jrb.domain.JRBReqHeaderMsg;
 import com.pactera.fems.message.jrb.service.JRBBizInfoDeclareService;
 import com.pactera.fems.message.jrb.service.impl.JRBBizInfoDeclareServiceImpl;
 import org.apache.log4j.Logger;
-import org.global.framework.xmlbeans.util.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 @Component
@@ -30,27 +26,23 @@ public class JRBBizInfoDeclareManager {
     }
 
     public Object realTimeDeclare(PettyLoanContract contract) throws Exception {
-        // 组装请求报文体数据
-        Map<String, Object> map = new HashMap<String, Object>();
-        //PropertyUtils.bean2Map(contract, map);
-        PropertyUtils.copyBean2Map(contract, map);
-        System.out.println(map);
+
         //组装请求报文头
         JRBReqHeaderMsg headerMsg = new JRBReqHeaderMsg();
         //设置服务代码
-        headerMsg.setSERVER_ID("SVR_PTLN");
+        headerMsg.setSERVICE_CODE("SVR_PTLN");
         //设置交易码
         headerMsg.setTRAN_CODE("PTLN001");
         //设置交易模式
         headerMsg.setTRAN_MODE("ONLINE");
         //设置组织机构代码
-        headerMsg.setBRANCH_ID("12312312231");
+        headerMsg.setBRANCH_ID("91500000584252884K");
         //设置交易日期
         headerMsg.setTRAN_DATE(DateTimeUtil.getNowDateTime("yyyyMMdd"));
         //设置交易时间
         headerMsg.setTRAN_TIMESTAMP(DateTimeUtil.getNowDateTime("HHmmssSSS"));
         //设置用户语言
-        headerMsg.setUSER_LANG("USER_LANG");
+        headerMsg.setUSER_LANG("CHINESE");
         //设置渠道流水号
         //headerMsg.setSEQ_NO(sysCommonService.getSeqNo("wfl_taskinfo"));
         headerMsg.setSEQ_NO("1234567890123145");
@@ -60,11 +52,13 @@ public class JRBBizInfoDeclareManager {
         headerMsg.setMESSAGE_TYPE("1200");
         //设置报文代码
         headerMsg.setMESSAGE_CODE("MESSAGE_CODE");
-        if (contract.getConCustomerName() != null) {
+
+        if ( "530002".equals(contract.getLoanCate())) {
             //委托贷款
+            jrbBizInfoDeclareService.dorealTimeDeclareEntrustedLoan(contract, headerMsg);
         } else {
             //自营贷款
-            jrbBizInfoDeclareService.doRealTimeDeclare(map, headerMsg);
+            jrbBizInfoDeclareService.doRealTimeDeclare(contract, headerMsg);
         }
 
 

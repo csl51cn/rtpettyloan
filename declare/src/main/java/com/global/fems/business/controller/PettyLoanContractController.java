@@ -50,7 +50,6 @@ public class PettyLoanContractController {
     @RequestMapping(params = "method=batchSavePettyLoanContract")
     @ResponseBody
     public String batchSavePettyLoanContract(String ids) {
-        System.out.println(ids);
         try {
             contractService.batchSavePettyLoanContract(ids);
             return "1";

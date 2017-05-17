@@ -4,6 +4,7 @@ import com.global.fems.business.service.RealTimeDeclareService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 实时申报管理Controller
@@ -23,15 +24,19 @@ public class RealTimeDeclareController {
     }
 
     /**
-     * 指定时间范围内的小额贷款合同实时申报
-     * @param startDate
-     * @param endDate
+     * 指定id的小额贷款合同实时申报
      * @return
      */
     @RequestMapping(params = "method=sendRealTimeDeclare")
-    public String sendPettyLoanContract(String  startDate, String  endDate) throws Exception {
-        realTimeDeclareService.sendPettyLoanContract(startDate, endDate);
-        return "business/pettyLoanContract/realTimeDeclare";
+    @ResponseBody
+    public String sendPettyLoanContract(String ids) throws Exception {
+        try {
+            realTimeDeclareService.sendPettyLoanContract(ids);
+            return "1";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "0";
+        }
 
     }
 

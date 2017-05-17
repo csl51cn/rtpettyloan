@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@taglib prefix="ebills" uri="/WEB-INF/tld/dicitem.tld" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -9,8 +8,97 @@
     <title>批量报文发送</title>
     <jsp:include page="../../common/include.jsp"></jsp:include>
     <script type="text/javascript">
+        $(function () {
+            //初始化申报查询的datagrid
+            $("#declareQueryResultTb").datagrid({
+                url: '',
+                singleSelect: true,
+                pagination: true,
+                pageSize: 15,
+                pageList: [5, 10, 15, 20, 30],
+                columns: [[{
+                    field: "id",
+                    title: "主键",
+                    hidden: true
+                }, {
+                    field: "dateId",
+                    title: "Date_Id",
+                    hidden: true
+                }, {
+                    field: "contractNo",
+                    title: "合同编号",
+                    width: 100
+                }, {
+                    field: "customerName",
+                    title: "借款人名称",
+                    width: 100
 
+                }, {
+                    field: "contractAmount",
+                    title: "合同金额",
+                    width: 100,
+                }, {
+                    field: "contractSignDate",
+                    title: "合同签订日期",
+                    width: 100,
+                    formatter: function (value, row) {
+                        return formatDatebox(value);
+                    }
+                }, {
+                    field: "sendStatus",
+                    title: "是否已申报",
+                    width: 100,
+                    formatter: function (value, row) {
+                        if (1 == value) {
+                            return "是";
+                        } else {
+                            return "否";
+                        }
 
+                    }
+                }
+                ]],
+
+                onDblClickRow: function (rowIndex, rowData) {
+                    queryContractByContractId(rowData.id);
+                }
+            })
+
+        })
+
+        //格式化时间
+        Date.prototype.format = function (format) {
+            var o = {
+                "M+": this.getMonth() + 1, // month
+                "d+": this.getDate(), // day
+                "h+": this.getHours(), // hour
+                "m+": this.getMinutes(), // minute
+                "s+": this.getSeconds(), // second
+                "q+": Math.floor((this.getMonth() + 3) / 3), // quarter
+                "S": this.getMilliseconds()
+                // millisecond
+            }
+            if (/(y+)/.test(format))
+                format = format.replace(RegExp.$1, (this.getFullYear() + "")
+                    .substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(format))
+                    format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+            return format;
+        }
+        function formatDatebox(value) {
+            if (value == null || value == '') {
+                return '';
+            }
+            var dt;
+            if (value instanceof Date) {
+                dt = value;
+            } else {
+                dt = new Date(value);
+            }
+
+            return dt.format("yyyy-MM-dd"); //扩展的Date的format方法
+        }
     </script>
 </head>
 <body>
@@ -55,8 +143,9 @@
             </table>
         </div>
     </div>
-
-
 </form>
+<div>
+    <table id="declareQueryResultTb"></table>
+</div>
 </body>
 </html>

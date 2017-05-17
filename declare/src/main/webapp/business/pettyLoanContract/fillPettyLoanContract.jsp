@@ -192,7 +192,7 @@
             }
 
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: "${basePath}/pettyLoanContract.do?method=batchSavePettyLoanContract",
                 data: {"ids": ids.toString()},
                 dataType: "json",

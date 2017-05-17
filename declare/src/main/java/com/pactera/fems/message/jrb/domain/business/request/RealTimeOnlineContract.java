@@ -3,8 +3,6 @@ package com.pactera.fems.message.jrb.domain.business.request;
 import com.global.framework.util.SysUtils;
 import com.pactera.fems.message.jrb.domain.JRBGetTx;
 
-import java.util.Date;
-
 /**
  * 实时网签
  */
@@ -148,7 +146,8 @@ public class RealTimeOnlineContract extends JRBGetTx {
     }
 
     public void setContractSignDate(String contractSignDate) {
-        java.sql.Date date = SysUtils.getStrToDate(contractSignDate, "yyyyMMdd");
-        this.contractSignDate = date.toString();
+
+        String date = SysUtils.formatDateStrToString(contractSignDate, "yyyyMMdd");
+        this.contractSignDate = date;
     }
 }

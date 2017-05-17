@@ -17,21 +17,5 @@ import java.util.List;
 @Repository
 public class RealTimeDeclareDaoImpl extends BaseDaoSupport implements RealTimeDeclareDao  {
 
-    /**
-     * 根据签约时间查询未申报合同记录
-     * @param startDate
-     * @param endDate
-     * @return
-     */
-    public List<PettyLoanContract> findContractBySignDate(String startDate, String endDate) {
-        StringBuilder sql =  new StringBuilder("select * from DC_PETTY_LOAN_CONTRACT where 1 = 1  AND sendStatus = 0");
-        List<Object> list = new ArrayList<Object>();
-        if (StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
-            sql.append(" AND contractsigndate >= ? AND contractsigndate <= ?");
-            list.add(startDate);
-            list.add(endDate);
-        }
-        List<PettyLoanContract> contractList = (List<PettyLoanContract>) super.findForListBySql(sql.toString(), list.toArray(), PettyLoanContract.class);
-        return contractList;
-    }
+
 }
