@@ -5,7 +5,6 @@ import com.global.framework.system.service.SysCommonService;
 import com.global.framework.util.DateTimeUtil;
 import com.pactera.fems.message.jrb.domain.JRBReqHeaderMsg;
 import com.pactera.fems.message.jrb.service.JRBBizInfoDeclareService;
-import com.pactera.fems.message.jrb.service.impl.JRBBizInfoDeclareServiceImpl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,12 +17,8 @@ public class JRBBizInfoDeclareManager {
     @Autowired
     private SysCommonService sysCommonService;
 
-
-    private JRBBizInfoDeclareService jrbBizInfoDeclareService = null;
-
-    public JRBBizInfoDeclareManager() {
-        jrbBizInfoDeclareService = new JRBBizInfoDeclareServiceImpl();
-    }
+    @Autowired
+    private JRBBizInfoDeclareService jrbBizInfoDeclareService;
 
     public Object realTimeDeclare(PettyLoanContract contract) throws Exception {
 

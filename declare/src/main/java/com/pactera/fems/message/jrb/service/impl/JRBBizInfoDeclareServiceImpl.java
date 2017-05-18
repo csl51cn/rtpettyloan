@@ -8,21 +8,24 @@ import com.pactera.fems.message.jrb.support.JRBGetTxValidator;
 import com.pactera.fems.message.jrb.support.JRBMsgHandler;
 import org.global.framework.xmlbeans.bean.DataCheckException;
 import org.global.framework.xmlbeans.util.PropertyUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.annotation.Resource;
 import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-@Component
+@Service
 public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
 
-    @Resource(name = "validator")
-    private LocalValidatorFactoryBean validatorFactoryBean;
+    @Autowired
+    private Validator validator;
 
     public Map doRealTimeDeclare(PettyLoanContract contract, JRBReqHeaderMsg headerMsg) throws DataCheckException {
         RealTimeOnlineContract realTimeOnlineContract = new RealTimeOnlineContract();
@@ -35,7 +38,7 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
             e.printStackTrace();
         }
         //校验数据
-        Set<ConstraintViolation<PettyLoanContract>> constraintViolations = validatorFactoryBean.getValidator().validate(contract);
+        Set<ConstraintViolation<PettyLoanContract>> constraintViolations = validator.validate(contract);
         System.out.println(constraintViolations.size());
         JRBGetTxValidator.validateLoanContract(map);
         //校验通过,

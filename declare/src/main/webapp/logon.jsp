@@ -37,7 +37,7 @@
 
 </head>
 
-<body style="background-color:#1c77ac; background-image:url(images/light.png); background-repeat:no-repeat; background-position:center top; overflow:hidden;">
+<body style="background-color:#1c77ac; background-image:url(resources/images/light.png); background-repeat:no-repeat; background-position:center top; overflow:hidden;">
 
 
 <div id="mainBody">
