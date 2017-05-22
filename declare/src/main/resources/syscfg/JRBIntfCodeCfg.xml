@@ -6,7 +6,7 @@
            reqXmlMapping="JRBReqRealTimeContract" rspXmlMapping="RspIndividualLCYQuery"
            serviceMethod="JRBBizInfoDeclareService.realTimeDeclare"/>
     <field serviceName="实时网签-委托贷款"
-           reqEntity="com.pactera.fems.message.jrb.domain.business.request.RealTimeOnlineContract"
+           reqEntity="com.pactera.fems.message.jrb.domain.business.request.RealTimeOnlineEntrustedContract"
            rspEntity="com.global.fems.message.domain.business.response.RspIndividualLCYQuery"
            reqXmlMapping="JRBReqRealTimeContractEntrustedLoan" rspXmlMapping="RspIndividualLCYQuery"
            serviceMethod="JRBBizInfoDeclareService.realTimeDeclareEntrustedLoan"/>

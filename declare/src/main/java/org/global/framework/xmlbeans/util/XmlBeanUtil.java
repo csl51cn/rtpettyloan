@@ -264,4 +264,6 @@ public class XmlBeanUtil {
         basictypes.put("double", Double.class);
         basictypes.put("long", Long.class);
     }
+
+
 }

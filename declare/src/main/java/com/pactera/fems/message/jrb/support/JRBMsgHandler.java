@@ -1,6 +1,7 @@
 package com.pactera.fems.message.jrb.support;
 
 
+import com.global.fems.client.handler.SocketClient;
 import com.pactera.fems.message.jrb.domain.JRBGetTx;
 import com.pactera.fems.message.jrb.domain.JRBReqHeaderMsg;
 import org.apache.log4j.Logger;
@@ -11,15 +12,19 @@ public class JRBMsgHandler {
     private static final Logger log = Logger.getLogger(JRBMsgHandler.class);
 
 
-    public  static  Object sendMessage(JRBGetTx getTx, JRBReqHeaderMsg headerMsg, String reqXmlMapping) throws DataCheckException {
+    public  static  Object sendMessage(JRBGetTx getTx, JRBReqHeaderMsg headerMsg) throws DataCheckException {
 
-        String reqMsg = new JRBXmlMsgBuilder().buildXml(getTx, headerMsg, reqXmlMapping);
-        log.error("发送的请求报文:\r\n" + reqMsg);
+        String reqMsg = new JRBXmlMsgBuilder().buildXml(getTx, headerMsg);
+        log.debug("发送的请求报文:\r\n" + reqMsg);
         String retMsg = null;
         try{
             //发送报文和接收返回的报文
+//            DeclareClient declareClient = new DeclareClient();
+//            declareClient.sendMsg(reqMsg);
+            retMsg = SocketClient.sendMsg(reqMsg);
+            System.out.println(retMsg);
 
-           // retMsg = new
+            // retMsg = new
         }catch (Exception e){
             //抛出异常
         }

@@ -43,34 +43,16 @@
 
             return dt.format("yyyy-MM-dd"); //扩展的Date的format方法
         }
-        //批量从业务系统导出数据到申报系统
-        function doBatchSave() {
-            var ids = [];
-            var rows = $("#businessQueryResultTb").datagrid("getSelections");
-            for (var i = 0; i < rows.length; i++) {
-                ids.push(rows[i].dateId);
-            }
 
-            $.ajax({
-                type: "GET",
-                url: "${basePath}/pettyLoanContract.do?method=batchSavePettyLoanContract",
-                data: {"ids": ids.toString()},
-                dataType: "json",
-                success: function (data) {
-                    if (data == "1") {
-                        $.messager.alert("提示消息", "操作成功", "info");
-                    } else {
-                        $.messager.alert("提示消息", "操作失败", "warning");
-                    }
-                }
-            });
-        }
         //报文申报
         function doDeclare() {
             var ids = [];
             var rows = $("#declareQueryResultTb").datagrid("getSelections");
             for (var i = 0; i < rows.length; i++) {
-                ids.push(rows[i].dateId);
+                ids.push(rows[i].id);
+            }
+            if (ids.length == 0){
+                return;
             }
             $.ajax({
                 type: "POST",
@@ -78,10 +60,11 @@
                 data: {"ids": ids.toString()},
                 dataType: "json",
                 success: function (data) {
-                    if (data == "1") {
+                    data = eval(data);
+                    if (data.sucesss ) {
                         $.messager.alert("提示消息", "操作成功", "info");
                     } else {
-                        $.messager.alert("提示消息", "操作失败", "warning");
+                        $.messager.alert("提示消息", data.msg, "warning");
                     }
                 }
             });
@@ -91,7 +74,7 @@
         function doDeclareQuery() {
             var flag = true;
             $("#dateCheckMsg").html("");
-            if (!checkEndTime("startDate", "endDate")) {
+            if (!checkEndTime("signStartDate", "signEndDate")) {
                 $("#dateCheckMsg").html("结束时间必须晚于开始时间！");
                 flag = false;
                 return;
@@ -209,11 +192,11 @@
                 <tr>
                     <th width="15%">签约日期：</th>
                     <td>
-                        <input type="text" id="startDate" name="startDate" data-options="required:true"
+                        <input type="text" id="signStartDate" name="signStartDate" data-options="required:true"
                                class="easyui-validatebox"
                                style="border:1px solid #95B8E7;*color:#007fca;width:245px;padding:4px 2px;"
                                onclick="WdatePicker()"/>至
-                        <input type="text" id="endDate" name="endDate" data-options="required:true" style="border:1px solid #95B8E7;
+                        <input type="text" id="signEndDate" name="signEndDate" data-options="required:true" style="border:1px solid #95B8E7;
                         *color:#007fca;width:245px;padding:4px 2px;" onclick="WdatePicker()"
                                class="easyui-validatebox"/>
                         <input type="hidden" name="sendStatus" id="sendStatus" value="0"/>

@@ -4,9 +4,9 @@ import com.global.framework.util.SysUtils;
 import com.pactera.fems.message.jrb.domain.JRBGetTx;
 
 /**
- * 实时网签--自营贷款
+ * 实时网签--委托贷款
  */
-public class RealTimeOnlineContract extends JRBGetTx {
+public class RealTimeOnlineEntrustedContract extends JRBGetTx {
 
 
     private String contractNo; //合同编号
@@ -20,6 +20,16 @@ public class RealTimeOnlineContract extends JRBGetTx {
     private String certificateType;//借款人证件类型
 
     private String certificateNo;//证件号码
+
+    private String conCustomerType;//委托人类别
+
+    private String conCustomerName;//委托人
+
+    private String conCertificateType;//委托人证件类型
+
+    private String conCertificateNo;//委托人证件号码
+
+    private String  conFee;//委托代理费
 
     private String contractAmount;//合同金额
 
@@ -73,6 +83,46 @@ public class RealTimeOnlineContract extends JRBGetTx {
 
     public void setCertificateNo(String certificateNo) {
         this.certificateNo = certificateNo;
+    }
+
+    public String getConCustomerType() {
+        return conCustomerType;
+    }
+
+    public void setConCustomerType(String conCustomerType) {
+        this.conCustomerType = conCustomerType;
+    }
+
+    public String getConCustomerName() {
+        return conCustomerName;
+    }
+
+    public void setConCustomerName(String conCustomerName) {
+        this.conCustomerName = conCustomerName;
+    }
+
+    public String getConCertificateType() {
+        return conCertificateType;
+    }
+
+    public void setConCertificateType(String conCertificateType) {
+        this.conCertificateType = conCertificateType;
+    }
+
+    public String getConCertificateNo() {
+        return conCertificateNo;
+    }
+
+    public void setConCertificateNo(String conCertificateNo) {
+        this.conCertificateNo = conCertificateNo;
+    }
+
+    public String getConFee() {
+        return conFee;
+    }
+
+    public void setConFee(String conFee) {
+        this.conFee = conFee;
     }
 
     public String getContractAmount() {

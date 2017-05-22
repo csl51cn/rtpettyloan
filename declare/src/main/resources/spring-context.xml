@@ -10,8 +10,8 @@
            http://www.springframework.org/schema/context/spring-context-2.5.xsd
            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
-
-	<context:component-scan base-package="com.global.**.controller." >
+	<context:property-placeholder location="classpath:resource.properties"></context:property-placeholder>
+	<context:component-scan base-package="com.global.**.controller,com.pactera.fems" >
 		<context:exclude-filter type="regex" expression=".*Controller" />
 	</context:component-scan>
 	<context:annotation-config />
@@ -117,5 +117,6 @@
 		<property name="defaultEncoding" value="UTF-8"/>
 		<property name="cacheSeconds" value="60"/>
 	</bean>
+
 
 </beans>

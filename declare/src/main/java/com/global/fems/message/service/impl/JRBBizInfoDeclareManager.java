@@ -9,6 +9,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 
 @Component
 public class JRBBizInfoDeclareManager {
@@ -20,7 +22,16 @@ public class JRBBizInfoDeclareManager {
     @Autowired
     private JRBBizInfoDeclareService jrbBizInfoDeclareService;
 
-    public Object realTimeDeclare(PettyLoanContract contract) throws Exception {
+
+    /**
+     * 实时网签
+     * 组装请求报文头
+     *
+     * @param contract 从表DC_PETTY_LOAN_CONTRACT中查询的合同信息
+     * @return
+     * @throws Exception
+     */
+    public Map realTimeDeclare(PettyLoanContract contract) throws Exception {
 
         //组装请求报文头
         JRBReqHeaderMsg headerMsg = new JRBReqHeaderMsg();
@@ -40,24 +51,24 @@ public class JRBBizInfoDeclareManager {
         headerMsg.setUSER_LANG("CHINESE");
         //设置渠道流水号
         //headerMsg.setSEQ_NO(sysCommonService.getSeqNo("wfl_taskinfo"));
-        headerMsg.setSEQ_NO("1234567890123145");
+        headerMsg.setSEQ_NO("2017051900000001");
         //设置模块标识
         headerMsg.setMODULE_ID("CL");
         //设置报文类型
         headerMsg.setMESSAGE_TYPE("1200");
         //设置报文代码
-        headerMsg.setMESSAGE_CODE("MESSAGE_CODE");
+        headerMsg.setMESSAGE_CODE("0001");
 
-        if ( "530002".equals(contract.getLoanCate())) {
+        Map map = null;
+        if ("530002".equals(contract.getLoanCate())) {
             //委托贷款
-            jrbBizInfoDeclareService.dorealTimeDeclareEntrustedLoan(contract, headerMsg);
+            map = jrbBizInfoDeclareService.dorealTimeDeclareEntrustedLoan(contract, headerMsg);
         } else {
             //自营贷款
-            jrbBizInfoDeclareService.doRealTimeDeclare(contract, headerMsg);
+            map = jrbBizInfoDeclareService.doRealTimeDeclare(contract, headerMsg);
         }
 
-
-        return null;
+        return map;
     }
 
 

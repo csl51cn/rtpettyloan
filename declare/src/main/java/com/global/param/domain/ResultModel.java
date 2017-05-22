@@ -59,4 +59,10 @@ public class ResultModel extends Entity {
         model.setEntity(obj);
         return  model;
     }
+    public  static ResultModel fail(String  msg){
+        ResultModel model =  new ResultModel();
+        model.setSucesss(false);
+        model.setMsg(msg);
+        return  model;
+    }
 }
