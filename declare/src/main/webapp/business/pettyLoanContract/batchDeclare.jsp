@@ -108,7 +108,7 @@
         <div class="editBlock">
             <table>
                 <tr>
-                    <th>类型：</th>
+                    <th>上报类型：</th>
                     <td>
                         <input class="easyui-combogrid"
                                style="border:1px solid #95B8E7;*color:#007fca;width:245px;padding:4px 2px;"

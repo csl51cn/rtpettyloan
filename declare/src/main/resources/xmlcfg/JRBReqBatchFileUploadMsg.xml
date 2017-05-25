@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transaction fieldName="transaction" nodeName="transaction" className="com.pactera.fems.message.jrb.domain.JRBReqMsg" type = "Single" >
+	<field fieldName="body" nodeName="body" type = "Single" classNameName="com.pactera.fems.message.jrb.domain.JRBReqBody" isHide="N">
+	  <field fieldName="gettx" nodeName="gettx" type = "Single" classNameName="com.pactera.fems.message.jrb.domain.JRBGetTx" isHide="N">
+	  </field>
+	</field>
+</transaction>

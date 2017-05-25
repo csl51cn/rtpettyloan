@@ -5,7 +5,7 @@ import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 
 /**
- * 小额贷款合同管理Service接口
+ * 实时网签小额贷款合同管理Service接口
  */
 public interface PettyLoanContractService {
     void saveOrUpdatePettyLoanContract(PettyLoanContract contract) throws BaseException;

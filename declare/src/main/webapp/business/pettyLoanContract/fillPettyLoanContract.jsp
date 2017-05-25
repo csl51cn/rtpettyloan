@@ -1,12 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@taglib prefix="ebills" uri="/WEB-INF/tld/dicitem.tld" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>交易查询</title>
+    <title>实时网签小额贷款合同信息操作</title>
     <jsp:include page="../../common/include.jsp"></jsp:include>
     <script type="text/javascript">
 
@@ -78,25 +77,27 @@
             if (flag) {
                 $("#conFee").parent().show();
                 $("#conFee").parent().prev("th").show();
-                $("#conCertificateType").parent().show();
-                $("#conCertificateType").parent().prev("th").show();
-                $("#conCertificateNo").parent().show();
-                $("#conCertificateNo").parent().prev("th").show();
-                $("#conCustomerType").parent().show();
-                $("#conCustomerType").parent().prev("th").show();
-                $("#conCustomerName").parent().show();
-                $("#conCustomerName").parent().prev("th").show();
+//                $("#conCertificateType").parent().show();
+//                $("#conCertificateType").parent().prev("th").show();
+//                $("#conCertificateNo").parent().show();
+//                $("#conCertificateNo").parent().prev("th").show();
+//                $("#conCustomerType").parent().show();
+//                $("#conCustomerType").parent().prev("th").show();
+//                $("#conCustomerName").parent().show();
+//                $("#conCustomerName").parent().prev("th").show();
+              $("#conCustomerTbody").show();
             } else {
                 $("#conFee").parent().hide();
                 $("#conFee").parent().prev("th").hide();
-                $("#conCertificateType").parent().hide();
-                $("#conCertificateType").parent().prev("th").hide();
-                $("#conCertificateNo").parent().hide();
-                $("#conCertificateNo").parent().prev("th").hide();
-                $("#conCustomerType").parent().hide();
-                $("#conCustomerType").parent().prev("th").hide();
-                $("#conCustomerName").parent().hide();
-                $("#conCustomerName").parent().prev("th").hide();
+//                $("#conCertificateType").parent().hide();
+//                $("#conCertificateType").parent().prev("th").hide();
+//                $("#conCertificateNo").parent().hide();
+//                $("#conCertificateNo").parent().prev("th").hide();
+//                $("#conCustomerType").parent().hide();
+//                $("#conCustomerType").parent().prev("th").hide();
+//                $("#conCustomerName").parent().hide();
+//                $("#conCustomerName").parent().prev("th").hide();
+                $("#conCustomerTbody").hide();
             }
 
 
@@ -170,16 +171,18 @@
 
         //根据签订时间段查询
         function doBusinessQuery() {
+            if($("#businessQueryForm").form('validate') == true){
 
-            $("#businessCheckMsg").html("");
-            if (!checkEndTime("startDate", "endDate")) {
-                $("#businessCheckMsg").html("结束时间必须晚于开始时间！");
-                return;
-            } else {
-                $("#businessQueryResultTb").datagrid({
-                    queryParams: form2Json("businessQueryForm"),
-                    "url": "${basePath}/pettyLoanContract.do?method=findPettyLoanContractByDate"
-                });
+                $("#businessCheckMsg").html("");
+                if (!checkEndTime("startDate", "endDate")) {
+                    $("#businessCheckMsg").html("结束时间必须晚于开始时间！");
+                    return;
+                } else {
+                    $("#businessQueryResultTb").datagrid({
+                        queryParams: form2Json("businessQueryForm"),
+                        "url": "${basePath}/pettyLoanContract.do?method=findPettyLoanContractByDate"
+                    });
+                }
             }
         }
 
@@ -329,20 +332,21 @@
 
         //根据申报状态查询
         function doDeclareQuery() {
-            var flag = true;
-            $("#businessCheckMsg").html("");
-            if ($("#insertEndDate").val() != null && !checkEndTime("insertStartDate", "insertEndDate")) {
-                $("#declarebusinessCheckMsg").html("结束时间必须晚于开始时间！");
-                flag = false;
-                return;
+            if($("#declareQueryForm").form('validate') == true){
+                var flag = true;
+                $("#businessCheckMsg").html("");
+                if ($("#insertEndDate").val() != null && !checkEndTime("insertStartDate", "insertEndDate")) {
+                    $("#declarebusinessCheckMsg").html("结束时间必须晚于开始时间！");
+                    flag = false;
+                    return;
+                }
+                if (flag) {
+                    $("#declareQueryResultTb").datagrid({
+                        queryParams: form2Json("declareQueryForm"),
+                        url: "${basePath}/pettyLoanContract.do?method=findPettyLoanContractBySendStatus"
+                    });
+                }
             }
-            if (flag) {
-                $("#declareQueryResultTb").datagrid({
-                    queryParams: form2Json("declareQueryForm"),
-                    url: "${basePath}/pettyLoanContract.do?method=findPettyLoanContractBySendStatus"
-                });
-            }
-
         }
         //刷新当前页，
         function doReset() {
@@ -502,16 +506,16 @@
                                class="easyui-numberbox"/>
                         <span class="warning">${errors['contractAmount']}</span>
                     </td>
-                    <span id="conFeeSpan">
-                    <th width="15%"><span class='warning'>*</span>委托人代理费(元)</th>
+
+                    <th width="15%"><span class='warning'>*</span>委托代理费(元)</th>
                     <td width="32%">
                         <input type="text" id="conFee" name="conFee" precision="2" style="border:1px solid #95B8E7;
                         *color:#007fca;width:245px;padding:4px 2px;" value="${model.conFee}" class="easyui-numberbox">
                         <span class="warning">${errors['conFee']}</span>
                     </td>
-                    </span>
                 </tr>
-
+                </tbody>
+                <tbody id="conCustomerTody">
                 <tr>
                     <th width="15%"><span class='warning'>*</span>委托人类别</th>
                     <td width="32%">

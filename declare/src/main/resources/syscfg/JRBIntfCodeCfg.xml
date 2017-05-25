@@ -10,4 +10,5 @@
            rspEntity="com.global.fems.message.domain.business.response.RspIndividualLCYQuery"
            reqXmlMapping="JRBReqRealTimeContractEntrustedLoan" rspXmlMapping="RspIndividualLCYQuery"
            serviceMethod="JRBBizInfoDeclareService.realTimeDeclareEntrustedLoan"/>
+    <field serviceName="贷款合同信息文件批量上传" reqEntity=""/>
 </config>

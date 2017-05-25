@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 小额贷款合同管理Service接口实现类
+ * 实时网签小额贷款合同管理Service接口实现类
  */
 @Service
 public class PettyLoanContractServiceImpl implements PettyLoanContractService {

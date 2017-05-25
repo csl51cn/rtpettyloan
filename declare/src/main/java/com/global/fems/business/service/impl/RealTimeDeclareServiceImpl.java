@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 /**
- * 实时网签管理Service
+ * 实时网签申报管理Service
  */
 @Service
 public class RealTimeDeclareServiceImpl implements RealTimeDeclareService {

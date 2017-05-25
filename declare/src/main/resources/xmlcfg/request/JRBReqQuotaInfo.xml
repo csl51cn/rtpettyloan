@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--授信额度信息批量文件上传-->
+<transaction className="com.pactera.fems.message.jrb.domain.business.request.QuotaInfo" fieldName="gettx" nodeName="gettx" type="Single" extends="JRBReqBatchFileUploadMsg" extendsfield="transaction.body" isHide="N">
+    <field fieldName="batchNo" nodeName="batch_no" text="批次号" type = "String" required = "Y" length="[1,50]"/>
+    <field fieldName="dataType" nodeName="data_type" text="数据类型" type = "String" required = "Y" length="[1,10]"/>
+    <field fieldName="recordCount" nodeName="record_count" text="总记录数" type = "String" required = "Y" length="[16]"/>
+    <field fieldName="quotaInfo" nodeName="quota_info" text="" className="java.util.ArrayList" type = "Group" subNodeName="quota_info" isHide="H" >
+        <field className="com.pactera.fems.message.jrb.domain.business.request.QuotaInfoParam" type="Single" fieldName="quotaInfo" nodeName="quota_info" isHide="N">
+            <field fieldName="reportType" nodeName="report_type" text="上报类型" type = "String" required = "Y" length="[6]"/>
+            <field fieldName="orgCode" nodeName="org_code" text="组织机构代码" type = "String" required = "Y" length="[1,20]"/>
+            <field fieldName="contractNo" nodeName="contract_no" text="额度协议编号" type = "String" required = "Y" length="[1,40]" />
+            <field fieldName="contractName" nodeName="contract_name" text="额度协议名称" type = "String" required = "Y" length="[1,100]" />
+            <field fieldName="customerType" nodeName="customer_type" text="借款人类别" type = "String" required = "Y"  length="[1,6]"/>
+            <field fieldName="customerName" nodeName="customer_name" text="借款人名称" type = "String" required = "Y"  length="[1,100]"/>
+            <field fieldName="certificateType" nodeName="certificate_type" text="借款人证件类型" type = "String" required = "Y"  length="[1,100]"/>
+            <field fieldName="certificateNo" nodeName="certificate_no" text="借款人证件号码" type = "String" required = "Y"  length="[1,100]"/>
+            <field fieldName="contractSignDate" nodeName="contract_sign_date" text="额度协议签订日期" type = "Date" required = "Y"  format="yyyyMMdd"/>
+            <field fieldName="contractBeginDate" nodeName="contract_begin_date" text="额度协议起期" type = "Date" required = "Y"  format="yyyyMMdd"/>
+            <field fieldName="contractEndDate" nodeName="contract_end_date" text="额度协议终期" type = "Date" required = "Y"  format="yyyyMMdd"/>
+            <field fieldName="contractAmount" nodeName="contract_amount" text="额度协议金额" type = "Double" required = "Y"  length="[1,16]" format="#.##"/>
+            <field fieldName="ccy" nodeName="ccy" text="币种" type = "String" required = "Y"  length="[1,6]"/>
+            <field fieldName="usedAmount" nodeName="used_amount" text="已用额度" type = "Double" required = "Y"  length="[1,16]" format="#.##"/>
+            <field fieldName="remainAmount" nodeName="remain_amount" text="剩余额度" type = "Double" required = "Y"  length="[1,16]" format="#.##"/>
+            <field fieldName="guarType" nodeName="guar_type" text="担保方式" type = "String" required = "Y" length="[1,6]"/>
+            <field fieldName="isCircle" nodeName="is_circle" text="是否循环额度" type = "String" required = "Y"  length="[1,6]"/>
+            <field fieldName="contractStatus" nodeName="contract_status" text="协议状态" type = "String" required = "Y"  length="[1,6]"/>
+            <field fieldName="relationManager" nodeName="relation_manager" text="客户经理" type = "String" required = "Y"  length="[1,50]"/>
+            <field fieldName="remark" nodeName="remark" text="备注" type = "String" required = "Y"  length="[1,50]"/>
+        </field>
+    </field>
+</transaction>

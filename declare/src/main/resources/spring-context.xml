@@ -10,7 +10,7 @@
            http://www.springframework.org/schema/context/spring-context-2.5.xsd
            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
-	<context:property-placeholder location="classpath:resource.properties"></context:property-placeholder>
+	<context:property-placeholder location="classpath:*.properties"></context:property-placeholder>
 	<context:component-scan base-package="com.global.**.controller,com.pactera.fems" >
 		<context:exclude-filter type="regex" expression=".*Controller" />
 	</context:component-scan>
@@ -27,13 +27,13 @@
 
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
 		scope="singleton" destroy-method="close">
-		<property name="driverClass" value="${datasource.driverClassName}"/>
+		<property name="driverClass" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
 		<property name="jdbcUrl" value="jdbc:sqlserver://10.200.1.20:1433;DatabaseName=AutoSet_RunTongTest" />
-		<property name="user" value="${datasource.username}" />
-		<property name="password" value="${datasource.password}"/>
+		<property name="user" value="AutoSet_RunTong" />
+		<property name="password" value="AutoSet_RunTong@15"/>
 
 		<!-- 指定连接数据库连接池的最大连接数 -->
-		<property name="maxPoolSize" value="${datasource.maxPoolSize}" />
+		<property name="maxPoolSize" value="200" />
 		<!-- 指定连接数据库连接池的最小连接数 -->
 		<property name="minPoolSize" value="${datasource.minPoolSize}" />
 		<!-- 指定连接数据库连接池的初始化连接数 -->
@@ -80,6 +80,7 @@
 			<tx:method name="doIndividualLCYModify" propagation="NOT_SUPPORTED" />
 			<tx:method name="doIndividualLCYCancel" propagation="NOT_SUPPORTED" />
 			<tx:method name="doIndividualLCYMakeUp" propagation="NOT_SUPPORTED" />
+			<tx:method name="sendPettyLoanContract" propagation="NOT_SUPPORTED" />
 
 			<!-- 对剩余的方法进行事务 -->
 			<tx:method name="*" propagation="REQUIRED" rollback-for="Exception"/><!-- rollback-for="RuntimeException"  -->

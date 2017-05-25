@@ -7,7 +7,7 @@ import com.global.framework.exception.BaseException;
 import java.util.List;
 
 /**
- * 小额贷款合同管理Dao接口
+ * 实时网签小额贷款合同信息管理Dao接口
  */
 public interface PettyLoanContractDao {
 

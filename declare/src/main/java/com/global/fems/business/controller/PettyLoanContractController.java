@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 小额贷款合同管理Controller
+ * 实时网签合同信息管理Controller
  * Created by senlin.deng on 2017/4/28.
  */
 @Controller

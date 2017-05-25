@@ -72,18 +72,20 @@
         }
         //根据申报状态查询
         function doDeclareQuery() {
-            var flag = true;
-            $("#dateCheckMsg").html("");
-            if (!checkEndTime("signStartDate", "signEndDate")) {
-                $("#dateCheckMsg").html("结束时间必须晚于开始时间！");
-                flag = false;
-                return;
-            }
-            if (flag) {
-                $("#declareQueryResultTb").datagrid({
-                    queryParams: form2Json("fo"),
-                    url: "${basePath}/pettyLoanContract.do?method=findPettyLoanContractBySendStatus"
-                });
+            if($("#fo").form('validate') == true){
+                var flag = true;
+                $("#dateCheckMsg").html("");
+                if (!checkEndTime("signStartDate", "signEndDate")) {
+                    $("#dateCheckMsg").html("结束时间必须晚于开始时间！");
+                    flag = false;
+                    return;
+                }
+                if (flag) {
+                    $("#declareQueryResultTb").datagrid({
+                        queryParams: form2Json("fo"),
+                        url: "${basePath}/pettyLoanContract.do?method=findPettyLoanContractBySendStatus"
+                    });
+                }
             }
 
         }

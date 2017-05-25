@@ -5,7 +5,6 @@ import com.global.fems.business.domain.PettyLoanContract;
 import com.global.framework.dbutils.support.BaseDaoSupport;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
-import com.global.framework.util.DateTimeUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 小额贷款合同管理Dao接口实现类
+ * 实时网签小额贷款合同管理Dao接口实现类
  */
 @Repository("PettyLoanContractDao")
 public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoanContractDao {

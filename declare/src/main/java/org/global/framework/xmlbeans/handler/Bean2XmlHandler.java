@@ -20,6 +20,7 @@ import org.global.framework.xmlbeans.util.PropertyUtils;
 import org.global.framework.xmlbeans.util.XmlBeanUtil;
 
 import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
@@ -48,6 +49,39 @@ public class Bean2XmlHandler {
         String var11 = xs.toXML(obj);
         return var11;
     }
+    public String toXml(Object obj, String fileName, String ccsid,String filePath) throws DataCheckException {
+        XStream xs = new XStream(new DomDriver(ccsid, new NoNameCoder()));
+        System.out.println("fileName=" + fileName);
+        Map alias = XmlBeanCfgManager.getCfgByFileName(fileName);
+        String nodeName = (String)alias.get(fileName + ".nodename");
+        xs.alias(nodeName, obj.getClass());
+        Field[] fields = PropertyUtils.getDeclaredFields(obj.getClass(), new ArrayList());
+
+        for(int xml = 0; xml < fields.length; ++xml) {
+            Field field = fields[xml];
+            String key = fileName + "." + nodeName + ".";
+            buildXml(xs, alias, key + field.getName(), field, obj);
+        }
+
+        String var11 = xs.toXML(obj);
+
+        //保存到本地的方法
+        PrintWriter printWriter = null;
+        if(StringUtils.isNotBlank(filePath)){
+            try {
+                printWriter = new PrintWriter(filePath, ccsid);
+                xs.toXML(obj,printWriter);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }finally {
+                if(printWriter != null)
+                    printWriter.close();
+            }
+        }
+        return var11;
+    }
+
+
 
     private static void buildXml(XStream xs, Map alias, String key, Field field, Object obj) throws DataCheckException {
         XmlMsgCfg xmlMsgCfg = XmlBeanUtil.getXmlMsgCfg(key, alias);

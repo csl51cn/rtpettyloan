@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -50,8 +51,8 @@ public class JRBBizInfoDeclareManager {
         //设置用户语言
         headerMsg.setUSER_LANG("CHINESE");
         //设置渠道流水号
-        //headerMsg.setSEQ_NO(sysCommonService.getSeqNo("wfl_taskinfo"));
-        headerMsg.setSEQ_NO("2017051900000001");
+        headerMsg.setSEQ_NO(sysCommonService.getSeqNo("wfl_taskinfo"));
+       // headerMsg.setSEQ_NO("2017051900000001");
         //设置模块标识
         headerMsg.setMODULE_ID("CL");
         //设置报文类型
@@ -71,5 +72,26 @@ public class JRBBizInfoDeclareManager {
         return map;
     }
 
+    /**
+     * 额度信息申报
+     * @param list
+     * @return
+     */
+
+    public  Map  quotaInfoDeclare(List list){
+
+        return null;
+    }
+
+    /**
+     * 合同信息申报
+     * @param list
+     * @return
+     */
+
+    public  Map  contractInfoDeclare(List list){
+
+        return null;
+    }
 
 }
