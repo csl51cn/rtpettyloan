@@ -43,17 +43,28 @@ public class JRBXmlMsgBuilder {
      * @return
      */
     private String formatXml(String xml) {
-        StringBuilder xmlToReturn = new StringBuilder();
-        int len = xml.length();
-        String length = String.format("%08d", len);
-        xmlToReturn.append(length).append("<?xml version='1.0' encoding='UTF-8'?>");
+        StringBuilder xmlToReturn = new StringBuilder("<?xml version='1.0' encoding='UTF-8'?>");
+        xmlToReturn.append(xml);
         Pattern p = Pattern.compile("\\s{2,}|\t|\r|\n");
-        Matcher m = p.matcher(xml);
+        Matcher m = p.matcher(xmlToReturn);
         String finalresult = m.replaceAll("");
-        xmlToReturn.append(finalresult);
+//        try {
+//            finalresult =  new String(finalresult.getBytes(),"UTF-8");
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+        int len = finalresult.length();
+        String length = String.format("%08d", len);
+        //清空StringBuilder
+        xmlToReturn.setLength(0);
+        xmlToReturn.append(length).append(finalresult);
         return xmlToReturn.toString();
     }
 
+    public static void main(String[] args) {
+        String  xml = "";
+
+    }
     /**
      * 批量上传生成xml
      * @param getTxList

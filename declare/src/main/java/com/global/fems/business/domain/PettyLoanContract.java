@@ -6,11 +6,9 @@ import com.global.framework.dbutils.annotation.ColumnMapping;
 import com.global.framework.dbutils.annotation.TableMapping;
 import com.global.framework.dbutils.support.Entity;
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -72,7 +70,7 @@ public class PettyLoanContract extends Entity {
     @ColumnMapping(columnName = "insertDate", columnType = "Date")
     private Date insertDate;//记录保存日期
     @ColumnMapping(columnName = "sendDate", columnType = "Date")
-    private Date sendDate;//记录保存日期
+    private Date sendDate;//记录申报日期
 
 
     private String businessNum;//业务编号，查询时会使用，DC_PETTY_LOAN_CONTRACT表中没有

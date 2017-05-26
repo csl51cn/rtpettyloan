@@ -263,7 +263,7 @@
             window.location.href = "${basePath}/pettyLoanContract.do?method=findPettyLoanContractById&id=" + id;
         }
 
-        //
+        //根据WorkInfo的dateId查询合同信息
         function queryContractByWorkInfoId(id) {
             window.location.href = "${basePath}/pettyLoanContract.do?method=findPettyLoanContractByWorkInfoId&dateId=" + id;
         }

@@ -10,6 +10,8 @@ import java.util.List;
  * 贷款合同信息循环节点
  */
 public class ContractInfoCycleNode extends Entity {
+    private String id;              //主键
+    private Integer dateId;           // Data_WorkInfo中的Date_Id
     private String reportType;        //上报类型:增 删 改
     private String orgCode;          //组织机构代码
     private String contractNo;       //合同编号
@@ -58,7 +60,26 @@ public class ContractInfoCycleNode extends Entity {
     private String assPostalCode;     //受托人邮编
     private Double conFee;            //代理费
     private List<CoCustomerCycleNode> coCustomerInfo;//共同借款人数组
+    private String isSend; //发送状态,0表示未发送，1表示已发送
+    private Date sendDate;//记录申报日期
+    private Date insertDate;//记录保存日期
+    private String isLast;//是否是最新,Y表示是,N表示否
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Integer getDateId() {
+        return dateId;
+    }
+
+    public void setDateId(Integer dateId) {
+        this.dateId = dateId;
+    }
 
     public String getReportType() {
         return reportType;
@@ -418,5 +439,37 @@ public class ContractInfoCycleNode extends Entity {
 
     public void setCoCustomerInfo(List<CoCustomerCycleNode> coCustomerInfo) {
         this.coCustomerInfo = coCustomerInfo;
+    }
+
+    public String getIsSend() {
+        return isSend;
+    }
+
+    public void setIsSend(String isSend) {
+        this.isSend = isSend;
+    }
+
+    public Date getSendDate() {
+        return sendDate;
+    }
+
+    public void setSendDate(Date sendDate) {
+        this.sendDate = sendDate;
+    }
+
+    public Date getInsertDate() {
+        return insertDate;
+    }
+
+    public void setInsertDate(Date insertDate) {
+        this.insertDate = insertDate;
+    }
+
+    public String getIsLast() {
+        return isLast;
+    }
+
+    public void setIsLast(String isLast) {
+        this.isLast = isLast;
     }
 }

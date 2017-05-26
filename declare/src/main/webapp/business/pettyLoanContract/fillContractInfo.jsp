@@ -45,6 +45,11 @@
             $("#realQuotaNo").parent().prev("th").hide();
 
 
+            //如果编辑已申报的记录,保存按钮失效
+            if($("#isSend").val() != null){
+                $("#saveBtn").linkbutton("disable");
+            }
+
         })
 
         //设置授信额度协议编号显示状态
@@ -196,10 +201,10 @@
            iconCls="icon-reload" onclick="doReset();">重置</a>
         <a id="addCoCustomerInfoBtn" name="resetBtn"
            href="javascript:void(0)" class="easyui-linkbutton" plain="true"
-           iconCls="icon-reload" onclick="addCoCustomerInfo();">添加共借人信息</a>
+           iconCls="icon-add" onclick="addCoCustomerInfo();">添加共借人信息</a>
         <a id="deleteCoCustomerInfoBtn" name="resetBtn"
            href="javascript:void(0)" class="easyui-linkbutton" plain="true"
-           iconCls="icon-reload" onclick="delCoCustomerInfo();">删除共借人信息</a>
+           iconCls="icon-del" onclick="delCoCustomerInfo();">删除共借人信息</a>
 
     </div>
 </div>
@@ -208,7 +213,8 @@
         <table width="99%">
             <tr>
                 <td colspan="4" class="subtitle">合同信息</td>
-                <input type="hidden" name="sendStatus" id="sendStatus" value="${model.sendStatus }"/>
+                <input type="hidden" name="isSend" id="isSend" value="${model.isSend }"/>
+                <input type="hidden" name="isLast" id="isLast" value="${model.isLast }"/>
             </tr>
             <tbody>
             <tr>
