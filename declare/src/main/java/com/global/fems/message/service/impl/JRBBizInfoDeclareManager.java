@@ -52,7 +52,7 @@ public class JRBBizInfoDeclareManager {
         headerMsg.setUSER_LANG("CHINESE");
         //设置渠道流水号
         headerMsg.setSEQ_NO(sysCommonService.getSeqNo("wfl_taskinfo"));
-       // headerMsg.setSEQ_NO("2017051900000001");
+
         //设置模块标识
         headerMsg.setMODULE_ID("CL");
         //设置报文类型

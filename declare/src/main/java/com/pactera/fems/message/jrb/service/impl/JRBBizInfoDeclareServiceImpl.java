@@ -4,6 +4,7 @@ import com.global.fems.business.domain.PettyLoanContract;
 import com.global.fems.interfaces.validator.First;
 import com.global.fems.interfaces.validator.Second;
 import com.pactera.fems.message.jrb.domain.JRBReqHeaderMsg;
+import com.pactera.fems.message.jrb.domain.JRBRespMsg;
 import com.pactera.fems.message.jrb.domain.business.request.RealTimeOnlineContract;
 import com.pactera.fems.message.jrb.domain.business.request.RealTimeOnlineEntrustedContract;
 import com.pactera.fems.message.jrb.service.JRBBizInfoDeclareService;
@@ -23,6 +24,7 @@ import java.util.Set;
 
 @Service
 public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
+
 
 
     @Autowired
@@ -53,9 +55,9 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
         //设置签约时间格式
         realTimeOnlineContract.setContractSignDate(realTimeOnlineContract.getContractSignDate());
         //发送数据
-        JRBMsgHandler.sendMessage(realTimeOnlineContract, headerMsg);
-
-        return null;
+        JRBRespMsg respMsg = (JRBRespMsg) JRBMsgHandler.sendMessage(realTimeOnlineContract, headerMsg);
+        result.put("respMsg",respMsg);
+        return result;
     }
 
     /**
@@ -82,8 +84,9 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
         //设置签约时间格式
         realTimeOnlineEntrustedContract.setContractSignDate(realTimeOnlineEntrustedContract.getContractSignDate());
         //发送数据
-        JRBMsgHandler.sendMessage(realTimeOnlineEntrustedContract, headerMsg);
-        return null;
+        JRBRespMsg respMsg = (JRBRespMsg) JRBMsgHandler.sendMessage(realTimeOnlineEntrustedContract, headerMsg);
+        result.put("respMsg",respMsg);
+        return result;
     }
 
     /**

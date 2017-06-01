@@ -109,12 +109,12 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
         List<PettyLoanContract> list = new ArrayList<PettyLoanContract>();
         for (String id : idsArr) {
             Integer dateId = new Integer(id);
-            PettyLoanContract pettyLoanContract = pettyLoanContractDao.findPettyLoanContractByWorkInfoId(dateId);
             //根据dateId查询小额贷款合同表，避免重复插入数据
             PettyLoanContract existPettyLoanContract = pettyLoanContractDao.findContractByDateId(dateId);
             if (existPettyLoanContract != null) {//如果存在，跳过
                 continue;
             }
+            PettyLoanContract pettyLoanContract = pettyLoanContractDao.findPettyLoanContractByWorkInfoId(dateId);
             //将以百分之一为单位的月利率转换为以千分之一为单位的月利率，接口文档要求千分之一为单位的利率
             pettyLoanContract.setIntRate(pettyLoanContract.getIntRate() * 10);
             //当前查询的业务数据贷款类型都是自营贷款，委托贷款未走业务系统，设置贷款类型为自营贷款530001

@@ -80,7 +80,6 @@
 			<tx:method name="doIndividualLCYModify" propagation="NOT_SUPPORTED" />
 			<tx:method name="doIndividualLCYCancel" propagation="NOT_SUPPORTED" />
 			<tx:method name="doIndividualLCYMakeUp" propagation="NOT_SUPPORTED" />
-			<tx:method name="sendPettyLoanContract" propagation="NOT_SUPPORTED" />
 
 			<!-- 对剩余的方法进行事务 -->
 			<tx:method name="*" propagation="REQUIRED" rollback-for="Exception"/><!-- rollback-for="RuntimeException"  -->

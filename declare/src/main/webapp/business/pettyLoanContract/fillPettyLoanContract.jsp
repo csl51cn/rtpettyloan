@@ -162,6 +162,9 @@
 
                     queryContractByWorkInfoId(rowData.dateId);
                     $('#businessQueryWindow').window('close');
+                },
+                onLoadSuccess:function(){
+                    $(this).datagrid('clearChecked');
                 }
             })
 
@@ -391,6 +394,7 @@
                 <tr>
                     <td colspan="4" class="subtitle">合同信息</td>
                     <input type="hidden" name="sendStatus" id="sendStatus" value="${model.sendStatus }"/>
+                    <input type="hidden" name="dateId" id="dateId" value="${model.dateId }"/>
 
                 </tr>
                 <tbody>
@@ -491,7 +495,7 @@
                     <th width="15%"><span class="warning">*</span>合同签订日期</th>
                     <td>
                         <input type="text" id="contractSignDate" name="contractSignDate"
-                               value="<fmt:formatDate pattern="yyyy-MM-dd"
+                               value="<fmt:formatDate pattern="yyyy-MM-dd "
                                                 value="${model.contractSignDate }" /> " onclick="WdatePicker()"
                                class="inputText"/>
                         <span class="warning">${errors['contractSignDate']}</span>
@@ -515,7 +519,7 @@
                     </td>
                 </tr>
                 </tbody>
-                <tbody id="conCustomerTody">
+                <tbody id="conCustomerTbody">
                 <tr>
                     <th width="15%"><span class='warning'>*</span>委托人类别</th>
                     <td width="32%">
@@ -620,8 +624,7 @@
                 <th width="15%">是否已申报：</th>
                 <td width="25%">
                     <select id="sendStatusCode" name="sendStatusCode" class="easyui-combobox" style="width:75px;">
-                        <option value="">--请选择--</option>
-                        <option value="0">否</option>
+                        <option value="0" selected>否</option>
                         <option value="1">是</option>
                     </select>
                 </td>

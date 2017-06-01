@@ -52,7 +52,7 @@ public class PettyLoanContract extends Entity {
     @NotBlank(message = "{PettyLoanContract.conCertificateNo.null}", groups = {Second.class})
     @ColumnMapping(columnName = "conCertificateNo", columnType = "String")
     private String conCertificateNo;//委托人证件号码
-    @NotNull(message = "{PettyLoanContract.conCustomerType.null}", groups = {Second.class})
+    @NotNull(message = "{PettyLoanContract.conFee.null}", groups = {Second.class})
     @ColumnMapping(columnName = "conFee", columnType = "BigDecimal")
     private Double conFee;//委托代理费
     @NotNull(message = "{PettyLoanContract.contractAmount.null}", groups = {First.class, Second.class})
@@ -63,7 +63,7 @@ public class PettyLoanContract extends Entity {
     private Double intRate;//月利率
     @NotNull(message = "{PettyLoanContract.contractSignDate.null}", groups = {First.class, Second.class})
     @ColumnMapping(columnName = "contractSignDate", columnType = "Date")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date contractSignDate;//合同签订日期
     @ColumnMapping(columnName = "sendStatus", columnType = "Integer")
     private Integer sendStatus;//发送状态,0表示未发送，1表示已发送
@@ -71,7 +71,10 @@ public class PettyLoanContract extends Entity {
     private Date insertDate;//记录保存日期
     @ColumnMapping(columnName = "sendDate", columnType = "Date")
     private Date sendDate;//记录申报日期
-
+    @ColumnMapping(columnName = "seqno",columnType = "String")
+    private String seqNo;//渠道流水号
+    @ColumnMapping(columnName = "netsignno",columnType = "String")
+    private String netSignNo;//网签编号
 
     private String businessNum;//业务编号，查询时会使用，DC_PETTY_LOAN_CONTRACT表中没有
 
@@ -235,5 +238,19 @@ public class PettyLoanContract extends Entity {
         this.dateId = dateId;
     }
 
+    public String getSeqNo() {
+        return seqNo;
+    }
 
+    public void setSeqNo(String seqNo) {
+        this.seqNo = seqNo;
+    }
+
+    public String getNetSignNo() {
+        return netSignNo;
+    }
+
+    public void setNetSignNo(String netSignNo) {
+        this.netSignNo = netSignNo;
+    }
 }

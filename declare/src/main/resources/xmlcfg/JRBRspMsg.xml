@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<msg class="com.pactera.fems.message.wg.domain.WGRspMsg" nodeName="MSG">
-	<field fieldName="head" nodeName="HEAD" type = "Single" className="com.pactera.fems.message.wg.domain.WGRspMsgHead" isHide="N">
-	  <field fieldName="VER" nodeName="VER" type = "String" required = "Y" length="[1,4]"/>
-	  <field fieldName="SRC" nodeName="SRC" type = "String" required = "Y" length="[6]"/>
-	  <field fieldName="DES" nodeName="DES"  type = "Integer" required = "Y" length="[4|9]"/>
-	  <field fieldName="SRCAPP" nodeName="SRCAPP"  type = "String" required = "Y" length="[1,100]"/>
-	  <field fieldName="DESAPP" nodeName="DESAPP"  type = "String" required = "N" length="[1,100]"/>
-	  <field fieldName="SENDTIME" nodeName="SENDTIME"  type = "Date" required = "Y" format="yyyy-MM-dd HH:mm:ss"/>
-	  <field fieldName="MSGNO" nodeName="MSGNO"  type = "String" required = "Y" length="[1,33]"/>
-	  <field fieldName="CODE" nodeName="CODE"  type = "String" required = "Y" length="[1,6]"/>
-	  <field fieldName="DETAIL" nodeName="DETAIL"  type = "String" required = "N" length="[1,200]"/>
-	</field>
-	<field fieldName="body" nodeName="BODY" type = "Single" className="com.pactera.fems.message.wg.domain.WGMsgBody" isHide="N">
-	  <field fieldName="dataStores" nodeName="DATASTORES" type = "Single" className="com.pactera.fems.message.wg.domain.WGDataStores" isHide="N">
-		<field className="com.pactera.fems.message.wg.domain.WGRspPageDS" fieldName="ds" nodeName="DS" type="Single" isHide="N">
-			<field fieldName="PAGESIZE" nodeName="PAGESIZE" type = "String" required = "N" length="[1,10]"/>
-			<field fieldName="PAGENUMBER" nodeName="PAGENUMBER" type = "String" required = "N" length="[1,10]"/>
-			<field fieldName="RECORDCOUNT" nodeName="RECORDCOUNT"  type = "String" required = "N" length="[1,10]"/>
+<transaction fieldName="transaction" nodeName="transaction" className="com.pactera.fems.message.jrb.domain.JRBRespMsg" type = "Single" >
+	<field fieldName="header" nodeName="header" className = "com.pactera.fems.message.jrb.domain.JRBRespHeader" type = "Single" isHide="N">
+		<field fieldName="msg" nodeName="msg" className="com.pactera.fems.message.jrb.domain.JRBRespHeaderMsg"  type = "Single"  isHide="N">
+			<field fieldName="ret" nodeName="RET" className="com.pactera.fems.message.jrb.domain.JRBRET"  type = "Single"  isHide="N">
+				<field fieldName="retMsg"  nodeName="RET_MSG" text="返回消息" type = "String" required = "Y" length="[1,32]"/>
+				<field fieldName="retCode"  nodeName="RET_CODE" text="返回代码" type = "String" required = "Y" length="[1,32]"/>
+			</field>
+			<field fieldName="tranTimestamp"  nodeName="TRAN_TIMESTAMP" text="交易时间" type = "String" required = "Y" length="[1,16]"/>
+			<field fieldName="messageType" nodeName="MESSAGE_TYPE" text="报文类型" type = "String" required = "Y" length="[1,32]"/>
+			<field fieldName="sourceBranchNo" nodeName="SOURCE_BRANCH_NO" text="源节点编号" type = "String" required = "Y" length="[1,32]"/>
+			<field fieldName="TRAN_DATE" nodeName="TRAN_DATE" text="交易日期" type = "String" required = "Y"  length="[1,32]"/>
+			<field fieldName="branchId" nodeName="BRANCH_ID" text="组织机构代码" type = "String" required = "Y"  length="[1,32]"/>
+			<field fieldName="messageCode" nodeName="MESSAGE_CODE" text="报文代码" type = "String" required = "Y" length="[1,32]"/>
+			<field fieldName="retStatus" nodeName="RET_STATUS" text="返回状态" type = "String" required = "Y" length="[1,32]"/>
+			<field fieldName="serviceCode" nodeName="SERVICE_CODE" text="服务代码" type = "String" required = "Y" length="[1,32]"/>
+			<field fieldName="destBranchNo" nodeName="DEST_BRANCH_NO" text="目标节点编号" type = "String" required = "Y" length="[1,32]"/>
+			<field fieldName="tranDate" nodeName="TRAN_DATE" text="交易日期" type = "String" required = "Y" length="[1,32]"/>
+			<field fieldName="seqNo" nodeName="SEQ_NO" text="渠道流水号" type = "String" required = "Y" length="[1,32]"/>
 		</field>
-	  </field>
 	</field>
-	<field fieldName="tail" nodeName="TAIL" type = "Single" className="com.pactera.fems.message.wg.domain.WGMsgTail" isHide="Y">
-	  <field fieldName="SIGNATURE" nodeName="SIGNATURE" type = "String" required = "N" length="[0,300]"/>
-	  <field fieldName="CHECKSUM" nodeName="CHECKSUM" type = "String" required = "N" length="[0,300]"/>
+	<field fieldName="body" nodeName="body" type = "Single" className="com.pactera.fems.message.jrb.domain.JRBRespBody" isHide="N">
+		<field fieldName="rtrtx" nodeName="RtrTx" type = "Single" className="com.pactera.fems.message.jrb.domain.JRBRtrTx" isHide="N">
+		</field>
 	</field>
-</msg>
+</transaction>

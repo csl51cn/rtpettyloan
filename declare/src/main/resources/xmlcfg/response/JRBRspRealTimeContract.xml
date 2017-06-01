@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--实时网签-自营贷款-->
+<transaction className="com.pactera.fems.message.jrb.domain.business.response.RealTimeContractRtrTx" fieldName="rtrtx"
+             nodeName="RtrTx" type="Single" extends="JRBRspMsg" extendsfield="transaction.body" isHide="N">
+    <!--自营贷款-->
+    <field fieldName="netSignId" nodeName="NET_SIGN_ID" text="网签编号" type = "String" required = "Y" length="[1,50]"/>
+</transaction>

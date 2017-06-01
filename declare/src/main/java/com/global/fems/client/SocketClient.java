@@ -8,8 +8,6 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Properties;
 
-import static java.awt.SystemColor.info;
-
 /**
  * socket通信
  */
@@ -42,19 +40,20 @@ public class SocketClient {
         InputStreamReader inputStreamReader = null;
         InputStream inputStream = null;
         BufferedReader bufferedReader = null;
+        StringBuilder info = new StringBuilder();
         try {
             outputStream = socket.getOutputStream();//获取一个输出流，向服务端发送信息
             printWriter = new PrintWriter(outputStream);//将输出流包装成打印流
             printWriter.print(xml);
             printWriter.flush();
-            //socket.shutdownOutput();//关闭输出流
+           // socket.shutdownOutput();//关闭输出流
+
             inputStream = socket.getInputStream();//获取一个字节输入流，接收服务端的信息
             int n = 1024 ;
             byte buffer[] = new byte[n];
-            StringBuilder info = new StringBuilder();
+
             while ((inputStream.read(buffer, 0, n) != -1) ) {
-                info.append(buffer);
-                System.out.print(new String(buffer));
+                info.append(new String(buffer));
             }
 
 //            inputStreamReader = new InputStreamReader(inputStream);//转换成字符流
@@ -64,7 +63,7 @@ public class SocketClient {
 //            while ((temp = bufferedReader.readLine()) != null) {
 //                info.append(temp);
 //            }
-            System.out.println("客户端接收服务端发送信息：" + info);
+            System.out.println("客户端接收服务端发送信息：" + info.toString());
 
         } catch (IOException e) {
             logger.error("SocketClient: sendMsg()", e);
@@ -82,8 +81,8 @@ public class SocketClient {
             }
 
         }
-
         return info.toString();
+
     }
 
     public static void main(String[] args) {

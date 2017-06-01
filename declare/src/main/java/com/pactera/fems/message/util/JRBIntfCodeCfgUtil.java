@@ -22,19 +22,18 @@ public class JRBIntfCodeCfgUtil {
 
             String filePath = "/xmlcfg/";
             loadXmlCfg(filePath, elementCfgMap, "JRBReqMsg");
-           // loadXmlCfg(filePath, elementCfgMap, "JRBRspMsg");
+            loadXmlCfg(filePath, elementCfgMap, "JRBRspMsg");
             String reqPath = filePath + "request/";
-           // String rspPath = filePath + "response/";
-           for (Iterator iterator = set.iterator();iterator.hasNext();) {
+            String rspPath = filePath + "response/";
+            for (Iterator iterator = set.iterator(); iterator.hasNext(); ) {
                 String key = (String) iterator.next();
                 if (key.startsWith("serviceMethod:")) {
                     Map m = (Map) cfgCache.get(key.substring(key.indexOf("serviceMethod:")));
                     String reqXmlMapping = (String) m.get("reqXmlMapping");
                     loadXmlCfg(reqPath, elementCfgMap, reqXmlMapping);
-
-//                    String rspXmlMapping = (String) m.get("rspXmlMapping");
-//                    if (!"".equals(rspXmlMapping))
-//                        loadXmlCfg(rspPath, elementCfgMap, rspXmlMapping);
+                    String rspXmlMapping = (String) m.get("rspXmlMapping");
+                    if (!"".equals(rspXmlMapping))
+                        loadXmlCfg(rspPath, elementCfgMap, rspXmlMapping);
                 }
             }
 

@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -44,9 +43,8 @@
             $("#realQuotaNo").hide();
             $("#realQuotaNo").parent().prev("th").hide();
 
-
             //如果编辑已申报的记录,保存按钮失效
-            if($("#isSend").val() != null){
+            if($("#isSend").val() == '1'){
                 $("#saveBtn").linkbutton("disable");
             }
 
@@ -86,48 +84,48 @@
 
         //保存记录
         function doSave() {
-             //$("#fo").submit();
-            var action = $("#fo").attr("action");
-            $.ajax({
-                type: "POST",
-                url:action ,
-                data:$("#fo").serialize(),
-                sucess:function (data) {
-                    data = eval(data);
-                    if(data.sucess ){
-                        $.messager.alert("提示消息", "操作成功", "info");
-                    }else {
-                        $.messager.alert("提示消息", "操作失败", "warning");
-                    }
-                }
-            });
+             $("#fo").submit();
+//            var action = $("#fo").attr("action");
+//            $.ajax({
+//                type: "POST",
+//                url:action ,
+//                data:$("#fo").serialize(),
+//                sucess:function (data) {
+//                    data = eval(data);
+//                    if(data.sucess ){
+//                        $.messager.alert("提示消息", "操作成功", "info");
+//                    }else {
+//                        $.messager.alert("提示消息", "操作失败", "warning");
+//                    }
+//                }
+//            });
         }
 
         //动态添加共同借款人相关项
-        var i = 0;
+        var i = 1;
         function addCoCustomerInfo(){
-            if(i == 4){
+            if(i == 5){
                 $.messager.alert("提示消息", "最多添加四个共借人!", "warning");
                 return;
             }
             var id = "coCustomerTbody" + i;
-            var addContent ="<tbody id='"+ id +"'><th width='15%'><span class='warning'>*</span>共同借款人类别</th>"+
-            "<td><input class ='easyui-combogrid' id='coCustomerType"+i +"' name='coCustomerInfo["+ i +"].coCustomerType'  style='width:251px;'"+
+            var addContent ="<tbody id='"+ id +"'><th width='15%'><span class='warning'>*</span>共同借款人"+ i+"类别</th>"+
+            "<td><input class ='easyui-combogrid' id='coCustomerType"+i +"' name='coCustomerType"+ i +"'  style='width:251px;'"+
                 "<span class='warning'>${errors['coCustomerType']}</span> </td>"+
-              "<th width='15%'><span class='warning'>*</span>共同借款人名称</th>" +
-                "<td><input type='text' id='coCustomerName"+ i +"' name='coCustomerInfo["+i+"].coCustomerName'"+
-                " class='inputText'> <span class='warning'>${errors['coCustomerName']}</span></td>"+
-               " <tr> <th width='15%'><span class='warning'>*</span>共同借款人证件类型</th> <td width='32%'>"+
-                "<input class='easyui-combogrid' id='coCertificateType"+ i +"' name='coCustomerInfo["+ i + "].coCertificateType' style='width:251px;'"+
+              "<th width='15%'><span class='warning'>*</span>共同借款人"+ i+"名称</th>" +
+                "<td><input type='text' id='coCustomerName"+ i +"' name='coCustomerName"+ i +
+                "' class='inputText'> <span class='warning'>${errors['coCustomerName']}</span></td>"+
+               " <tr> <th width='15%'><span class='warning'>*</span>共同借款人"+ i+"证件类型</th> <td width='32%'>"+
+                "<input class='easyui-combogrid' id='coCertificateType"+ i +"' name='coCertificateType"+ i+"' style='width:251px;'"+
             "<span class='warning'>${errors['coCertificateType']}</span> </td>"+
-               "<th width='15%'><span class='warning'>*</span>共同借款人证件号码</th><td>"+
-                "<input type='text' id='coCertificateNo"+ i +"' name='coCustomerInfo["+i+"].coCertificateNo'"+
-             " class='inputText'/>"+
+               "<th width='15%'><span class='warning'>*</span>共同借款人"+ i+"证件号码</th><td>"+
+                "<input type='text' id='coCertificateNo"+ i +"' name='coCertificateNo"+i+
+             "' class='inputText'/>"+
                 "<span class='warning'>${errors['coCertificateNo']}</span>  </td></tr>"+
-                "<tr> <th width='15%'>共同贷款人联系人</th><td> <input type='text' id='coLinkman"+i +"' name='coCustomerInfo["+ i +"].coLinkman'"+
-            "class='inputText'/>  </td>"+
-                "<th width='15'>共同贷款人联系电话</th> <td width='32%'> <input type='text' id='coTelephone"+ i +"' name='coCustomerInfo["+ i +"].coTelephone'"+
-            "class='inputText'> </td> </tr> </tbody>"  ;
+                "<tr> <th width='15%'>共同贷款人"+ i+"联系人</th><td> <input type='text' id='coLinkman"+i +"' name='coLinkman"+i+
+            "' class='inputText'/>  </td>"+
+                "<th width='15'>共同贷款人"+ i+"联系电话</th> <td width='32%'> <input type='text' id='coTelephone"+ i +"' name='coTelephone"+ i+
+            "' class='inputText'> </td> </tr> </tbody>"  ;
             $("#conCustomerTbody").after(addContent);
             $('#coCustomerType'+i).combogrid({
                 panelWidth:255,
@@ -156,7 +154,7 @@
             i++;
         }
 
-
+        //删除共借人信息
         function delCoCustomerInfo(){
             if(i > 0){
                 i-- ;
@@ -164,10 +162,165 @@
                 return;
             }
             $("#coCustomerTbody" + i).remove();
+        }
 
+
+        function openBusinessQueryWindow() {
+
+            //初始化业务查询的datagrid
+            $("#businessQueryResultTb").datagrid({
+                url: '',
+                pagination: true,
+                checkOnSelect: true,
+                pageSize: 15,
+                pageList: [5, 10, 15, 20, 30],
+                columns: [[{
+                    field: "id",
+                    title: "主键",
+                    checkbox: true
+                }, {
+                    field: "dateId",
+                    title: "Date_Id",
+                    hidden: true
+                }, {
+                    field: "contractNo",
+                    title: "合同编号",
+                    width: 100
+                }, {
+                    field: "customerName",
+                    title: "借款人名称",
+                    width: 100
+
+                }, {
+                    field: "contractAmount",
+                    title: "合同金额",
+                    width: 100,
+                }, {
+                    field: "contractSignDate",
+                    title: "合同签订日期",
+                    width: 100,
+                    formatter: function (value, row) {
+                        return formatDatebox(value);
+                    }
+                }]],
+
+                onDblClickRow: function (rowIndex, rowData) {
+
+                   queryContractByContractNo(rowData.contractNo);
+                    $('#businessQueryWindow').window('close');
+                },
+                onLoadSuccess:function(){
+                    $(this).datagrid('clearChecked');
+                }
+            })
+
+            $('#businessQueryWindow').window('open');
 
         }
 
+        function queryContractByContractNo(contractNo){
+            window.location.href = "${basePath}/contractInfo.do?method=findContractBycontractNo&contractNo=" + contractNo;
+        }
+
+
+        //批量保存
+        function doBatchSave(){
+            var contractNo = [];
+            var rows = $("#businessQueryResultTb").datagrid("getSelections");
+            for (var i = 0; i < rows.length; i++) {
+                contractNo.push(rows[i].contractNo);
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "${basePath}/contractInfo.do?method=batchSaveContract",
+                data: {"contractNos": contractNo.toString()},
+                dataType: "json",
+                success: function (data) {
+                    if (data == "1") {
+                        $.messager.alert("提示消息", "操作成功", "info");
+                    } else {
+                        $.messager.alert("提示消息", "操作失败", "warning");
+                    }
+                }
+            });
+        }
+        //根据签订时间段查询,贷款合同信息上报依赖于实时网签,实时网签执行后才做贷款合同信息上报操作
+        function doBusinessQuery() {
+            if($("#businessQueryForm").form('validate') == true){
+
+                $("#businessCheckMsg").html("");
+                if (!checkEndTime("startDate", "endDate")) {
+                    $("#businessCheckMsg").html("结束时间必须晚于开始时间！");
+                    return;
+                } else {
+                    $("#businessQueryResultTb").datagrid({
+                        queryParams: form2Json("businessQueryForm"),
+                        "url": "${basePath}/pettyLoanContract.do?method=findPettyLoanContractBySendStatus"
+                    });
+                }
+            }
+        }
+        //检查结束时间是否大于等于开始时间
+        function checkEndTime(dateId1, dateId2) {
+            var startDate = $("#" + dateId1).val();
+            var start = new Date(startDate.replace("-", "/").replace("-", "/"));
+            var endDate = $("#" + dateId2).val();
+            var end = new Date(endDate.replace("-", "/").replace("-", "/"));
+            if (end < start) {
+                return false;
+            }
+            return true;
+        }
+        //将表单数据转为json
+        function form2Json(id) {
+
+            var arr = $("#" + id).serializeArray();
+            var jsonStr = "";
+
+            jsonStr += '{';
+            for (var i = 0; i < arr.length; i++) {
+                jsonStr += '"' + arr[i].name + '":"' + arr[i].value + '",'
+            }
+            jsonStr = jsonStr.substring(0, (jsonStr.length - 1));
+            jsonStr += '}'
+
+            var json = JSON.parse(jsonStr)
+            return json
+        }
+        //格式化时间
+        Date.prototype.format = function (format) {
+            var o = {
+                "M+": this.getMonth() + 1, // month
+                "d+": this.getDate(), // day
+                "h+": this.getHours(), // hour
+                "m+": this.getMinutes(), // minute
+                "s+": this.getSeconds(), // second
+                "q+": Math.floor((this.getMonth() + 3) / 3), // quarter
+                "S": this.getMilliseconds()
+                // millisecond
+            }
+            if (/(y+)/.test(format))
+                format = format.replace(RegExp.$1, (this.getFullYear() + "")
+                    .substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(format))
+                    format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+            return format;
+        }
+        function formatDatebox(value) {
+            if (value == null || value == '') {
+                return '';
+            }
+            var dt;
+            if (value instanceof Date) {
+                dt = value;
+            } else {
+                dt = new Date(value);
+            }
+
+            return dt.format("yyyy-MM-dd"); //扩展的Date的format方法
+        }
     </script>
 </head>
 <body>
@@ -184,6 +337,13 @@
            name="declarebusinessQueryBtn" href="javascript:void(0)"
            class="easyui-linkbutton" plain="true" iconCls="icon-search"
            onclick="openDeclareQueryWindow()">申报查询</a>
+        <a id="saveBtn"
+           name="saveBtn" href="javascript:void(0)"
+           class="easyui-linkbutton" plain="true" iconCls="icon-save"
+           onclick="doSave();">保存</a>
+        <a id="resetBtn" name="resetBtn"
+           href="javascript:void(0)" class="easyui-linkbutton" plain="true"
+           iconCls="icon-reload" onclick="doReset();">重置</a>
         <a id="declarebusinessUpdateBtn"
            name="declarebusinessQueryBtn" href="javascript:void(0)"
            class="easyui-linkbutton" plain="true" iconCls="icon-save"
@@ -192,13 +352,6 @@
            name="declarebusinessQueryBtn" href="javascript:void(0)"
            class="easyui-linkbutton" plain="true" iconCls="icon-del"
            onclick="openDeclareQueryWindow()">已申报删除</a>
-        <a id="saveBtn"
-           name="saveBtn" href="javascript:void(0)"
-           class="easyui-linkbutton" plain="true" iconCls="icon-save"
-           onclick="doSave();">保存</a>
-        <a id="resetBtn" name="resetBtn"
-           href="javascript:void(0)" class="easyui-linkbutton" plain="true"
-           iconCls="icon-reload" onclick="doReset();">重置</a>
         <a id="addCoCustomerInfoBtn" name="resetBtn"
            href="javascript:void(0)" class="easyui-linkbutton" plain="true"
            iconCls="icon-add" onclick="addCoCustomerInfo();">添加共借人信息</a>
@@ -214,6 +367,7 @@
             <tr>
                 <td colspan="4" class="subtitle">合同信息</td>
                 <input type="hidden" name="isSend" id="isSend" value="${model.isSend }"/>
+                <input type="hidden" name="dateId" id="dateId" value="${model.dateId }"/>
                 <input type="hidden" name="isLast" id="isLast" value="${model.isLast }"/>
             </tr>
             <tbody>
@@ -344,7 +498,7 @@
                 <th width="15"><span class="warning">*</span>贷款对象规模</th>
                 <td width="32%">
                     <input class="easyui-combogrid" id="loanObjectSize" name="loanObjectSize" style="width:251px;"
-                           value="${model.loanObject}"
+                           value="${model.loanObjectSize}"
                            data-options="
 									panelWidth: 255,
 									idField: 'dictCode',
@@ -361,8 +515,7 @@
                 <th width="15%"><span class="warning">*</span>合同签订日期</th>
                 <td>
                     <input type="text" id="contractSignDate" name="contractSignDate"
-                           value="<fmt:formatDate pattern="yyyy-MM-dd"
-                                                value="${model.contractSignDate }" /> " onclick="WdatePicker()"
+                           value="${model.contractSignDate }" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
                            class="inputText"/>
                     <span class="warning">${errors['contractSignDate']}</span>
                 </td>
@@ -371,16 +524,14 @@
                 <th width="15"><span class="warning">*</span>合同有效起始日期</th>
                 <td width="32%">
                     <input type="text" id="contractBeginDate" name="contractBeginDate"
-                           value="<fmt:formatDate pattern="yyyy-MM-dd"
-                                                value="${model.contractBeginDate }" /> " onclick="WdatePicker()"
+                           value="${model.contractBeginDate } " onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
                            class="inputText"/>
                     <span class="warning">${errors['contractBeginDate']}</span>
                 </td>
                 <th width="15%"><span class="warning">*</span>合同有效结束日期</th>
                 <td>
                     <input type="text" id="contractEndDate" name="contractEndDate"
-                           value="<fmt:formatDate pattern="yyyy-MM-dd"
-                                                value="${model.contractEndDate }" /> " onclick="WdatePicker()"
+                           value="${model.contractEndDate }" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
                            class="inputText"/>
                     <span class="warning">${errors['contractEndDate']}</span>
                 </td>
@@ -474,13 +625,13 @@
 
                 <th width="15%"><span class='warning'>*</span>客户经理</th>
                 <td>
-                    <input type="text" id="relationManager" name="relationManager" value='<c:choose> <c:when test="${model.relationManager !=null }">${model.relationManager} </c:when><c:otherwise>渠道来源</c:otherwise></c:choose>'
+                    <input type="text" id="relationManager" name="relationManager" value='<c:choose><c:when test="${model.relationManager !=null }">${model.relationManager}</c:when><c:otherwise>渠道来源</c:otherwise></c:choose>'
                            class="inputText"/>
                     <span class="warning">${errors['relationManager']}</span>
                 </td>
                 <th width="15%"><span class='warning'>*</span>争议解决方式</th>
                 <td>
-                    <input class="easyui-combogrid" id="disputeScheme" name="contractStatus"
+                    <input class="easyui-combogrid" id="disputeScheme" name="disputeScheme"
                            style="width:251px;"
                            value="${model.disputeScheme}"
                            data-options="
@@ -603,11 +754,10 @@
                 </td>
             </tr>
             <tr>
-                <th width="15%"><span class='warning'>*</span>代理费(元)</th>
+                <th width="15%">代理费(元)</th>
                 <td width="32%">
                     <input type="text" id="conFee" name="conFee" precision="2" style="border:1px solid #95B8E7;
                         *color:#007fca;width:245px;padding:4px 2px;" value="${model.conFee}" class="easyui-numberbox"/>
-                    <span class="warning">${errors['conFee']}</span>
                 </td>
                 <th width="15%">委托方法定代表人/负责人</th>
                 <td width="32%">
@@ -651,12 +801,13 @@
                            value="${model.conAccountNo}" class="inputText"/>
                     <span class="warning">${errors['conAccountNo']}</span>
                 </td>
-                <th width="15%">受托人</th>
+                <th width="15%"><span class="warning">*</span>受托人</th>
                 <td width="32%">
                     <input type="text" id="assCustomerName" name="assCustomerName"
                            value="${model.assCustomerName}" class="inputText"/>
-                </td>
 
+                    <span class="warning">${errors['assCustomerName']}</span>
+                </td>
             </tr>
 
             <tr>
@@ -712,6 +863,9 @@
                 </td>
 
                 <td>
+
+                    <input type="hidden"  name="sendStatusCode" data-options="required:true"
+                          value="1"/>
                     <input type="text" id="endDate" name="endDate" data-options="required:true" style="border:1px solid #95B8E7;
                         *color:#007fca;width:245px;padding:4px 2px;" onclick="WdatePicker()"
                            class="easyui-validatebox"/>
