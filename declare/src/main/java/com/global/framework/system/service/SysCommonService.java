@@ -1,11 +1,11 @@
 package com.global.framework.system.service;
 
-import java.util.List;
-
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 import com.global.framework.system.domain.CommonOrgUser;
 import com.global.framework.system.domain.Property;
+
+import java.util.List;
 
 /**
  * 
@@ -20,7 +20,10 @@ public interface SysCommonService {
 	 * @return
 	 */
 	public String getSeqNo(String objName) throws BaseException;
-	
+
+	public String getNo(String objName) throws BaseException;
+
+
 	/**
 	 * 根据柜员号生成流水号,格式为:金融机构代码（4位）+年月日+8位唯一代码
 	 * @param objName

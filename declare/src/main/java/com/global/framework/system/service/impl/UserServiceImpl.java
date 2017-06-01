@@ -1,15 +1,5 @@
 package com.global.framework.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
@@ -18,8 +8,16 @@ import com.global.framework.system.domain.User;
 import com.global.framework.system.domain.UserRole;
 import com.global.framework.system.service.SysCommonService;
 import com.global.framework.system.service.UserService;
-import com.global.framework.system.web.common.session.SessionManager;
 import com.global.framework.system.web.common.util.MD5Util;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author cqchenf@qq.com
@@ -53,7 +51,7 @@ public class UserServiceImpl implements UserService {
 		if (user != null && StringUtils.isNotBlank(user.getUserId())) {
 			return this.updateUser(user);
 		} else {
-			user.setUserId(sysCommonService.getSeqNo("SYS_USER"));
+			user.setUserId(sysCommonService.getNo("SYS_USER"));
 			user.setPassword(MD5Util.getMD5("123456"));// 初始密码123456
 			user.setStatus("Y");
 			return this.userDao.insertUser(user);

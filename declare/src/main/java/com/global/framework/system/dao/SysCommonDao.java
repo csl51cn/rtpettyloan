@@ -1,11 +1,11 @@
 package com.global.framework.system.dao;
 
-import java.util.List;
-
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 import com.global.framework.system.domain.CommonOrgUser;
 import com.global.framework.system.domain.Property;
+
+import java.util.List;
 
 /**
  * 
@@ -15,6 +15,8 @@ import com.global.framework.system.domain.Property;
 public interface SysCommonDao {
 
 	public String getSeqNo(String objName) throws BaseException;
+
+	public String getNo(String objName) throws BaseException;
 
 	public String getBizNo(String objName) throws BaseException;
 	

@@ -52,7 +52,7 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
      */
     public PageBean findPettyLoanContractByDate(String startDate, String endDate, PageBean pageBean) throws BaseException {
 
-        return pageBean = pettyLoanContractDao.findPettyLoanContractByDate(startDate, endDate, pageBean);
+        return pettyLoanContractDao.findPettyLoanContractByDate(startDate, endDate, pageBean);
 
     }
 
@@ -153,5 +153,14 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
             pettyLoanContractDao.batchSavePettyLoanContract(list);
         }
 
+    }
+
+    public PageBean findPettyLoanContractByContractNo(String contractNo, PageBean pageBean) throws BaseException {
+
+        return pettyLoanContractDao.findPettyLoanContractByContractNo(contractNo,pageBean);
+    }
+
+    public PageBean findPettyLoanContractByContractNoFromBizSys(String contractNo, PageBean pageBean) throws BaseException {
+        return pettyLoanContractDao.findPettyLoanContractByContractNoFromBizSys(contractNo,pageBean);
     }
 }

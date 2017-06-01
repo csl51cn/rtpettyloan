@@ -40,7 +40,7 @@ import com.global.web.BaseController;
 public class SpfeQueryController extends BaseController {
 
 	private static final Logger log = Logger
-			.getLogger(SpfeLmtController.class);
+			.getLogger(SpfeQueryController.class);
 	
 	@Autowired
 	private SpfeQueryService spfeQueryService;

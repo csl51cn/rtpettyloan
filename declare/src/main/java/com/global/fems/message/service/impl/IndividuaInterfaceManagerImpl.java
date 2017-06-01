@@ -1,49 +1,16 @@
 package com.global.fems.message.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.global.framework.xmlbeans.bean.DataCheckException;
-import org.global.framework.xmlbeans.bean.MsgErrorCodeEnum;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.global.fems.business.domain.SpfeCsr;
 import com.global.fems.business.domain.SpfeLmt;
 import com.global.fems.business.domain.SpfeMdf;
 import com.global.fems.business.domain.SpfeMkUp;
 import com.global.fems.business.enums.TradeTypeEnum;
 import com.global.fems.business.service.SafeExRateService;
-import com.global.fems.business.service.SpfeCsrService;
-import com.global.fems.business.service.SpfeLmtService;
 import com.global.fems.business.service.SpfeMdfService;
 import com.global.fems.business.service.SpfeMkUpService;
 import com.global.fems.message.domain.MsgHead;
-import com.global.fems.message.domain.business.receive.RecvCommonUser;
-import com.global.fems.message.domain.business.receive.RecvIndividualLCYCancel;
-import com.global.fems.message.domain.business.receive.RecvIndividualLCYMakeUp;
-import com.global.fems.message.domain.business.receive.RecvIndividualLCYModify;
-import com.global.fems.message.domain.business.receive.RecvIndividualLCYQuery;
-import com.global.fems.message.domain.business.receive.RecvIndividualLCYRegCheck;
-import com.global.fems.message.domain.business.receive.RecvIndividualLCYRegQuery;
-import com.global.fems.message.domain.business.receive.RecvIndividualLCYRegister;
-import com.global.fems.message.domain.business.receive.RecvMakeUpSignStatus;
-import com.global.fems.message.domain.business.receive.RecvQueryIndividualFXSEAInfo;
-import com.global.fems.message.domain.business.receive.RecvSafeExRateQuery;
-import com.global.fems.message.domain.business.response.RspIndividualLCYCancel;
-import com.global.fems.message.domain.business.response.RspIndividualLCYMakeUp;
-import com.global.fems.message.domain.business.response.RspIndividualLCYModify;
-import com.global.fems.message.domain.business.response.RspIndividualLCYQuery;
-import com.global.fems.message.domain.business.response.RspIndividualLCYRegCheck;
-import com.global.fems.message.domain.business.response.RspIndividualLCYRegQuery;
-import com.global.fems.message.domain.business.response.RspIndividualLCYRegister;
-import com.global.fems.message.domain.business.response.RspQueryIndividualFXSEAInfo;
-import com.global.fems.message.domain.business.response.RspQueryIndividualFXSEAInfoRec;
-import com.global.fems.message.domain.business.response.RspSafeExRateQuery;
+import com.global.fems.message.domain.business.receive.*;
+import com.global.fems.message.domain.business.response.*;
 import com.global.fems.message.service.IndividuaInterfaceManager;
 import com.global.fems.message.support.IndMessageValidator;
 import com.global.fems.message.support.IndividualLCYDataConver;
@@ -61,6 +28,17 @@ import com.global.workflow.domain.TaskInfo;
 import com.global.workflow.domain.TransStateEnum;
 import com.global.workflow.service.TasklistService;
 import com.pactera.fems.message.wg.constants.BizTypeEnum;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.global.framework.xmlbeans.bean.DataCheckException;
+import org.global.framework.xmlbeans.bean.MsgErrorCodeEnum;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 行内接口门面服务实现类
@@ -74,12 +52,12 @@ public class IndividuaInterfaceManagerImpl implements IndividuaInterfaceManager 
 	private static final Logger log = Logger.getLogger(IndividuaInterfaceManagerImpl.class);
 	@Autowired
 	private IndividualMsgBizManager individualMsgBizManager;
-	@Autowired
-	private SpfeLmtService spfeLmtService;
+	//@Autowired
+	//private SpfeLmtService spfeLmtService;
 	@Autowired
 	private SpfeMdfService spfeMdfService;
-	@Autowired
-	private SpfeCsrService spfeCsrService;
+//	@Autowired
+//	private SpfeCsrService spfeCsrService;
 	@Autowired
 	private SpfeMkUpService SpfeMkUpService;
 	@Autowired
@@ -150,7 +128,7 @@ public class IndividuaInterfaceManagerImpl implements IndividuaInterfaceManager 
 				ds.setFCY_REMIT_AMT(ds.getTXAMT());//通过支付机构渠道时，汇出资金等于售汇交易金额
 				mode.setFCY_REMIT_AMT(ds.getTXAMT());
 			}
-			mode = spfeLmtService.doHandle(mode, user, true, head.getReqSeqNo());
+			//mode = spfeLmtService.doHandle(mode, user, true, head.getReqSeqNo());
 			txnSerialNo = mode.getSEQNO();
 		} catch (Exception e) {
 			log.error("个人结售汇信息录入数据库操作失败:请求方流水号为[" + head.getReqSeqNo() + "]", e);
@@ -171,7 +149,7 @@ public class IndividuaInterfaceManagerImpl implements IndividuaInterfaceManager 
 			throw e;
 		} finally {
 			//更新个人结售汇信息登记接口信息
-			spfeLmtService.doFinish(txnSerialNo, rsp, transState, recode, remsg, user);
+			//spfeLmtService.doFinish(txnSerialNo, rsp, transState, recode, remsg, user);
 		}
 		return new Object[]{rsp, txnSerialNo };
 	}
@@ -293,7 +271,7 @@ public class IndividuaInterfaceManagerImpl implements IndividuaInterfaceManager 
 			mode.setPrimaryBizNo(primaryBizNo);
 			mode.setTradeNo(tradeNo);
 			mode.setSEQNO("");
-			mode = spfeCsrService.doHandle(mode, user, true, head.getReqSeqNo());
+			//mode = spfeCsrService.doHandle(mode, user, true, head.getReqSeqNo());
 			txnSerialNo = mode.getSEQNO();
 		} catch (Exception e) {
 			log.error("个人结售汇信息撤消数据库操作失败:请求方流水号为[" + head.getReqSeqNo() + "]", e);
@@ -315,7 +293,7 @@ public class IndividuaInterfaceManagerImpl implements IndividuaInterfaceManager 
 			throw e;
 		} finally {
 			//更新个人结售汇撤消接口信息
-			spfeCsrService.doFinish(mode, rsp, transState, recode, remsg, user);
+			//.doFinish(mode, rsp, transState, recode, remsg, user);
 		}
 		return new Object[]{rsp, txnSerialNo };
 	}
@@ -538,7 +516,7 @@ public class IndividuaInterfaceManagerImpl implements IndividuaInterfaceManager 
 	
 	/**
 	 * 删除错误的外围系统登记数据
-	 * @param renfo
+	 * @param
 	 * @return
 	 * @throws Exception
 	 */
@@ -547,7 +525,7 @@ public class IndividuaInterfaceManagerImpl implements IndividuaInterfaceManager 
 		if(taskinfo!=null && taskinfo.getTxnSerialNo()!=null){
 			SpfeLmt delLmt = new SpfeLmt();
 			delLmt.setSEQNO(taskinfo.getTxnSerialNo());
-			spfeLmtService.dodelete(delLmt);
+			//spfeLmtService.dodelete(delLmt);
 			tasklistService.dodeleteTaskInfo(taskinfo.getTxnSerialNo());
 		}
 		

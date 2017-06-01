@@ -1,10 +1,5 @@
 package com.global.framework.system.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 import com.global.framework.system.dao.SysCommonDao;
@@ -12,6 +7,10 @@ import com.global.framework.system.domain.CommonOrgUser;
 import com.global.framework.system.domain.Property;
 import com.global.framework.system.service.SysCommonService;
 import com.global.framework.util.MD5Utils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 
@@ -29,7 +28,12 @@ public class SysCommonServiceImpl implements SysCommonService {
 		String seqNo = this.sysCommonDao.getSeqNo(objName);
 		return seqNo;
 	}
-	
+	public String getNo(String objName) throws BaseException {
+		// 不带时间的流水号
+		String seqNo = this.sysCommonDao.getNo(objName);
+		return seqNo;
+	}
+
 	public String getSeqNoByOperNo(String objName, String operNo) throws BaseException {
 		// 流水号
 		String seqNo = this.sysCommonDao.getSeqNo(objName);

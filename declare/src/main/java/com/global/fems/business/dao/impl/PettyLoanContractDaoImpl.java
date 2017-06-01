@@ -93,8 +93,8 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
     /**
      * 根据申报状态从表DC_PETTY_LOAN_CONTRACT查询小额贷款合同记录
      *
-     * @param sendStatus      0表示未申报，1表示已申报
-     * @param startDate     签约时间起始时间
+     * @param sendStatus 0表示未申报，1表示已申报
+     * @param startDate  签约时间起始时间
      * @param endDate    签约时间终止时间
      * @param pageBean
      */
@@ -126,7 +126,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
      */
     public PettyLoanContract findPettyLoanContractByWorkInfoId(Integer dateId) throws BaseException {
         StringBuilder sql = new StringBuilder(
-                    "SELECT  " +
+                "SELECT  " +
                         "  w.date_id AS dateid ," +
                         "  w.合同编号 AS contractno,  " +
                         "  w.授信金额 AS contractamount,  " +
@@ -206,5 +206,44 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
             return (PettyLoanContract) list.get(0);
         }
         return null;
+    }
+
+    /**
+     * 根据合同号查询合同信息
+     *
+     * @param contractNo
+     * @param pageBean
+     * @return
+     * @throws BaseException
+     */
+    public PageBean findPettyLoanContractByContractNo(String contractNo, PageBean pageBean) throws BaseException {
+        String sql = "select * from DC_PETTY_LOAN_CONTRACT where contractno = ?";
+        PageBean forPage = super.findForPage(sql, new Object[]{contractNo}, pageBean, PettyLoanContract.class);
+        return forPage;
+    }
+
+    public PageBean findPettyLoanContractByContractNoFromBizSys(String contractNo, PageBean pageBean) throws BaseException {
+        StringBuilder sql = new StringBuilder("SELECT " +
+                "w.date_id AS dateid ," +
+                "w.业务编号 AS businessNum," +
+                "w.合同编号 AS contractno, " +
+                "w.授信金额 AS contractamount, " +
+                "w.签约时间 AS contractsigndate, " +
+                "ISNULL( " +
+                "CASE w.授信主体类型 " +
+                "WHEN 1 THEN " +
+                "m.客户名称 " +
+                "WHEN 2 THEN " +
+                "c.中文客户名称 " +
+                "END, " +
+                "'' " +
+                ") AS customername " +
+                "FROM " +
+                "Data_WorkInfo w " +
+                "LEFT JOIN Data_CompanyInfo c ON w.授信主体编号 = c.Id " +
+                "LEFT JOIN Data_MemberInfo m ON w.授信主体编号 = m.ID " +
+                "WHERE w.合同编号 = ? ");
+        PageBean forPage = super.findForPage(sql.toString(), new Object[]{contractNo}, pageBean, PettyLoanContract.class);
+        return forPage;
     }
 }

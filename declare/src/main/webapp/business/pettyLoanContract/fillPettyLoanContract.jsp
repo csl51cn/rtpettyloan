@@ -57,7 +57,42 @@
                 $("#fo").prop("action", "${basePath}/pettyLoanContract.do?method=saveEntrustPettyLoanContract");
             }
 
+            $("#contract_no2").change(function(){
+                var value = $("#contract_no2").val();
+                if(value != ""){
+                    $("#sendStatusCode").combogrid({disabled: true});
+                    $("#insertStartDate").prop("disabled", "disabled");
+                    $("#insertEndDate").prop("disabled", "disabled");
+                }else{
+                    $("#sendStatusCode").combogrid({disabled: false});
+                    $("#insertStartDate").removeProp("disabled");
+                    $("#insertEndDate").removeProp("disabled");
+                }
+            })
 
+            $("#contract_no1").change(function(){
+                var value=$("#contract_no1").val();
+                if(value != ""){
+                    $("#startDate").prop("disabled", "disabled");
+                    $("#endDate").prop("disabled", "disabled");
+                }else{
+                    $("#startDate").removeProp("disabled");
+                    $("#endDate").removeProp("disabled");
+                }
+
+            })
+
+
+            var netSignNo = "${model.netSignNo}";
+            if (netSignNo == ""){
+                $("#netSignNo").parent().hide();
+                $("#netSignNo").parent().prev("th").hide();
+
+            }else{
+                $("#netSignNo").parent().show();
+                $("#netSignNo").parent().prev("th").show();
+
+            }
         })
 
         //判断是否为委托贷款，530001代表自营贷款，530002代表委托贷款
@@ -77,26 +112,11 @@
             if (flag) {
                 $("#conFee").parent().show();
                 $("#conFee").parent().prev("th").show();
-//                $("#conCertificateType").parent().show();
-//                $("#conCertificateType").parent().prev("th").show();
-//                $("#conCertificateNo").parent().show();
-//                $("#conCertificateNo").parent().prev("th").show();
-//                $("#conCustomerType").parent().show();
-//                $("#conCustomerType").parent().prev("th").show();
-//                $("#conCustomerName").parent().show();
-//                $("#conCustomerName").parent().prev("th").show();
               $("#conCustomerTbody").show();
             } else {
                 $("#conFee").parent().hide();
                 $("#conFee").parent().prev("th").hide();
-//                $("#conCertificateType").parent().hide();
-//                $("#conCertificateType").parent().prev("th").hide();
-//                $("#conCertificateNo").parent().hide();
-//                $("#conCertificateNo").parent().prev("th").hide();
-//                $("#conCustomerType").parent().hide();
-//                $("#conCustomerType").parent().prev("th").hide();
-//                $("#conCustomerName").parent().hide();
-//                $("#conCustomerName").parent().prev("th").hide();
+
                 $("#conCustomerTbody").hide();
             }
 
@@ -174,7 +194,13 @@
 
         //根据签订时间段查询
         function doBusinessQuery() {
-            if($("#businessQueryForm").form('validate') == true){
+            var value = $("#contract_no1").val();
+            if(value != null){
+                $("#businessQueryResultTb").datagrid({
+                    queryParams: {"contractNo":value},
+                    "url": "${basePath}/pettyLoanContract.do?method=findPettyLoanContractByContractNoFromBizSys"
+                });
+            }else if($("#businessQueryForm").form('validate') == true){
 
                 $("#businessCheckMsg").html("");
                 if (!checkEndTime("startDate", "endDate")) {
@@ -327,7 +353,10 @@
                 onDblClickRow: function (rowIndex, rowData) {
                     queryContractByContractId(rowData.id);
                     $('#declareQueryWindow').window('close');
-                }
+                },
+                onLoadSuccess:function(){
+                $(this).datagrid('clearChecked');
+            }
             })
 
             $('#declareQueryWindow').window('open');
@@ -335,7 +364,14 @@
 
         //根据申报状态查询
         function doDeclareQuery() {
-            if($("#declareQueryForm").form('validate') == true){
+           var value = $("#contract_no2").val();
+            if( value != ""){
+                $("#declareQueryResultTb").datagrid({
+                    queryParams: {"contractNo":value},
+                    url: "${basePath}/pettyLoanContract.do?method=findPettyLoanContractByContractNo"
+                });
+
+            }else if($("#declareQueryForm").form('validate') == true){
                 var flag = true;
                 $("#businessCheckMsg").html("");
                 if ($("#insertEndDate").val() != null && !checkEndTime("insertStartDate", "insertEndDate")) {
@@ -511,11 +547,10 @@
                         <span class="warning">${errors['contractAmount']}</span>
                     </td>
 
-                    <th width="15%"><span class='warning'>*</span>委托代理费(元)</th>
-                    <td width="32%">
-                        <input type="text" id="conFee" name="conFee" precision="2" style="border:1px solid #95B8E7;
-                        *color:#007fca;width:245px;padding:4px 2px;" value="${model.conFee}" class="easyui-numberbox">
-                        <span class="warning">${errors['conFee']}</span>
+                    <th width="15%">网签编号</th>
+                    <td>
+                        <input type="text" id="netSignNo" name="netSignNo"  value="${model.netSignNo}"
+                               class="inputText"/>
                     </td>
                 </tr>
                 </tbody>
@@ -572,6 +607,14 @@
                         <span class="warning">${errors['conCertificateNo']}</span>
                     </td>
                 </tr>
+                <tr>
+                    <th width="15%"><span class='warning'>*</span>委托代理费(元)</th>
+                    <td width="32%">
+                        <input type="text" id="conFee" name="conFee" precision="2" style="border:1px solid #95B8E7;
+                        *color:#007fca;width:245px;padding:4px 2px;" value="${model.conFee}" class="easyui-numberbox">
+                        <span class="warning">${errors['conFee']}</span>
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </div>
@@ -594,11 +637,24 @@
                            style="border:1px solid #95B8E7;*color:#007fca;width:245px;padding:4px 2px;"
                            onclick="WdatePicker()"/>至
                 </td>
-
                 <td>
                     <input type="text" id="endDate" name="endDate" data-options="required:true" style="border:1px solid #95B8E7;
                         *color:#007fca;width:245px;padding:4px 2px;" onclick="WdatePicker()"
                            class="easyui-validatebox"/>
+
+                </td>
+            </tr>
+            <tr>
+                <th width="5%">合同编号:</th>
+                <td>
+                    <input type="text" id="contract_no1" name="contract_no" style="border:1px solid #95B8E7;
+                        *color:#007fca;width:180px;padding:4px 2px;">
+                </td>
+
+            </tr>
+            <tr>
+                <th> </th>
+                <td>
                     <input id="businessQueryBtn" type="button" class="inputButton" onclick="doBusinessQuery();"
                            value="查询"/>
                     <input id="batchSaveBtn" type="button" class="inputButton" onclick="doBatchSave();"
@@ -620,6 +676,8 @@
 
     <form action="" method="post" id="declareQueryForm">
         <table>
+
+
             <tr>
                 <th width="15%">是否已申报：</th>
                 <td width="25%">
@@ -629,6 +687,7 @@
                     </select>
                 </td>
             </tr>
+
             <br/>
             <tr>
                 <th width="15%">签约日期：</th>
@@ -644,9 +703,23 @@
                            class="easyui-validatebox" style="border:1px solid #95B8E7;
                         *color:#007fca;width:180px;padding:4px 2px;"
                            onclick="WdatePicker()" class="inputText"/>
-                    <input id="declareQueryBtn" type="button" class="inputButton" onclick="doDeclareQuery();"
-                           value="查询"/>
+
                 </td>
+
+            </tr>
+
+            <tr>
+                <th width="5%">合同编号:</th>
+                <td>
+                    <input type="text" id="contract_no2" name="contract_no" style="border:1px solid #95B8E7;
+                        *color:#007fca;width:180px;padding:4px 2px;">
+                </td>
+
+            </tr>
+            <tr>
+                <th> </th>
+                <td><input id="declareQueryBtn" type="button" class="inputButton" onclick="doDeclareQuery();"
+                           value="查询"/></td>
             </tr>
         </table>
     </form>

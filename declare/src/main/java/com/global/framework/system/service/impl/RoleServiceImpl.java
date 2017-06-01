@@ -1,14 +1,5 @@
 package com.global.framework.system.service.impl;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
@@ -20,6 +11,14 @@ import com.global.framework.system.domain.UserRole;
 import com.global.framework.system.service.RoleService;
 import com.global.framework.system.service.SysCommonService;
 import com.global.framework.system.web.common.CacheService;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 @Service("roleService")
 public class RoleServiceImpl implements RoleService {
@@ -58,7 +57,7 @@ public class RoleServiceImpl implements RoleService {
 		if (role != null && StringUtils.isNotBlank(role.getRoleId())) {
 			r = this.updateRole(role);
 		}else {
-			role.setRoleId(sysCommonService.getSeqNo("SYS_ROLE"));
+			role.setRoleId(sysCommonService.getNo("SYS_ROLE"));
 			role.setIsFix("N");
 			r = this.roleDao.saveRole(role);
 		}

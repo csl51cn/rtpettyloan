@@ -19,4 +19,9 @@ public interface PettyLoanContractService {
     PettyLoanContract findPettyLoanContractByWorkInfoId(Integer dateId) throws BaseException;
 
     void batchSavePettyLoanContract(String ids) throws BaseException;
+
+    PageBean findPettyLoanContractByContractNo(String contractNo, PageBean pageBean) throws BaseException;
+
+    PageBean findPettyLoanContractByContractNoFromBizSys(String contractNo, PageBean pageBean)throws BaseException;
+
 }

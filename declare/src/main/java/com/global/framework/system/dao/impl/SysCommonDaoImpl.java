@@ -1,23 +1,22 @@
 package com.global.framework.system.dao.impl;
 
-import java.sql.CallableStatement;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.CallableStatementCallback;
-import org.springframework.stereotype.Repository;
-
 import com.global.framework.dbutils.support.BaseDaoSupport;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 import com.global.framework.system.dao.SysCommonDao;
 import com.global.framework.system.domain.CommonOrgUser;
 import com.global.framework.system.domain.Property;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.CallableStatementCallback;
+import org.springframework.stereotype.Repository;
+
+import java.sql.CallableStatement;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -42,6 +41,20 @@ public class SysCommonDaoImpl extends BaseDaoSupport implements SysCommonDao {
 		return (String) obj;
 	}
 
+	public  String  getNo(final String objName)throws BaseException{
+		String sql = "{call p_generate_no(?,?)}";
+		Object obj = this.getJdbcTemplate().execute(sql,
+				new CallableStatementCallback<Object>() {
+					public Object doInCallableStatement(CallableStatement cs)
+							throws SQLException, DataAccessException {
+						cs.setString(1, objName);
+						cs.registerOutParameter(2, Types.VARCHAR);
+						cs.execute();
+						return new String(cs.getString(2));
+					}
+				});
+		return (String) obj;
+	}
 	public String getBizNo(final String objName) throws BaseException {
 		String sql = "{call p_generate_bizno(?,?)}";
 		Object obj = this.getJdbcTemplate().execute(sql,
