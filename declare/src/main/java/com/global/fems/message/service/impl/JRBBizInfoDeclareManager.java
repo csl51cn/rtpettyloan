@@ -43,7 +43,7 @@ public class JRBBizInfoDeclareManager {
         //设置交易模式
         headerMsg.setTRAN_MODE("ONLINE");
         //设置组织机构代码
-        headerMsg.setBRANCH_ID("91500000584252884K");
+        headerMsg.setBRANCH_ID("58425288-4");
         //设置交易日期
         headerMsg.setTRAN_DATE(DateTimeUtil.getNowDateTime("yyyyMMdd"));
         //设置交易时间

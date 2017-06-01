@@ -1,12 +1,5 @@
 package com.global.framework.system.dao.impl;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Repository;
-
 import com.global.framework.dbutils.support.BaseDaoSupport;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
@@ -14,6 +7,12 @@ import com.global.framework.system.dao.UserDao;
 import com.global.framework.system.domain.DataRight;
 import com.global.framework.system.domain.User;
 import com.global.framework.system.domain.UserRole;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author cqchenf@qq.com
@@ -95,7 +94,7 @@ public class UserDaoImpl extends BaseDaoSupport implements UserDao {
 	}
 
 	public void deleteUserRoleByUserId(String userId) throws BaseException {
-		String sql = "delete from dc_sys_userrole t where t.userid = ? ";
+		String sql = "delete from dc_sys_userrole  where userid = ? ";
 		super.delete(sql, new Object[] { userId });
 	}
 

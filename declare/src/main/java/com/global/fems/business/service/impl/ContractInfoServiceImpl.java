@@ -44,7 +44,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             //设置上报类型,初始保存时,默认为新增:100001
             contractInfoCycleNode.setReportType("100001");
             //设置组织机构代码
-            contractInfoCycleNode.setOrgCode("91500000584252884K");
+            contractInfoCycleNode.setOrgCode("58425288-4");
             //设置是否发送,0:否,1:是
             contractInfoCycleNode.setIsSend(0);
             if (StringUtil.isNullOrEmpty(contractInfoCycleNode.getInsertDate())) {
@@ -121,7 +121,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             //设置上报类型,初始保存时,默认为新增:100001
             contractInfoCycleNode.setReportType("100001");
             //设置组织机构代码
-            contractInfoCycleNode.setOrgCode("91500000584252884K");
+            contractInfoCycleNode.setOrgCode("58425288-4");
             //设置是否发送,0:否,1:是
             contractInfoCycleNode.setIsSend(0);
             //设置记录保存时间

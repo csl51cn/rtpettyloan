@@ -28,7 +28,7 @@ public class InitServlet extends HttpServlet {
 
     public void init(ServletConfig config) throws ServletException {
         try {
-//            this.initCacheService();
+            this.initCacheService();
             //new TimeoutTask().start();
             //new Receiver().start();// 启动SOCKET接口服务
             //AutoImportSafeExRateThread.start();//定时任务服务
