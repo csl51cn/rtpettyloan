@@ -36,16 +36,16 @@ public class SocketClient {
     public static String sendMsg(String xml) {
 
         OutputStream outputStream = null;
-        PrintWriter printWriter = null;
+        OutputStreamWriter outputStreamWriter = null;
         InputStreamReader inputStreamReader = null;
         InputStream inputStream = null;
         BufferedReader bufferedReader = null;
         StringBuilder info = new StringBuilder();
         try {
             outputStream = socket.getOutputStream();//获取一个输出流，向服务端发送信息
-            printWriter = new PrintWriter(outputStream);//将输出流包装成打印流
-            printWriter.print(xml);
-            printWriter.flush();
+            outputStreamWriter = new OutputStreamWriter(outputStream, "UTF-8");//将输出流包装成打印流
+            outputStreamWriter.write(xml);
+            outputStreamWriter.flush();
             socket.shutdownOutput();//关闭输出流
 
             inputStream = socket.getInputStream();//获取一个字节输入流，接收服务端的信息
@@ -53,7 +53,7 @@ public class SocketClient {
             byte buffer[] = new byte[n];
 
             while ((inputStream.read(buffer, 0, n) != -1)) {
-                info.append(new String(buffer,"UTF-8"));
+                info.append(new String(buffer, "UTF-8"));
             }
 
             System.out.println("客户端接收服务端发送信息：" + info.toString());
@@ -64,7 +64,7 @@ public class SocketClient {
             //关闭相对应的资源
             IOUtils.closeQuietly(bufferedReader);
             IOUtils.closeQuietly(inputStream);
-            IOUtils.closeQuietly(printWriter);
+            IOUtils.closeQuietly(outputStreamWriter);
             IOUtils.closeQuietly(outputStream);
 
             try {

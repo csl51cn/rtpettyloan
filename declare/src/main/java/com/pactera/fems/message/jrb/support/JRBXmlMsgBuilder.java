@@ -89,8 +89,8 @@ public class JRBXmlMsgBuilder {
         String str = null;
         try {
 
-            str = new String(finalresult.getBytes(), "GBK");
-            len = finalresult.getBytes("GBK").length;
+            str = new String(finalresult.getBytes(), "utf-8");
+            len = finalresult.getBytes("UTF-8").length;
 
 
         } catch (UnsupportedEncodingException e) {
