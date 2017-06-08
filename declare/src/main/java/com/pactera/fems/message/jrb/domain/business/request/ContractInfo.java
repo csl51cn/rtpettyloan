@@ -6,7 +6,8 @@ import java.util.List;
  * 贷款合同信息批量文件上传实体类
  */
 public class ContractInfo  extends BatchFileInfo {
-    private String dataType = "QUOTA_INFO";//数据类型
+
+    private String dataType = "CONTRACT_INFO";//数据类型
 
     private List<ContractInfoParam> contractInfo;
 

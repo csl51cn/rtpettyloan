@@ -25,13 +25,27 @@
             <field fieldName="guarType" nodeName="guar_type" text="担保方式" type = "String" required = "Y"  length="[1,18]" />
             <field fieldName="ccy" nodeName="ccy" text="币种" type = "String" required = "Y"  length="[1,6]"/>
             <field fieldName="isRealQuotaLoan" nodeName="is_real_quota_loan" text="是否额度项下贷款" type = "String" required = "Y"  length="[1,16]" />
-            <field fieldName="realQuotaNo" nodeName="real_quota_no" text="授信额度协议编号" type = "String" required = "Y"  length="[1,16]" />
-            <field fieldName="intRate" nodeName="int_rate" text="逾期月利率" type = "Double" required = "Y" length="[1,18]" format="#.########"/>
+            <field fieldName="realQuotaNO" nodeName="real_quota_no" text="授信额度协议编号" type = "String" required = "Y"  length="[1,16]" />
             <field fieldName="priPltyRate" nodeName="pri_plty_rate" text="逾期月利率" type = "Double" required = "Y" length="[1,18]" format="#.########"/>
             <field fieldName="contractStatus" nodeName="contract_status" text="合同状态" type = "String" required = "Y"  length="[1,16]" />
             <field fieldName="relationManager" nodeName="relation_manager" text="客户经理" type = "String" required = "Y"  length="[1,16]"/>
             <field fieldName="disputeScheme" nodeName="dispute_scheme" text="争议解决方式" type = "String" required = "Y" length="[1,6]"/>
-            <field fieldName="coCustomerInfo" nodeName="co_customer_info" text="共同借款人数组" className="java.util.ArrayList" type = "Group" subNodeName="co_customer_info" isHide="H">
+            <field fieldName="conCertificateType" nodeName="con_certificate_type" text="委托人类别" type = "String" required = "Y" length="[1,6]"/>
+            <field fieldName="conCertificateNo" nodeName="con_certificate_no" text="委托人名称" type = "String" required = "Y" length="[1,6]"/>
+            <field fieldName="conCertificateType" nodeName="con_certificate_type" text="委托人证件类型" type = "String" required = "Y"  length="[1,6]"/>
+            <field fieldName="comCertificateNo" nodeName="com_certificate_no" text="委托人证件号码" type = "String" required = "Y"  length="[1,500]"/>
+            <field fieldName="conJurisitc" nodeName="con_jurisitc" text="委托方法定代表人/负责人" type = "String" required = "Y" length="[1,100]"/>
+            <field fieldName="conTelephone" nodeName="con_telephone" text="委托人联系电话" type = "String" required = "Y" length="[1,20]"/>
+            <field fieldName="conLocus" nodeName="con_locus" text="委托人地址" type = "String" required = "Y" length="[1,100]"/>
+            <field fieldName="conFincalOrg" nodeName="con_fincal_org" text="委托人开户金融机构" type = "String" required = "Y" length="[1,100]"/>
+            <field fieldName="conAccountNo" nodeName="con_account_no" text="委托人账户" type = "String" required = "Y" length="[1,40]"/>
+            <field fieldName="assCustomerName" nodeName="ass_customer_name" text="受托人" type = "String" required = "Y" length="[1,6]"/>
+            <field fieldName="assJuristic" nodeName="ass_juristic" text="受托人法定代表人/负责人" type = "String" required = "Y" length="[1,100]"/>
+            <field fieldName="assTelephone" nodeName="ass_telephone" text="受托人联系电话" type = "String" required = "Y" length="[1,20]"/>
+            <field fieldName="assLocus" nodeName="ass_locus" text="受托人地址" type = "String" required = "Y" length="[1,100]"/>
+            <field fieldName="assPostalcode" nodeName="ass_postalcode" text="受托人邮编" type = "String" required = "Y" length="[1,10]"/>
+            <field fieldName="conFee" nodeName="con_fee" text="代理费" type = "Double"  length="[1,18]" format="#.########"/>
+            <field fieldName="contractInfo" nodeName="co_customer_info" text="共同借款人数组" className="java.util.ArrayList" type = "Group" subNodeName="co_customer_info" isHide="H">
                 <field className="com.pactera.fems.message.jrb.domain.business.request.CoCustomerInfoParam" type="Single" fieldName="contractInfo" nodeName="co_customer_info" isHide="N">
                     <field fieldName="customerType" nodeName="customer_type" text="借款人类别" type = "String" required = "Y"  length="[1,6]"/>
                     <field fieldName="customerName" nodeName="customer_name" text="借款人名称" type = "String" required = "Y"  length="[1,100]"/>

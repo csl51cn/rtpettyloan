@@ -3,8 +3,10 @@ package com.global.fems.business.dao.impl;
 import com.global.fems.business.dao.PettyLoanContractDao;
 import com.global.fems.business.domain.PettyLoanContract;
 import com.global.framework.dbutils.support.BaseDaoSupport;
+import com.global.framework.dbutils.support.DAOException;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
+import com.global.framework.util.DateTimeUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +68,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
         if (StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
             sql.append(" AND 签约时间 >= ? AND 签约时间 <= ?");
             list.add(startDate);
+            endDate = DateTimeUtil.dayAdd(endDate, 1);
             list.add(endDate);
         }
         PageBean forPage = super.findForPage(sql.toString(), list.toArray(), pageBean, PettyLoanContract.class);
@@ -99,7 +102,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
      * @param pageBean
      */
     public PageBean findPettyLoanContractBySendStatus(Integer sendStatus, String startDate, String endDate, PageBean pageBean) throws BaseException {
-        StringBuilder sql = new StringBuilder("SELECT id ,dateid ,contractno,customername,contractamount,contractsigndate,sendstatus FROM DC_PETTY_LOAN_CONTRACT WHERE 1=1 ");
+        StringBuilder sql = new StringBuilder("SELECT id ,dateid ,contractno,customername,contractamount,contractsigndate,sendstatus,netsignno FROM DC_PETTY_LOAN_CONTRACT WHERE 1=1 ");
         List<Object> list = new ArrayList<Object>();
         if (sendStatus != null && StringUtils.isNotBlank(sendStatus.toString())) {
 
@@ -110,6 +113,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
         if (StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
             sql.append(" AND contractsigndate >= ? AND contractsigndate <= ?");
             list.add(startDate);
+            endDate = DateTimeUtil.dayAdd(endDate, 1);
             list.add(endDate);
         }
 
@@ -209,7 +213,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
     }
 
     /**
-     * 根据合同号查询合同信息
+     * 根据合同编号从DC_PETTY_LOAN_CONTRACT中查询合同信息
      *
      * @param contractNo
      * @param pageBean
@@ -222,6 +226,14 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
         return forPage;
     }
 
+    /**
+     * 根据合同编号从业务系统查询合同信息
+     *
+     * @param contractNo
+     * @param pageBean
+     * @return
+     * @throws BaseException
+     */
     public PageBean findPettyLoanContractByContractNoFromBizSys(String contractNo, PageBean pageBean) throws BaseException {
         StringBuilder sql = new StringBuilder("SELECT " +
                 "w.date_id AS dateid ," +
@@ -246,4 +258,35 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
         PageBean forPage = super.findForPage(sql.toString(), new Object[]{contractNo}, pageBean, PettyLoanContract.class);
         return forPage;
     }
+
+    /**
+     * 根据合同编号查询dateId
+     *
+     * @param contractNo
+     * @return
+     * @throws BaseException
+     */
+    public int findPettyLoanContractDateIdByContractNo(String contractNo) throws BaseException {
+        String sql = "select date_id  from Data_WorkInfo where  合同编号 = ?";
+        return super.findForIntBySql(sql, new Object[]{contractNo});
+
+    }
+
+    /**
+     * 根据合同编号和发送状态从DC_PETTY_LOAN_CONTRACT查询合同部分信息
+     * @param contractNo
+     * @param sendStatus
+     * @param pageBean
+     * @return
+     * @throws DAOException
+     */
+    public PageBean findContractByContractNoFromRealTimeContract(String contractNo, String sendStatus, PageBean pageBean) throws BaseException {
+        String sql = "SELECT id ,dateid ,contractno,customername,contractamount,contractsigndate,netsignno FROM DC_PETTY_LOAN_CONTRACT WHERE  contractno = ?  AND sendstatus = ? ";
+        PageBean forPage = super.findForPage(sql, new Object[]{contractNo, sendStatus}, pageBean, PettyLoanContract.class);
+        return forPage;
+    }
+
+
+
+
 }

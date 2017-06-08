@@ -1,9 +1,11 @@
 package com.global.fems.message.service.impl;
 
+import com.global.fems.business.domain.ContractInfoCycleNode;
 import com.global.fems.business.domain.PettyLoanContract;
 import com.global.framework.system.service.SysCommonService;
 import com.global.framework.util.DateTimeUtil;
 import com.pactera.fems.message.jrb.domain.JRBReqHeaderMsg;
+import com.pactera.fems.message.jrb.domain.business.request.ContractInfo;
 import com.pactera.fems.message.jrb.service.JRBBizInfoDeclareService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +45,9 @@ public class JRBBizInfoDeclareManager {
         //设置交易模式
         headerMsg.setTRAN_MODE("ONLINE");
         //设置组织机构代码
-        headerMsg.setBRANCH_ID("58425288-4");
+        //headerMsg.setBRANCH_ID("58425288-4");
+        headerMsg.setBRANCH_ID("91500000584252884K");
+
         //设置交易日期
         headerMsg.setTRAN_DATE(DateTimeUtil.getNowDateTime("yyyyMMdd"));
         //设置交易时间
@@ -74,24 +78,45 @@ public class JRBBizInfoDeclareManager {
 
     /**
      * 额度信息申报
+     *
      * @param list
      * @return
      */
 
-    public  Map  quotaInfoDeclare(List list){
+    public Map quotaInfoDeclare(List list) {
 
         return null;
     }
 
     /**
      * 合同信息申报
+     *
      * @param list
      * @return
      */
 
-    public  Map  contractInfoDeclare(List list){
+    public Map contractInfoDeclare(List list) {
+
 
         return null;
     }
 
+    /**
+     * 发送贷款合同信息批量文件
+     *
+     * @param list
+     * @return
+     */
+    public Map sendContractInfoBatchFile(List<ContractInfoCycleNode> list) throws Exception {
+        ContractInfo contractInfo = new ContractInfo();
+        contractInfo.setBatchNo(sysCommonService.getSeqNo("wfl_taskinfo"));
+        Map map = null;
+        if ("530002".equals(list.get(0).getLoanCate())) {//委托贷款
+            map = jrbBizInfoDeclareService.doSendEntrustedContractInfoBatchFile(list, contractInfo);
+        } else {//自营贷款
+            map = jrbBizInfoDeclareService.doSendContractInfoBatchFile(list, contractInfo);
+        }
+
+        return map;
+    }
 }

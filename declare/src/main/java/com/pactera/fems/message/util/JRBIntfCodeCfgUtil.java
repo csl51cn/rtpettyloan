@@ -23,6 +23,8 @@ public class JRBIntfCodeCfgUtil {
             String filePath = "/xmlcfg/";
             loadXmlCfg(filePath, elementCfgMap, "JRBReqMsg");
             loadXmlCfg(filePath, elementCfgMap, "JRBRspMsg");
+            loadXmlCfg(filePath, elementCfgMap, "JRBReqBatchFileUploadMsg");
+
             String reqPath = filePath + "request/";
             String rspPath = filePath + "response/";
             for (Iterator iterator = set.iterator(); iterator.hasNext(); ) {

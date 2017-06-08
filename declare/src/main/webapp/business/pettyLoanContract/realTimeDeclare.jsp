@@ -184,10 +184,9 @@
         <div class="editBlock">
             <table>
                 <tr>
-                    <th>类型：</th>
+                    <th>交易类型：</th>
                     <td>
                         实时网签 &nbsp <span id="dateCheckMsg" style="color:red;"/>
-
                     </td>
 
                 </tr>
@@ -201,7 +200,7 @@
                         <input type="text" id="signEndDate" name="signEndDate" data-options="required:true" style="border:1px solid #95B8E7;
                         *color:#007fca;width:245px;padding:4px 2px;" onclick="WdatePicker()"
                                class="easyui-validatebox"/>
-                        <input type="hidden" name="sendStatus" id="sendStatus" value="0"/>
+                        <input type="hidden" name="sendStatusCode" id="sendStatus" value="0"/>
                         <input id="declareQueryBtn" type="button" class="inputButton" onclick="doDeclareQuery();"
                                value="查询"/>
                         <input id="declareBtn" type="button" class="inputButton" onclick="doDeclare();"

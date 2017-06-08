@@ -63,7 +63,7 @@ public class PettyLoanContract extends Entity {
     private Double intRate;//月利率
     @NotNull(message = "{PettyLoanContract.contractSignDate.null}", groups = {First.class, Second.class})
     @ColumnMapping(columnName = "contractSignDate", columnType = "Date")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date contractSignDate;//合同签订日期
     @ColumnMapping(columnName = "sendStatus", columnType = "Integer")
     private Integer sendStatus;//发送状态,0表示未发送，1表示已发送

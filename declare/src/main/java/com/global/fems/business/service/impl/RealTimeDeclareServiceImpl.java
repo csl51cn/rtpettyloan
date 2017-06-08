@@ -69,7 +69,7 @@ public class RealTimeDeclareServiceImpl implements RealTimeDeclareService {
                     pettyLoanContractDao.saveOrUpdate(contract);
 
                 }else{
-                    return ResultModel.fail(validateError.append(ReturnMsgCodeEnum.getValueByCode(retCode)));
+                    return ResultModel.fail(validateError.append(ReturnMsgCodeEnum.getValueByCode(retCode)).toString());
                 }
             }
         }

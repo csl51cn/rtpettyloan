@@ -1,7 +1,9 @@
 package com.pactera.fems.message.jrb.domain.business.request;
 
+import com.global.framework.util.SysUtils;
 import org.global.framework.xmlbeans.bean.SerialBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,8 +19,8 @@ public class ContractInfoParam extends SerialBean {
     private String customerName;      //借款人名称
     private String certificateType;   //借款人证件类型
     private String certificateNo;     //借款人证件号码
-    private String linkman;           //联系人 选填
-    private String telephone;         //联系电话 选填
+    //    private String linkman = "无";           //联系人 选填
+    //    private String telephone = "无";       //联系电话 选填
     private String loanObject;        //贷款对象
     private String loanObjectSize;    //贷款对象规模
     private String contractSignDate;  //合同签订日期
@@ -29,14 +31,14 @@ public class ContractInfoParam extends SerialBean {
     private String guarType;          //担保方式
     private String ccy;               //币种
     private String isRealQuotaLoan;   //是否额度项下贷款
-    private String realQuotaNo;       //授信额度协议编号
+    private String realQuotaNo;      //授信额度协议编号
     private String intRate;           //月利率(‰)
     private String priPltyRate;       //逾期月利率(‰)
     private String contractStatus;    //合同状态
     private String relationManager;   //客户经理
     private String disputeScheme;     //争议解决方式
-    private String remark;            //备注
-    private List<CoCustomerInfoParam> coCustomerInfo;//共同借款人数组
+    //    private String remark = "无";            //备注
+    private List<CoCustomerInfoParam> coCustomerInfo = new ArrayList<CoCustomerInfoParam>();//共同借款人数组
 
     public String getReportType() {
         return reportType;
@@ -109,22 +111,22 @@ public class ContractInfoParam extends SerialBean {
     public void setCertificateNo(String certificateNo) {
         this.certificateNo = certificateNo;
     }
-
-    public String getLinkman() {
-        return linkman;
-    }
-
-    public void setLinkman(String linkman) {
-        this.linkman = linkman;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
+//
+//    public String getLinkman() {
+//        return linkman;
+//    }
+//
+//    public void setLinkman(String linkman) {
+//        this.linkman = linkman;
+//    }
+//
+//    public String getTelephone() {
+//        return telephone;
+//    }
+//
+//    public void setTelephone(String telephone) {
+//        this.telephone = telephone;
+//    }
 
     public String getLoanObject() {
         return loanObject;
@@ -147,7 +149,8 @@ public class ContractInfoParam extends SerialBean {
     }
 
     public void setContractSignDate(String contractSignDate) {
-        this.contractSignDate = contractSignDate;
+        String date = SysUtils.formatDateStrToString(contractSignDate, "yyyyMMdd");
+        this.contractSignDate = date;
     }
 
     public String getContractBeginDate() {
@@ -155,7 +158,8 @@ public class ContractInfoParam extends SerialBean {
     }
 
     public void setContractBeginDate(String contractBeginDate) {
-        this.contractBeginDate = contractBeginDate;
+        String date = SysUtils.formatDateStrToString(contractBeginDate, "yyyyMMdd");
+        this.contractBeginDate = date;
     }
 
     public String getContractEndDate() {
@@ -163,7 +167,9 @@ public class ContractInfoParam extends SerialBean {
     }
 
     public void setContractEndDate(String contractEndDate) {
-        this.contractEndDate = contractEndDate;
+        String date = SysUtils.formatDateStrToString(contractEndDate, "yyyyMMdd");
+        this.contractEndDate = date;
+
     }
 
     public String getContractAmount() {
@@ -211,7 +217,9 @@ public class ContractInfoParam extends SerialBean {
     }
 
     public void setRealQuotaNo(String realQuotaNo) {
+
         this.realQuotaNo = realQuotaNo;
+
     }
 
     public String getIntRate() {
@@ -254,13 +262,13 @@ public class ContractInfoParam extends SerialBean {
         this.disputeScheme = disputeScheme;
     }
 
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
+//    public String getRemark() {
+//        return remark;
+//    }
+//
+//    public void setRemark(String remark) {
+//        this.remark = remark;
+//    }
 
     public List<CoCustomerInfoParam> getCoCustomerInfo() {
         return coCustomerInfo;

@@ -38,6 +38,10 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
         if (StringUtil.isNullOrEmpty(contract.getInsertDate())) {//设置保存时间
             contract.setInsertDate(new Date());
         }
+        if(StringUtil.isNullOrEmpty(contract.getDateId())){//设置dateId
+             int  dateId =  pettyLoanContractDao.findPettyLoanContractDateIdByContractNo(contract.getContractNo());
+             contract.setDateId(dateId);
+        }
         pettyLoanContractDao.saveOrUpdate(contract);
 
     }
@@ -155,11 +159,25 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
 
     }
 
+    /**
+     * 根据合同编号从DC_PETTY_LOAN_CONTRACT中查询合同信息
+     * @param contractNo
+     * @param pageBean
+     * @return
+     * @throws BaseException
+     */
     public PageBean findPettyLoanContractByContractNo(String contractNo, PageBean pageBean) throws BaseException {
 
         return pettyLoanContractDao.findPettyLoanContractByContractNo(contractNo,pageBean);
     }
 
+    /**
+     * 根据合同编号从业务系统查询合同信息
+     * @param contractNo
+     * @param pageBean
+     * @return
+     * @throws BaseException
+     */
     public PageBean findPettyLoanContractByContractNoFromBizSys(String contractNo, PageBean pageBean) throws BaseException {
         return pettyLoanContractDao.findPettyLoanContractByContractNoFromBizSys(contractNo,pageBean);
     }

@@ -11,8 +11,8 @@ public class CoCustomerInfoParam extends SerialBean {
     private String customerName;//共同借款人名称
     private String certificateType;//证件类型
     private String certificateNo;//证件号码
-    private String linkman;//联系人
-    private String telephone;//联系电话
+//    private String linkman = "无";//联系人
+//    private String telephone = "无";//联系电话
 
     public String getCustomerType() {
         return customerType;
@@ -46,19 +46,19 @@ public class CoCustomerInfoParam extends SerialBean {
         this.certificateNo = certificateNo;
     }
 
-    public String getLinkman() {
-        return linkman;
-    }
-
-    public void setLinkman(String linkman) {
-        this.linkman = linkman;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
+//    public String getLinkman() {
+//        return linkman;
+//    }
+//
+//    public void setLinkman(String linkman) {
+//        this.linkman = linkman;
+//    }
+//
+//    public String getTelephone() {
+//        return telephone;
+//    }
+//
+//    public void setTelephone(String telephone) {
+//        this.telephone = telephone;
+//    }
 }

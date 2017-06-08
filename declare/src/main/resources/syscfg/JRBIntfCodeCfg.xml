@@ -10,4 +10,9 @@
            rspEntity="com.pactera.fems.message.jrb.domain.business.response.RealTimeContractRtrTx"
            reqXmlMapping="JRBReqRealTimeContractEntrustedLoan" rspXmlMapping="JRBRspRealTimeContract"
            serviceMethod="JRBBizInfoDeclareService.realTimeDeclareEntrustedLoan"/>
+    <field serviceName="贷款合同信息上报-委托贷款"
+           reqEntity="com.pactera.fems.message.jrb.domain.business.request.ContractInfo"
+           rspEntity="com.pactera.fems.message.jrb.domain.business.response.RealTimeContractRtrTx"
+           reqXmlMapping="JRBReqContractInfo"  rspXmlMapping="JRBRspRealTimeContract"
+           serviceMethod="JRBBizInfoDeclareService.doSendContractInfoBatchFile"/>
 </config>

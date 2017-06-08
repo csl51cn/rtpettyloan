@@ -1,7 +1,7 @@
 package com.global.fems.business.enums;
 
 /**
- * 返回消息状态码
+ * socket返回消息状态码
  */
 public enum ReturnMsgCodeEnum {
     RETURNCODE_1907("1907", "报文类型和报文代码没有匹配上"),

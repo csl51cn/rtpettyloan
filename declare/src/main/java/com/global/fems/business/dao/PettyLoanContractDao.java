@@ -22,11 +22,16 @@ public interface PettyLoanContractDao {
 
     PettyLoanContract findPettyLoanContractByWorkInfoId(Integer dateId) throws BaseException;
 
-    void batchSavePettyLoanContract(List<PettyLoanContract> list)throws BaseException;
+    void batchSavePettyLoanContract(List<PettyLoanContract> list) throws BaseException;
 
-    PettyLoanContract findContractByDateId(Integer dateId)throws BaseException;
+    PettyLoanContract findContractByDateId(Integer dateId) throws BaseException;
 
-    PageBean findPettyLoanContractByContractNo(String contractNo, PageBean pageBean)throws BaseException;
+    PageBean findPettyLoanContractByContractNo(String contractNo, PageBean pageBean) throws BaseException;
 
-    PageBean findPettyLoanContractByContractNoFromBizSys(String contractNo, PageBean pageBean)throws BaseException;
+    PageBean findPettyLoanContractByContractNoFromBizSys(String contractNo, PageBean pageBean) throws BaseException;
+
+    int findPettyLoanContractDateIdByContractNo(String contractNo) throws BaseException;
+
+    PageBean findContractByContractNoFromRealTimeContract(String contractNo, String sendStatus, PageBean pageBean) throws BaseException;
+
 }

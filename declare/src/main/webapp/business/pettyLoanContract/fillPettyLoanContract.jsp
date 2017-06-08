@@ -195,7 +195,7 @@
         //根据签订时间段查询
         function doBusinessQuery() {
             var value = $("#contract_no1").val();
-            if(value != null){
+            if(value != ""){
                 $("#businessQueryResultTb").datagrid({
                     queryParams: {"contractNo":value},
                     "url": "${basePath}/pettyLoanContract.do?method=findPettyLoanContractByContractNoFromBizSys"
@@ -225,7 +225,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "${basePath}/pettyLoanContract.do?method=batchSavePettyLoanContract",
+                url: "${basePath}/pettyLoanContract.do?method=batchSaveContract",
                 data: {"ids": ids.toString()},
                 dataType: "json",
                 success: function (data) {
@@ -322,7 +322,7 @@
                 }, {
                     field: "customerName",
                     title: "借款人名称",
-                    width: 100
+                    width: 170
 
                 }, {
                     field: "contractAmount",
@@ -338,7 +338,7 @@
                 }, {
                     field: "sendStatus",
                     title: "是否已申报",
-                    width: 100,
+                    width: 80,
                     formatter: function (value, row) {
                         if (1 == value) {
                             return "是";
@@ -347,6 +347,10 @@
                         }
 
                     }
+                },{
+                    field:"netSignNo",
+                    title:"网签编号",
+                    width:220
                 }
                 ]],
                 //
@@ -389,11 +393,6 @@
         }
         //刷新当前页，
         function doReset() {
-//            $(':input', '#fo')
-//                .not(':button, :submit, :reset, :hidden')
-//                .val('')
-//                .removeAttr('checked')
-//                .removeAttr('selected');
             window.location.href = "${basePath}/pettyLoanContract.do?method=showPettyLoanContract";
         }
 

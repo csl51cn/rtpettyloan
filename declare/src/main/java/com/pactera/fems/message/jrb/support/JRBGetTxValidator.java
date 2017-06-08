@@ -187,6 +187,23 @@ public class JRBGetTxValidator {
         }
     }
 
+    public static void setFeild(Object obj, Map data,String excludeField)
+            throws DataCheckException {
+        try {
+            Field[] fs = PropertyUtils.getDeclaredFields(obj.getClass(), new ArrayList());
+            for (int i = 0; i < fs.length; i++) {
+                Field f = fs[i];
+                if (!f.getName().equals("serialVersionUID") && !f.getName().equals(excludeField)) {
+                    f.setAccessible(true);
+                    f.set(obj, getVal(obj, data, i, f));
+                }
+            }
+        } catch (Exception e) {
+            throw new DataCheckException(MsgErrorCodeEnum.ERRCODE_999999.getCode(), e.getMessage());
+        }
+    }
+
+
     private static Object getVal(Object obj, Map data, int i, Field f)
             throws DataCheckException {
         if (Collection.class.isAssignableFrom(f.getType()))

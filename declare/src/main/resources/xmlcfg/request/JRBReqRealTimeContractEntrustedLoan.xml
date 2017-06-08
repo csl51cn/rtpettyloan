@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--实时网签-委托贷款-->
 <transaction className="com.pactera.fems.message.jrb.domain.business.request.RealTimeOnlineEntrustedContract" fieldName="gettx"
-             nodeName="gettx" type="Single" extends="JRBReqMsg" extendsfield="transaction.body" isHide="N">
+             nodeName="GetTx" type="Single" extends="JRBReqMsg" extendsfield="transaction.body" isHide="N">
     <!--委托贷款-->
     <field fieldName="contractNo" nodeName="CONTRACT_NO" text="合同编号" type = "String" required = "Y" length="[1,100]"/>
     <field fieldName="loanCate" nodeName="LOAN_CATE" text="贷款类型" type = "String" required = "Y" length="[6]"/>
@@ -12,8 +12,8 @@
     <field fieldName="contractAmount" nodeName="CONTRACT_AMOUNT" text="合同金额" type = "Double" required = "Y" length="[1,16]" format="#.##"/>
     <field fieldName="intRate" nodeName="INT_RATE" text="月利率" type = "Double" required = "Y" length="[1,14]" format="#.########"/>
     <field fieldName="contractSignDate" nodeName="CONTRACT_SIGN_DATE" text="合同签订日期" type = "Date" required = "Y"  format="yyyyMMdd"/>
-    <field fieldName="concustomerNype" nodeName="CON_CUSTOMER_TYPE" text="委托人类别" type = "String" required = "Y" length="[0,6]"/>
-    <field fieldName="concustomerName" nodeName="CON_CUSTOMER_NAME" text="委托人" type = "String" required = "Y" length="[0,100]"/>
+    <field fieldName="conCustomerType" nodeName="CON_CUSTOMER_TYPE" text="委托人类别" type = "String" required = "Y" length="[0,6]"/>
+    <field fieldName="conCustomerName" nodeName="CON_CUSTOMER_NAME" text="委托人" type = "String" required = "Y" length="[0,100]"/>
     <field fieldName="conCertificateType" nodeName="CON_CERTIFICATE_TYPE" text="委托人证件类型" type = "String" required = "Y" length="[0,6]"/>
     <field fieldName="conCertificateNo" nodeName="CON_CERTIFICATE_NO" text="委托人证件号码" type = "String" required = "Y" length="[0,50]" />
     <field fieldName="conFee" nodeName="CON_FEE" text="委托费用" type = "Double" required = "Y" length="[0,16]" format="#.##"/>

@@ -48,7 +48,7 @@ public class PettyLoanContractController {
      * @param ids Data_WorkInfo表中的Date_Id
      * @return 是否操作成功：1保存成功，0保存失败
      */
-    @RequestMapping(params = "method=batchSavePettyLoanContract")
+    @RequestMapping(params = "method=batchSaveContract")
     @ResponseBody
     public String batchSavePettyLoanContract(String ids) {
         try {
@@ -210,6 +210,13 @@ public class PettyLoanContractController {
     }
 
 
+    /**
+     * 根据合同编号从业务系统查询合同信息
+     * @param contractNo 合同编号
+     * @param pageBean  查询结果
+     * @return 返回easyui需要的total 和 rows格式的json数据
+     * @throws BaseException
+     */
     @RequestMapping(params = "method=findPettyLoanContractByContractNoFromBizSys")
     @ResponseBody
     public  Map<String, Object> findPettyLoanContractByContractNoFromBizSys(String contractNo,PageBean pageBean) throws BaseException {

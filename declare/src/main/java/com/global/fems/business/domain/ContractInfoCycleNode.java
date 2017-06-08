@@ -20,6 +20,12 @@ public class ContractInfoCycleNode extends Entity {
     private String id;              //主键
     @ColumnMapping(columnName = "date_id", columnType = "Integer")
     private Integer dateId;           // Data_WorkInfo中的Date_Id
+    @ColumnMapping(columnName = "batch_no", columnType = "String")
+    private String batchNo;
+    @ColumnMapping(columnName = "data_type", columnType = "String")
+    private String dataType;
+    @ColumnMapping(columnName = "record_count", columnType = "String")
+    private String recordCount ;
     @ColumnMapping(columnName = "report_type", columnType = "String")
     private String reportType;        //上报类型:增 删 改
     @ColumnMapping(columnName = "org_code", columnType = "String")
@@ -100,13 +106,13 @@ public class ContractInfoCycleNode extends Entity {
     @NotBlank(message = "{ContractInfoCycleNode.conCustomerType.null}", groups = {Second.class})
     @ColumnMapping(columnName = "con_customer_type", columnType = "String")
     private String conCustomerType;   //委托人类别
-    @NotBlank(message = "{ContractInfoCycleNode.conCustomerName.null}", groups = { Second.class})
+    @NotBlank(message = "{ContractInfoCycleNode.conCustomerName.null}", groups = {Second.class})
     @ColumnMapping(columnName = "con_customer_name", columnType = "String")
     private String conCustomerName;   //委托人
-    @NotBlank(message = "{ContractInfoCycleNode.conCertificateType.null}", groups = { Second.class})
+    @NotBlank(message = "{ContractInfoCycleNode.conCertificateType.null}", groups = {Second.class})
     @ColumnMapping(columnName = "con_certificate_type", columnType = "String")
     private String conCertificateType;//委托人证件类型
-    @NotBlank(message = "{ContractInfoCycleNode.conCertificateNo.null}", groups = { Second.class})
+    @NotBlank(message = "{ContractInfoCycleNode.conCertificateNo.null}", groups = {Second.class})
     @ColumnMapping(columnName = "con_certificate_no", columnType = "String")
     private String conCertificateNo;  //委托人证件号码
     @ColumnMapping(columnName = "con_jurisitc", columnType = "String")
@@ -121,7 +127,7 @@ public class ContractInfoCycleNode extends Entity {
     private String conFincalOrg;      //委托人开户金融机构
     @ColumnMapping(columnName = "con_account_no", columnType = "String")
     private String conAccountNo;      //委托人账户
-    @NotBlank(message = "{ContractInfoCycleNode.assCustomerName.null}", groups = { Second.class})
+    @NotBlank(message = "{ContractInfoCycleNode.assCustomerName.null}", groups = {Second.class})
     @ColumnMapping(columnName = "ass_customer_name", columnType = "String")
     private String assCustomerName;   //受托人
     @ColumnMapping(columnName = "ass_juristic", columnType = "String")
@@ -195,6 +201,8 @@ public class ContractInfoCycleNode extends Entity {
     @ColumnMapping(columnName = "is_last", columnType = "String")
     private String isLast;//是否是最新,Y表示是,N表示否
 
+    @ColumnMapping(columnName = "net_sign_no", columnType = "String")
+    private String netSignNo;
 
     public String getId() {
         return id;
@@ -210,6 +218,30 @@ public class ContractInfoCycleNode extends Entity {
 
     public void setDateId(Integer dateId) {
         this.dateId = dateId;
+    }
+
+    public String getBatchNo() {
+        return batchNo;
+    }
+
+    public void setBatchNo(String batchNo) {
+        this.batchNo = batchNo;
+    }
+
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getRecordCount() {
+        return recordCount;
+    }
+
+    public void setRecordCount(String recordCount) {
+        this.recordCount = recordCount;
     }
 
     public String getReportType() {
@@ -786,5 +818,13 @@ public class ContractInfoCycleNode extends Entity {
 
     public void setIsLast(String isLast) {
         this.isLast = isLast;
+    }
+
+    public String getNetSignNo() {
+        return netSignNo;
+    }
+
+    public void setNetSignNo(String netSignNo) {
+        this.netSignNo = netSignNo;
     }
 }
