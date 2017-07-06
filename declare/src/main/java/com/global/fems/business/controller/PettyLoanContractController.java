@@ -111,13 +111,16 @@ public class PettyLoanContractController {
                 model.addAttribute("errors", err);
                 throw new BaseException("保存或更新合同记录时，数据校验未通过");
             }
-
-            contractService.saveOrUpdatePettyLoanContract(contract);
+            if (contract.getSendStatus() != null && contract.getSendStatus() == 1) {
+                contractService.declaredUpdate(contract);
+            } else {
+                contractService.saveOrUpdatePettyLoanContract(contract);
+            }
             model.addAttribute("msg", "1");//返回操作成功标志
 
         } catch (BaseException e) {
             e.printStackTrace();
-            model.addAttribute("msg", "0");//返回操作失败标志
+            model.addAttribute("msg", e.getLocalizedMessage());//返回操作失败标志
         }
         model.addAttribute("model", contract);
         return "business/pettyLoanContract/fillPettyLoanContract";
@@ -174,7 +177,7 @@ public class PettyLoanContractController {
 
 
     /**
-     * 根据申报状态查询小额贷款合同记录
+     * 根据申报状态查询所有小额贷款合同记录
      *
      * @param sendStatusCode 申报状态，0未申报，1已申报
      * @param signStartDate  签约时间起始时间
@@ -193,7 +196,28 @@ public class PettyLoanContractController {
     }
 
     /**
+     * 根据申报状态查询最新小额贷款合同记录
+     *
+     * @param sendStatusCode 申报状态，0未申报，1已申报
+     * @param signStartDate  签约时间起始时间
+     * @param signEndDate    签约时间终止时间
+     * @param pageBean       接收分页参数
+     * @return 返回根据申报状态查询的分页后小额贷款合同记录
+     */
+    @RequestMapping(params = "method=findLastPettyLoanContractBySendStatus")
+    @ResponseBody
+    public Map<String, Object> findLastPettyLoanContractBySendStatus(Integer sendStatusCode, String signStartDate, String signEndDate, PageBean pageBean) throws BaseException {
+        pageBean = contractService.findLastPettyLoanContractBySendStatus(sendStatusCode, signStartDate, signEndDate, pageBean);
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("total", pageBean.getTotalRows());
+        map.put("rows", pageBean.getDataList());
+        return map;
+    }
+
+
+    /**
      * 根据合同编号从DC_PETTY_LOAN_CONTRACT查询合同信息
+     *
      * @param contractNo
      * @param pageBean
      * @return
@@ -201,8 +225,8 @@ public class PettyLoanContractController {
      */
     @RequestMapping(params = "method=findPettyLoanContractByContractNo")
     @ResponseBody
-    public  Map<String, Object> findPettyLoanContractByContractNo (String contractNo,PageBean pageBean) throws BaseException {
-        pageBean = contractService.findPettyLoanContractByContractNo(contractNo,pageBean);
+    public Map<String, Object> findPettyLoanContractByContractNo(String contractNo, PageBean pageBean) throws BaseException {
+        pageBean = contractService.findPettyLoanContractByContractNo(contractNo.trim(), pageBean);
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("total", pageBean.getTotalRows());
         map.put("rows", pageBean.getDataList());
@@ -212,15 +236,16 @@ public class PettyLoanContractController {
 
     /**
      * 根据合同编号从业务系统查询合同信息
+     *
      * @param contractNo 合同编号
-     * @param pageBean  查询结果
+     * @param pageBean   查询结果
      * @return 返回easyui需要的total 和 rows格式的json数据
      * @throws BaseException
      */
     @RequestMapping(params = "method=findPettyLoanContractByContractNoFromBizSys")
     @ResponseBody
-    public  Map<String, Object> findPettyLoanContractByContractNoFromBizSys(String contractNo,PageBean pageBean) throws BaseException {
-        pageBean = contractService.findPettyLoanContractByContractNoFromBizSys(contractNo, pageBean);
+    public Map<String, Object> findPettyLoanContractByContractNoFromBizSys(String contractNo, PageBean pageBean) throws BaseException {
+        pageBean = contractService.findPettyLoanContractByContractNoFromBizSys(contractNo.trim(), pageBean);
 
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("total", pageBean.getTotalRows());
@@ -228,7 +253,6 @@ public class PettyLoanContractController {
         return map;
 
     }
-
 
 
 }

@@ -4,15 +4,40 @@
            reqEntity="com.pactera.fems.message.jrb.domain.business.request.RealTimeOnlineContract"
            rspEntity="com.pactera.fems.message.jrb.domain.business.response.RealTimeContractRtrTx"
            reqXmlMapping="JRBReqRealTimeContract" rspXmlMapping="JRBRspRealTimeContract"
-           serviceMethod="JRBBizInfoDeclareService.realTimeDeclare"/>
+           serviceMethod="JRBBizInfoDeclareService.doRealTimeDeclare"/>
     <field serviceName="实时网签-委托贷款"
            reqEntity="com.pactera.fems.message.jrb.domain.business.request.RealTimeOnlineEntrustedContract"
            rspEntity="com.pactera.fems.message.jrb.domain.business.response.RealTimeContractRtrTx"
            reqXmlMapping="JRBReqRealTimeContractEntrustedLoan" rspXmlMapping="JRBRspRealTimeContract"
-           serviceMethod="JRBBizInfoDeclareService.realTimeDeclareEntrustedLoan"/>
-    <field serviceName="贷款合同信息上报-委托贷款"
+           serviceMethod="JRBBizInfoDeclareService.doRealTimeDeclareEntrustedLoan"/>
+    <field serviceName="贷款合同信息文件上报-委托贷款"
            reqEntity="com.pactera.fems.message.jrb.domain.business.request.ContractInfo"
            rspEntity="com.pactera.fems.message.jrb.domain.business.response.RealTimeContractRtrTx"
            reqXmlMapping="JRBReqContractInfo"  rspXmlMapping="JRBRspRealTimeContract"
            serviceMethod="JRBBizInfoDeclareService.doSendContractInfoBatchFile"/>
+    <field serviceName="贷款合同信息上报-委托贷款"
+           reqEntity="com.pactera.fems.message.jrb.domain.JRBReqBatchFileMsg"
+           rspEntity="com.pactera.fems.message.jrb.domain.JRBRespBatchFileMsg"
+           reqXmlMapping="JRBReqBatchFileMsg"  rspXmlMapping="JRBRspBatchFileMsg"
+           serviceMethod="JRBBizInfoDeclareService.doContractInfoDeclare"/>
+    <field serviceName="贷款放款信息上报"
+           reqEntity="com.pactera.fems.message.jrb.domain.business.request.ContractIssueInfoUpload"
+           rspEntity="com.pactera.fems.message.jrb.domain.JRBRespBatchFileMsg"
+           reqXmlMapping="JRBReqContractIssueInfo"  rspXmlMapping="JRBRspBatchFileMsg"
+           serviceMethod="JRBBizInfoDeclareService.doSendContractInfoIssueBatchFile"/>
+    <field serviceName="还款计划信息上报"
+           reqEntity="com.pactera.fems.message.jrb.domain.business.request.PayPlanInfoUpload"
+           rspEntity="com.pactera.fems.message.jrb.domain.JRBRespBatchFileMsg"
+           reqXmlMapping="JRBReqPayPlanInfo"  rspXmlMapping="JRBRspBatchFileMsg"
+           serviceMethod="JRBBizInfoDeclareService.doSendPayPlanInfoBatchFile"/>
+    <field serviceName="贷款回收计划信息上报"
+           reqEntity="com.pactera.fems.message.jrb.domain.business.request.RepayInfoUpload"
+           rspEntity="com.pactera.fems.message.jrb.domain.JRBRespBatchFileMsg"
+           reqXmlMapping="JRBReqRepayInfo"  rspXmlMapping="JRBRspBatchFileMsg"
+           serviceMethod="JRBBizInfoDeclareService.doSendRepayInfoBatchFile"/>
+    <field serviceName="上报结果查询"
+           reqEntity="com.pactera.fems.message.jrb.domain.business.request.QueryDeclared"
+           rspEntity="com.pactera.fems.message.jrb.domain.business.response.RealTimeContractRtrTx"
+           reqXmlMapping="JRBReqQueryDeclared" rspXmlMapping="JRBRspRealTimeContract"
+           serviceMethod="JRBBizInfoDeclareService.doQueryDeclared"/>
 </config>

@@ -7,20 +7,39 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>批量报文发送</title>
     <jsp:include page="../../common/include.jsp"></jsp:include>
+    <script type="application/javascript" src="../../resources/js/multiSelectSupport.js"></script>
     <script type="text/javascript">
             var  arr = new Array();
             arr.push(null);
-            arr.push(null);
-            arr.push("${basePath}/contractInfo.do?method=findContractBySendStatus");//0102交易类型
+            arr.push(null);//0101交易类型 授信额度信息上报
+            arr.push("${basePath}/contractInfo.do?method=findLastContractBySendStatus");//0102交易类型 贷款合同信息上报
+            arr.push("${basePath}/contractIssueInfo.do?method=findLastContractBySendStatus");//0103交易类型 贷款放款信息上报
+            arr.push("${basePath}/repayInfo.do?method=findLastRepayInfoSendStatus");//0104交易类型 贷款回收信息上报
+            arr.push("${basePath}/payPlanInfo.do?method=findLastPayPlanInfoBySendStatus");//0105交易类型 还款计划信息信息上报
 
         $(function () {
-            //初始化申报查询的datagrid
+            $("#transactionType").combogrid( {
+                onChange:function(n,o){
+                    if(n == '0102' || n =='0103'){
+                        init_a();
+                    }else if(n == '0105'){
+                        init_b();
+                    }else if(n == '0104'){
+                        init_c();
+                    }
+                }
+            })
+        })
+        function  init_a(){
+            //初始化申报查询的datagrid 0102/0103上报类型使用
             $("#declareQueryResultTb").datagrid({
                 url: '',
                 checkOnSelect: true,
                 pagination: true,
-                pageSize: 15,
-                pageList: [5, 10, 15, 20, 30],
+                multiple:true,
+                singleSelect:false,
+                pageSize: 20,
+                pageList: [5, 10, 15, 20, 30 ,40],
                 columns: [[{
                     field: "id",
                     title: "主键",
@@ -38,6 +57,18 @@
                     title: "借款人名称",
                     width: 100
 
+                }, {
+                    field: "loanCate",
+                    title: "贷款类型",
+                    width: 100,
+                    formatter:function(value,row){
+                        if(value == '530001'){
+                            return '自营贷款';
+                        }else if (value =='530002'){
+                            return '委托贷款';
+                        }
+
+                    }
                 }, {
                     field: "contractAmount",
                     title: "合同金额",
@@ -86,14 +117,233 @@
                         }
                     }
                 }
-                ]],
+                ]]
 
-                onDblClickRow: function (rowIndex, rowData) {
-                    queryContractByContractId(rowData.id);
+            })
+        }
+
+            function  init_b(){
+                //初始化申报查询的datagrid 0105上报类型使用
+                $("#declareQueryResultTb").datagrid({
+                    url: '',
+                    checkOnSelect: true,
+                    pagination: true,
+                    singleSelect:false,
+                    multiple:true,
+                    pageSize: 20,
+                    pageList: [5, 10, 15, 20, 30,40],
+                    columns: [[{
+                        field: "id",
+                        title: "主键",
+                        checkbox: true
+                    }, {
+                        field: "dateId",
+                        title: "Date_Id",
+                        hidden: true
+                    }, {
+                        field: "contractNo",
+                        title: "合同编号",
+                        width: 100
+                    }, {
+                        field: "dueBillNo",
+                        title: "发放编号",
+                        width: 100
+
+                    }, {
+                        field: "counter",
+                        title: "还款期数",
+                        width: 100
+                    }, {
+                        field: "totalCounter",
+                        title: "总期数",
+                        width: 100,
+                    }, {
+                        field: "repayDate",
+                        title: "应还日期",
+                        width: 100,
+                        formatter: function (value, row) {
+                            return formatDatebox(value);
+                        }
+                    }, {
+                        field: "repayPriAmt",
+                        title: "应还本金",
+                        width: 80
+                    }, {
+                        field: "repayIntAmt",
+                        title: "应还利息",
+                        width: 80
+                    }, {
+                        field: "startDate",
+                        title: "起息日期",
+                        width: 85,
+                        formatter: function (value, row) {
+                            return formatDatebox(value);
+                        }
+                    }, {
+                        field: "endDate",
+                        title: "止息日期",
+                        width: 85,
+                        formatter: function (value, row) {
+                            return formatDatebox(value);
+                        }
+                    }, {
+                        field: "isSend",
+                        title: "是否申报",
+                        width: 70,
+                        formatter: function (value, row) {
+                            if (1 == value) {
+                                return "是";
+                            } else {
+                                return "否";
+                            }
+                        }
+                    }, {
+                        field: "isLast",
+                        title: "是否最新",
+                        width: 70,
+                        formatter: function (value, row) {
+                            if (value == 'Y') {
+                                return '是';
+                            } else if (value == 'N') {
+                                return '否';
+                            }
+                        }
+                    }, {
+                        field: "reportType",
+                        title: "上报类型",
+                        width: 65,
+                        formatter: function (value, row) {
+                            if ('100001' == value) {
+                                return '新增记录';
+                            } else if ('100002' == value) {
+                                return '修改记录';
+                            } else if ('100003' == value) {
+                                return '删除记录';
+                            }
+                        }
+                    }
+                    ]],
+                    onClickRow:function(index,row){
+                        if(index != selectIndexs.firstSelectRowIndex && !inputFlags.isShiftDown ){
+                            selectIndexs.firstSelectRowIndex = index; //alert('firstSelectRowIndex, sfhit = ' + index);
+                        }
+                        if(inputFlags.isShiftDown ) {
+                            $('#declareQueryResultTb').datagrid('clearSelections');
+                            selectIndexs.lastSelectRowIndex = index;
+                            var tempIndex = 0;
+                            if(selectIndexs.firstSelectRowIndex > selectIndexs.lastSelectRowIndex ){
+                                tempIndex = selectIndexs.firstSelectRowIndex;
+                                selectIndexs.firstSelectRowIndex = selectIndexs.lastSelectRowIndex;
+                                selectIndexs.lastSelectRowIndex = tempIndex;
+                            }
+                            for(var i = selectIndexs.firstSelectRowIndex ; i <= selectIndexs.lastSelectRowIndex ; i++){
+                                $('#declareQueryResultTb').datagrid('selectRow', i);
+                            }
+                        }
+                    }
+                })
+            }
+        function init_c(){
+            //初始化申报查询的datagrid 0104上报类型使用
+            $("#declareQueryResultTb").datagrid({
+                url: '',
+                checkOnSelect: true,
+                pagination: true,
+                pageSize: 15,
+                pageList: [5, 10, 15, 20, 30],
+                columns: [[{
+                    field: "id",
+                    title: "主键",
+                    checkbox: true
+                }, {
+                    field: "dateId",
+                    title: "Date_Id",
+                    hidden: true
+                }, {
+                    field: "contractNo",
+                    title: "合同编号",
+                    width: 90
+                }, {
+                    field: "customerName",
+                    title: "借款人名称",
+                    width: 80
+
+                }, {
+                    field: "counter",
+                    title: "还款期数",
+                    width: 80,
+                }, {
+                    field: "repayDate",
+                    title: "还款日期",
+                    width: 90,
+                    formatter: function (value, row) {
+                        return formatDatebox(value);
+                    }
+                }, {
+                    field: "repayPriAmt",
+                    title: "实还本金",
+                    width: 80
+                }, {
+                    field: "repayIntAmt",
+                    title: "实还利息",
+                    width: 80
+
+                },{
+                    field: "receiptType",
+                    title: "回收类型",
+                    width: 80,
+                    formatter: function (value, row) {
+                        if(value == 550001){
+                            return '正常还款';
+                        }else if(value == 550002){
+                            return '逾期还款';
+                        }
+                    }
+                },{
+                    field: "delayDays",
+                    title: "逾期天数",
+                    width: 80
+                }, {
+                    field: "isSend",
+                    title: "是否申报",
+                    width: 70,
+                    formatter: function (value, row) {
+                        if (1 == value) {
+                            return "是";
+                        } else {
+                            return "否";
+                        }
+                    }
+                }, {
+                    field: "isLast",
+                    title: "是否最新",
+                    width: 70,
+                    formatter: function (value, row) {
+                        if (value == 'Y') {
+                            return '是';
+                        } else if (value == 'N') {
+                            return '否';
+                        }
+                    }
+                }, {
+                    field: "reportType",
+                    title: "上报类型",
+                    width: 65,
+                    formatter: function (value, row) {
+                        if ('100001' == value) {
+                            return '新增记录';
+                        } else if ('100002' == value) {
+                            return '修改记录';
+                        } else if ('100003' == value) {
+                            return '删除记录';
+                        }
+                    }
                 }
+                ]]
             })
 
-        })
+        }
+
 
         function doDeclare() {
             var ids = [];
@@ -107,7 +357,7 @@
             $.ajax({
                 type: "POST",
                 url: "${basePath}/batchDeclare.do?method=sendBatchFile",
-                data: {"ids": ids.toString()},
+                data: {"ids": ids.toString(),"transactionType":$("#transactionType").combobox("getValue")},
                 dataType: "json",
                 success: function (data) {
                     data = eval(data);
@@ -209,7 +459,7 @@
         }
     </script>
 </head>
-<body>
+<body onkeydown="javascript:keyPress(event);" onkeyup="javascript:keyRelease(event);">
 
 <form id="fo" action="" method="post">
     <div region="center" border="false">
@@ -218,7 +468,7 @@
                 <tr>
                     <th width="15%">交易类型：</th>
                     <td width="28%">
-                        <input class="easyui-combogrid" id="transactionType"
+                        <input class="easyui-combogrid" id="transactionType" name="transactionType"
                                style="border:1px solid #95B8E7;*color:#007fca;width:251px;padding:4px 2px;"
                                data-options="
                                     panelWidth: 255,
@@ -237,7 +487,7 @@
 
                 </tr>
                 <tr>
-                    <th width="15%">签约日期：</th>
+                    <th width="15%">签约日期(或还款日期)：</th>
                     <td  width="28%">
                         <input type="text" id="startDate" name="startDate" data-options="required:true"
                                class="easyui-validatebox"

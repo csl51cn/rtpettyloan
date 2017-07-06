@@ -3,31 +3,39 @@ package com.global.fems.client.utils;
 import com.jcraft.jsch.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 
+import java.io.IOException;
 import java.util.Properties;
 
 /**
  * Sftp通道工具类
  * 参考http://www.cnblogs.com/longyg/archive/2012/06/25/2556576.html
  */
+
 public class SFTPChannel {
     private Session session = null;
     private Channel channel = null;
-    @Value("SFTP_HOST")
-    private String  host;
-    @Value("SFTP_PORT")
-    private Integer  port;
-    @Value("SFTP_USERNAME")
-    private String  username;
-    @Value("SFTP_PASSWORD")
-    private String  password;
-    @Value("SFTP_TIMEOUT")
-    private Integer  timeout;
-
+    private String host;
+    private Integer port;
+    private String username;
+    private String password;
+    private Integer timeout;
 
     private static final Logger LOG = LoggerFactory.getLogger(SFTPChannel.class);
 
+    public SFTPChannel() {
+        Properties properties = new Properties();
+        try {
+            properties.load(SFTPChannel.class.getResourceAsStream("/resource.properties"));
+            host = (String) properties.get("SFTP_HOST");
+            port = Integer.parseInt((String)properties.get("SFTP_PORT")) ;
+            username = (String) properties.get("SFTP_USERNAME");
+            password = (String) properties.get("SFTP_PASSWORD");
+            timeout = Integer.parseInt((String ) properties.get("SFTP_TIMEOUT"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 创建通道
@@ -60,6 +68,7 @@ public class SFTPChannel {
 
     /**
      * 关闭通道
+     *
      * @throws Exception
      */
     public void closeChannel() throws Exception {

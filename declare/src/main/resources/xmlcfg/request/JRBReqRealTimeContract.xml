@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--实时网签-自营贷款-->
 <transaction className="com.pactera.fems.message.jrb.domain.business.request.RealTimeOnlineContract" fieldName="gettx"
-             nodeName="GetTx" type="Single" extends="JRBReqMsg" extendsfield="transaction.body" isHide="N">
+             nodeName="gettx" type="Single" extends="JRBReqMsg" extendsfield="transaction.body" isHide="N">
     <!--自营贷款-->
     <field fieldName="customerName" nodeName="CUSTOMER_NAME" text="借款人名称" type = "String" required = "Y" length="[1,100]"/>
     <field fieldName="intRate" nodeName="INT_RATE" text="月利率" type = "Double" required = "Y" length="[1,14]" format="#.########"/>

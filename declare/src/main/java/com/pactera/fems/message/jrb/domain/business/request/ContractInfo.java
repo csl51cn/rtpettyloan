@@ -5,11 +5,11 @@ import java.util.List;
 /**
  * 贷款合同信息批量文件上传实体类
  */
-public class ContractInfo  extends BatchFileInfo {
+public class ContractInfo extends BatchFileInfo {
 
     private String dataType = "CONTRACT_INFO";//数据类型
 
-    private List<ContractInfoParam> contractInfo;
+    private List<ContractInfoParam> contractInfo;//贷款合同信息集合
 
     public String getDataType() {
         return dataType;
@@ -18,10 +18,10 @@ public class ContractInfo  extends BatchFileInfo {
     public void setDataType(String dataType) {
         this.dataType = dataType;
     }
+
     public List<ContractInfoParam> getContractInfo() {
         return contractInfo;
     }
-
 
     public void setContractInfo(List<ContractInfoParam> contractInfo) {
         this.contractInfo = contractInfo;

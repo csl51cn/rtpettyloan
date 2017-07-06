@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transaction fieldName="transaction" nodeName="transaction" className="com.pactera.fems.message.jrb.domain.JRBReqBatchFileMsg" type = "Single" >
+	<field fieldName="header" nodeName="header" className = "com.pactera.fems.message.jrb.domain.JRBReqHeader" type = "Single" isHide="N">
+        <field fieldName="msg" nodeName="msg" className="com.pactera.fems.message.jrb.domain.JRBReqHeaderMsg"  type = "Single"  isHide="N">
+              <field fieldName="serviceCode" nodeName="service_code" text="服务代码" type = "String" required = "Y" length="[1,12]"/>
+            <field fieldName="tranCode"  nodeName="tran_code" text="交易码" type = "String" required = "Y" length="[1,8]"/>
+            <field fieldName="tranMode" nodeName="tran_mode" text="交易模式" type = "String" required = "Y" length="[1,10]"/>
+            <field fieldName="branchId" nodeName="branch_id" text="组织机构代码" type = "String" required = "Y" length="[1,20]"/>
+            <field fieldName="tranDate" nodeName="tran_date" text="交易日期" type = "Date" required = "Y" format="yyyyMMdd"/>
+            <field fieldName="tranTimestamp" nodeName="tran_timestamp" text="交易时间" type = "Date" required = "Y" format="HHmmssSSS"/>
+            <field fieldName="userLang" nodeName="user_lang" text="用户语言" type = "String" required = "Y" length="[1,20]"/>
+            <field fieldName="seqNo" nodeName="seq_no" text="渠道流水号" type = "String" required = "Y" length="[1,16]"/>
+            <field fieldName="moduleId" nodeName="module_id" text="模块标识" type = "String" required = "Y" length="[1,2]"/>
+            <field fieldName="messageType" nodeName="message_type" text="报文类型" type = "String" required = "Y" length="[1,4]"/>
+            <field fieldName="messageCode" nodeName="message_code" text="报文代码" type = "String" required = "Y" length="[1,8]"/>
+            <field fieldName="filePath" nodeName="file_path" text="文件路径" type = "String" required = "Y" length="[1,200]"/>
+        </field>
+	</field>
+</transaction>

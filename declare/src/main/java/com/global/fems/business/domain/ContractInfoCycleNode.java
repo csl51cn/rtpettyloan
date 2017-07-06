@@ -21,11 +21,11 @@ public class ContractInfoCycleNode extends Entity {
     @ColumnMapping(columnName = "date_id", columnType = "Integer")
     private Integer dateId;           // Data_WorkInfo中的Date_Id
     @ColumnMapping(columnName = "batch_no", columnType = "String")
-    private String batchNo;
+    private String batchNo;   //批次号
     @ColumnMapping(columnName = "data_type", columnType = "String")
-    private String dataType;
+    private String dataType;  //数据类型
     @ColumnMapping(columnName = "record_count", columnType = "String")
-    private String recordCount ;
+    private String recordCount ;  //记录数
     @ColumnMapping(columnName = "report_type", columnType = "String")
     private String reportType;        //上报类型:增 删 改
     @ColumnMapping(columnName = "org_code", columnType = "String")
@@ -61,13 +61,13 @@ public class ContractInfoCycleNode extends Entity {
     @ColumnMapping(columnName = "loan_object_size", columnType = "String")
     private String loanObjectSize;    //贷款对象规模
     @NotBlank(message = "{ContractInfoCycleNode.contractSignDate.null}", groups = {First.class, Second.class})
-    @ColumnMapping(columnName = "contract_sign_date", columnType = "Timestamp")
+    @ColumnMapping(columnName = "contract_sign_date", columnType = "Date")
     private String contractSignDate;  //合同签订日期
     @NotBlank(message = "{ContractInfoCycleNode.contractBeginDate.null}", groups = {First.class, Second.class})
-    @ColumnMapping(columnName = "contract_begin_date", columnType = "Timestamp")
+    @ColumnMapping(columnName = "contract_begin_date", columnType = "Date")
     private String contractBeginDate; //合同有效起始日期
     @NotBlank(message = "{ContractInfoCycleNode.contractEndDate.null}", groups = {First.class, Second.class})
-    @ColumnMapping(columnName = "contract_end_date", columnType = "Timestamp")
+    @ColumnMapping(columnName = "contract_end_date", columnType = "Date")
     private String contractEndDate;   //合同有效结束日期
     @NotNull(message = "{ContractInfoCycleNode.contractAmount.null}", groups = {First.class, Second.class})
     @ColumnMapping(columnName = "contract_amount", columnType = "BigDecimal")
@@ -190,9 +190,7 @@ public class ContractInfoCycleNode extends Entity {
     private String coLinkman4;//联系人
     @ColumnMapping(columnName = "co_telephone4", columnType = "String")
     private String coTelephone4;//联系电话
-
-
-    @ColumnMapping(columnName = "is_send", columnType = "String")
+    @ColumnMapping(columnName = "is_send", columnType = "Integer")
     private Integer isSend; //发送状态,0表示未发送，1表示已发送
     @ColumnMapping(columnName = "send_date", columnType = "String")
     private Date sendDate;//记录申报日期

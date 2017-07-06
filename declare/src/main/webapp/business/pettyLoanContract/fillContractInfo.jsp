@@ -15,8 +15,8 @@
             if (msg !== "") {
                 if (msg == '1') {
                     $.messager.alert("提示消息", "操作成功", "info");
-                } else if (msg == '0') {
-                    $.messager.alert("提示消息", "操作失败", "warning");
+                } else {
+                    $.messager.alert("提示消息", "操作失败," + msg, "warning");
                 }
             }
 
@@ -33,7 +33,6 @@
             //默认委托人相关项隐藏,如果是查询会数据且贷款类型为委托贷款：530002，展示相关项
             var loanCate = "${model.loanCate}";
             if (loanCate == "" || loanCate == "530001") {
-
                 setDisplayStatus("conCustomerTbody", false);
                 $("#fo").prop("action", "${basePath}/contractInfo.do?method=saveContract");
             } else if (loanCate == "530002") {
@@ -48,34 +47,33 @@
             //如果编辑已申报的记录,保存按钮失效,编辑未申报的记录,已申报修改,已申报删除按钮失效
             if ($("#isSend").val() == '1') {
                 $("#saveBtn").linkbutton("disable");
-            }else{
+            } else {
                 $("#declarebusinessUpdateBtn").linkbutton("disable");
                 $("#declarebusinessDeleteBtn").linkbutton("disable");
             }
 
-            $("#contract_no2").change(function(){
+            $("#contract_no2").change(function () {
                 var value = $("#contract_no2").val();
-                if(value != ""){
+                if (value != "") {
                     $("#sendStatusCode").combogrid({disabled: true});
-                    $("#insertStartDate").prop("disabled", "disabled");
-                    $("#insertEndDate").prop("disabled", "disabled");
-                }else{
+                    $("#signStartDate").prop("disabled", "disabled");
+                    $("#signEndDate").prop("disabled", "disabled");
+                } else {
                     $("#sendStatusCode").combogrid({disabled: false});
-                    $("#insertStartDate").removeProp("disabled");
-                    $("#insertEndDate").removeProp("disabled");
+                    $("#signStartDate").removeProp("disabled");
+                    $("#signEndDate").removeProp("disabled");
                 }
             })
 
-            $("#contract_no1").change(function(){
-                var value=$("#contract_no1").val();
-                if(value != ""){
+            $("#contract_no1").change(function () {
+                var value = $("#contract_no1").val();
+                if (value != "") {
                     $("#startDate").prop("disabled", "disabled");
                     $("#endDate").prop("disabled", "disabled");
-                }else{
+                } else {
                     $("#startDate").removeProp("disabled");
                     $("#endDate").removeProp("disabled");
                 }
-
             })
             //跳转当前页面时设置共借人信息
             var coCustomerTypeArray = new Array();
@@ -90,13 +88,27 @@
             coCustomerTypeArray.push(coCustomerType4);
 
             for (var j = 0; j < coCustomerTypeArray.length; j++) {
-                    var id = "coCustomerTbody"+(j + 1);
+                var id = "coCustomerTbody" + (j + 1);
                 if (coCustomerTypeArray[j] != "") {
-                   setDisplayStatus(id,true);
-                }else{
-                    setDisplayStatus(id,false);
+                    setDisplayStatus(id, true);
+                } else {
+                    setDisplayStatus(id, false);
                 }
             }
+            $("#declaredBatchDelete").hide();
+            $("#setNotSendBtn").hide();
+            $("#sendStatusCode").combobox({
+                onChange: function (newValue, oldValue) {
+                    if (newValue == 0) {
+                        $("#declaredBatchDelete").hide();
+                        $("#setNotSendBtn").hide();
+                    } else {
+                        $("#declaredBatchDelete").show();
+                        $("#setNotSendBtn").show();
+                    }
+                    ;
+                }
+            });
         })
 
         //点击“手工填写"按钮触发，解除锁定
@@ -144,6 +156,7 @@
 
         //保存记录
         function doSave() {
+            manualFill();
             $("#fo").submit();
         }
 
@@ -155,7 +168,7 @@
                 return;
             }
             var id = "coCustomerTbody" + i;
-            setDisplayStatus(id,true);
+            setDisplayStatus(id, true);
             i++;
         }
 
@@ -166,7 +179,7 @@
             } else {
                 return;
             }
-            setDisplayStatus("coCustomerTbody" + i,false);
+            setDisplayStatus("coCustomerTbody" + i, false);
         }
 
 
@@ -207,25 +220,47 @@
                     formatter: function (value, row) {
                         return formatDatebox(value);
                     }
-                },{
-                    field:"netSignNo",
-                    title:"网签编号",
-                    width:220
+                }, {
+                    field: "isLast",
+                    title: "是否是最新",
+                    width: 80,
+                    formatter: function (value, row) {
+                        if (value == 'Y') {
+                            return '是';
+                        } else if (value == 'N') {
+                            return '否';
+                        }
+                    }
+                }, {
+                    field: "netSignNo",
+                    title: "网签编号",
+                    width: 220
 
                 }]],
                 onDblClickRow: function (rowIndex, rowData) {
-                    queryContractByContractNo(rowData.contractNo);
-                    $('#businessQueryWindow').window('close');
+                    queryContractByDateId(rowData.dateId);
                 },
-                onLoadSuccess: function () {
+                onLoadSuccess: function (data) {
+                    if (data.total == 0) {
+                        //添加一个新数据行
+                        $(this).datagrid('appendRow', {contractNo: '<div style="text-align:center;color:red">没有相关记录！</div>'}).datagrid('mergeCells', {
+                            index: 0,
+                            field: 'contractNo',
+                            colspan: 6
+                        });
+                    }
                     $(this).datagrid('clearChecked');
                 }
             })
             $('#businessQueryWindow').window('open');
         }
 
-        function queryContractByContractNo(contractNo) {
-            window.location.href = "${basePath}/contractInfo.do?method=findContractByContractNo&contractNo=" + contractNo;
+        function queryContractByDateId(dateId) {
+            if (dateId != undefined) {
+                window.location.href = "${basePath}/contractInfo.do?method=findContractByDateId&dateId=" + dateId;
+                $('#businessQueryWindow').window('close');
+            }
+
         }
         //批量保存
         function doBatchSave() {
@@ -234,7 +269,10 @@
             for (var i = 0; i < rows.length; i++) {
                 ids.push(rows[i].dateId);
             }
-
+            if (ids.length == 0) {
+                $.messager.alert("提示消息", "请选择至少一条记录进行操作", "info");
+                return;
+            }
             $.ajax({
                 type: "POST",
                 url: "${basePath}/contractInfo.do?method=batchSaveContract",
@@ -252,12 +290,12 @@
         //根据签订时间段从实时网签的表中查询,贷款合同信息上报依赖于实时网签,实时网签执行后才做贷款合同信息上报操作
         function doBusinessQuery() {
             var value = $("#contract_no1").val();
-            if(value != ""){
+            if (value != "") {
                 $("#businessQueryResultTb").datagrid({
-                    queryParams: {"contractNo":value},
-                    url: "${basePath}/contractInfo.do?method=findContractByContractNoFromRealTimeContract&sendStatus=1"
+                    queryParams: {"contractNo": value, "sendStatus": ""},
+                    url: "${basePath}/contractInfo.do?method=findContractByContractNoFromRealTimeContract"
                 });
-            }else if ($("#businessQueryForm").form('validate') == true) {
+            } else if ($("#businessQueryForm").form('validate') == true) {
                 $("#businessCheckMsg").html("");
                 if (!checkEndTime("startDate", "endDate")) {
                     $("#businessCheckMsg").html("结束时间必须晚于开始时间！");
@@ -265,7 +303,7 @@
                 } else {
                     $("#businessQueryResultTb").datagrid({
                         queryParams: form2Json("businessQueryForm"),
-                        url: "${basePath}/pettyLoanContract.do?method=findPettyLoanContractBySendStatus"
+                        url: "${basePath}/pettyLoanContract.do?method=findLastPettyLoanContractBySendStatus"
                     });
                 }
             }
@@ -275,19 +313,19 @@
             //初始化申报查询的datagrid
             $("#declareQueryResultTb").datagrid({
                 url: '',
-                singleSelect: true,
+                checkOnSelect: true,
                 pagination: true,
                 pageSize: 15,
                 pageList: [5, 10, 15, 20, 30],
                 columns: [[{
                     field: "id",
                     title: "主键",
-                    hidden: true
+                    checkbox: true
                 }, {
                     field: "dateId",
                     title: "Date_Id",
                     hidden: true
-                } ,{
+                }, {
                     field: "contractNo",
                     title: "合同编号",
                     width: 100
@@ -318,27 +356,27 @@
                             return "否";
                         }
                     }
-                },{
+                }, {
                     field: "isLast",
                     title: "是否是最新",
                     width: 80,
-                    formatter:function(value,row){
-                        if(value = 'Y'){
+                    formatter: function (value, row) {
+                        if (value == 'Y') {
                             return '是';
-                        }else{
+                        } else if (value == 'N') {
                             return '否';
                         }
                     }
-                },{
+                }, {
                     field: "reportType",
                     title: "上报类型",
                     width: 80,
-                    formatter:function(value,row){
-                        if('100001' == value){
+                    formatter: function (value, row) {
+                        if ('100001' == value) {
                             return '新增记录';
-                        }else if ('100002' == value){
+                        } else if ('100002' == value) {
                             return '修改记录';
-                        }else if('100003' == value){
+                        } else if ('100003' == value) {
                             return '删除记录';
                         }
                     }
@@ -351,9 +389,16 @@
                 ]],
                 onDblClickRow: function (rowIndex, rowData) {
                     queryContractByContractId(rowData.id);
-                    $('#declareQueryWindow').window('close');
                 },
-                onLoadSuccess:function(){
+                onLoadSuccess: function (data) {
+                    if (data.total == 0) {
+                        //添加一个新数据行
+                        $(this).datagrid('appendRow', {contractNo: '<div style="text-align:center;color:red">没有相关记录！</div>'}).datagrid('mergeCells', {
+                            index: 0,
+                            field: 'contractNo',
+                            colspan: 8
+                        });
+                    }
                     $(this).datagrid('clearChecked');
                 }
             })
@@ -363,13 +408,13 @@
         //根据申报状态查询合同简略信息
         function doDeclareQuery() {
             var value = $("#contract_no2").val();
-            if( value != ""){
+            if (value != "") {
                 $("#declareQueryResultTb").datagrid({
-                    queryParams: {"contractNo":value},
+                    queryParams: {"contractNo": value},
                     url: "${basePath}/contractInfo.do?method=findContractBriefInfoByContractNo"
                 });
 
-            }else if($("#declareQueryForm").form('validate') == true){
+            } else if ($("#declareQueryForm").form('validate') == true) {
                 var flag = true;
                 $("#businessCheckMsg").html("");
                 if ($("#insertEndDate").val() != null && !checkEndTime("insertStartDate", "insertEndDate")) {
@@ -387,39 +432,88 @@
         }
 
         //根据记录id查询合同信息
-        function  queryContractByContractId(id){
-            window.location.href = "${basePath}/contractInfo.do?method=findContractById&id=" + id;
+        function queryContractByContractId(id) {
+            if (id != undefined) {
+                window.location.href = "${basePath}/contractInfo.do?method=findContractById&id=" + id;
+                $('#declareQueryWindow').window('close');
+            }
         }
 
         //已申报记录更新信息
-        function declaredUpdate(){
+        function declaredUpdate() {
+            manualFill();
             $("#fo").submit();
         }
 
         //已申报记录删除
-        function declaredDelete(){
+        function declaredDelete() {
             manualFill();
             $.ajax({
-                type: "POST",
-                url: "${basePath}/contractInfo.do?method=deleteRecord",
-                data: form2Json("fo"),
-                dataType: "json",
-                success: function (data) {
-                 //var result = eval("("+data+")");
-                  var status = data.sucesss;
-                    if (status) {
-                        $.messager.alert("提示消息", "操作成功", "info");
-                    } else {
-                        $.messager.alert("提示消息", "操作失败,"+data.msg, "warning");
+                    type: "POST",
+                    url: "${basePath}/contractInfo.do?method=deleteRecord",
+                    data: form2Json("fo"),
+                    dataType: "json",
+                    success: function (data) {
+
+                        if (data.sucesss) {
+                            $.messager.alert("提示消息", "操作成功", "info");
+                        } else {
+                            $.messager.alert("提示消息", "操作失败," + data.msg, "warning");
+                        }
                     }
-                }
-
-
                 }
             )
         }
-
-
+        //已申报批量删除
+        function doDeclaredBatchDelete() {
+            var ids = [];
+            var rows = $("#declareQueryResultTb").datagrid("getSelections");
+            for (var i = 0; i < rows.length; i++) {
+                ids.push(rows[i].dateId);
+            }
+            if (ids.length == 0) {
+                $.messager.alert("提示消息", "请选择至少一条记录进行操作", "info");
+                return;
+            }
+            $.ajax({
+                type: "POST",
+                url: "${basePath}/contractInfo.do?method=deleteRecordBatch",
+                data: {"ids": ids.toString()},
+                dataType: "json",
+                success: function (data) {
+                    if (data.sucesss) {
+                        $.messager.alert("提示消息", "操作成功", "info");
+                    } else {
+                        $.messager.alert("提示消息", "操作失败," + data.msg, "warning");
+                    }
+                }
+            });
+        }
+        //设置为未申报
+        function doSetNotSend() {
+            var ids = [];
+            var rows = $("#declareQueryResultTb").datagrid("getSelections");
+            for (var i = 0; i < rows.length; i++) {
+                ids.push(rows[i].id);
+            }
+            if (ids.length == 0) {
+                $.messager.alert("提示消息", "请选择至少一条记录进行操作", "info");
+                return;
+            }
+            $.ajax({
+                type: "POST",
+                url: "${basePath}/contractInfo.do?method=setNotSend",
+                data: {"ids": ids.toString()},
+                dataType: "json",
+                success: function (data) {
+                    if (data.sucesss) {
+                        $.messager.alert("提示消息", "操作成功", "info");
+                    } else {
+                        $.messager.alert("提示消息", "操作失败 " + data.msg, "warning");
+                    }
+                }
+            });
+        }
         //刷新当前页
         function doReset() {
             window.location.href = "${basePath}/contractInfo.do?method=showContractInfo";
@@ -655,7 +749,6 @@
 									fitColumns: true,
 									nowrap:false"/>
                         <span class="warning">${errors['loanObject']}</span>
-
                     </td>
                 </tr>
                 <tr>
@@ -719,14 +812,13 @@
 									panelWidth: 255,
 									idField: 'dictCode',
 									textField: 'dictName',
-									value:'240001',
 									url: '${basePath }/param/paramCommonController.do?method=getDatadict&code=GUAR_TYPE',
 									columns: [[
 										{field:'dictCode',title:'担保方式代码',width:60},
 										{field:'dictName',title:'担保方式',width:195}
 									]],
 									fitColumns: true,
-									nowrap:false,
+									nowrap:false
                                    "/>
                         <span class="warning">${errors['guarType']}</span>
                     </td>
@@ -1015,11 +1107,11 @@
                 </tbody>
                 <tbody id="coCustomerTbody1">
                 <tr>
-                <th width='15%'><span class='warning'>*</span>共同借款人1类别</th>
-                <td width="32%"><input class="easyui-combogrid" id="coCustomerType1" name="coCustomerType1"
-                           style="width:251px;"
-                           value="${model.coCustomerType1}"
-                           data-options="
+                    <th width='15%'><span class='warning'>*</span>共同借款人1类别</th>
+                    <td width="32%"><input class="easyui-combogrid" id="coCustomerType1" name="coCustomerType1"
+                                           style="width:251px;"
+                                           value="${model.coCustomerType1}"
+                                           data-options="
 									panelWidth: 255,
 									idField: 'dictCode',
 									textField: 'dictName',
@@ -1030,22 +1122,22 @@
 									]],
 									fitColumns: true,
 									nowrap:false"/>
-                    <span class='warning'>${errors['coCustomerType']}</span>
-                </td>
-                <th width='15%'><span class='warning'>*</span>共同借款人1名称</th>
-                <td width="32%">
-                    <input type="text" id="coCustomerName1" name="coCustomerName1"
-                           value="${model.coCustomerName1}" class="inputText">
-                    <span class="warning">${errors['conCustomerName']}</span>
-                </td>
-            </tr>
-            <tr>
-                <th width="15%"><span class='warning'>*</span>共同借款人证件类型</th>
-                <td width="32%">
-                    <input class="easyui-combogrid" id="coCertificateType1" name="coCertificateType1"
-                           value="${model.coCertificateType1}"
-                           style="width:251px;"
-                           data-options="
+                        <span class='warning'>${errors['coCustomerType']}</span>
+                    </td>
+                    <th width='15%'><span class='warning'>*</span>共同借款人1名称</th>
+                    <td width="32%">
+                        <input type="text" id="coCustomerName1" name="coCustomerName1"
+                               value="${model.coCustomerName1}" class="inputText">
+                        <span class="warning">${errors['conCustomerName']}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th width="15%"><span class='warning'>*</span>共同借款人证件类型</th>
+                    <td width="32%">
+                        <input class="easyui-combogrid" id="coCertificateType1" name="coCertificateType1"
+                               value="${model.coCertificateType1}"
+                               style="width:251px;"
+                               data-options="
 									panelWidth: 255,
 									idField: 'dictCode',
 									textField: 'dictName',
@@ -1056,35 +1148,35 @@
 									]],
 									fitColumns: true,
 									nowrap:false"/>
-                    <span class="warning">${errors['conCertificateType']}</span>
-                </td>
-                <th width="15%"><span class='warning'>*</span>委托人证件号码</th>
-                <td width="32%">
-                    <input type="text" id="coCertificateNo1" name="coCertificateNo1"
-                           value="${model.coCertificateNo1}" class="inputText"/>
-                    <span class="warning">${errors['conCertificateNo']}</span>
-                </td>
-            </tr>
-            <tr>
-                <th width='15%'>共同贷款人1联系人</th>
-                <td width="32%">
-                    <input type='text' id='coLinkman1' name='coLinkman1' value="${model.coLinkman1}"
-                           class='inputText'/>
-                </td>
+                        <span class="warning">${errors['conCertificateType']}</span>
+                    </td>
+                    <th width="15%"><span class='warning'>*</span>共同借款人证件号码</th>
+                    <td width="32%">
+                        <input type="text" id="coCertificateNo1" name="coCertificateNo1"
+                               value="${model.coCertificateNo1}" class="inputText"/>
+                        <span class="warning">${errors['conCertificateNo']}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th width='15%'>共同贷款人1联系人</th>
+                    <td width="32%">
+                        <input type='text' id='coLinkman1' name='coLinkman1' value="${model.coLinkman1}"
+                               class='inputText'/>
+                    </td>
 
-                <th width="15%">共借人联系电话</th>
-                <td width="32%">
-                    <input type="text" id="coTelephone1" name="coTelephone1"
-                           value="${model.coTelephone1}" class="inputText"/>
-                </td>
-            </tbody>
+                    <th width="15%">共借人联系电话</th>
+                    <td width="32%">
+                        <input type="text" id="coTelephone1" name="coTelephone1"
+                               value="${model.coTelephone1}" class="inputText"/>
+                    </td>
+                </tbody>
                 <tbody id="coCustomerTbody2">
                 <tr>
                     <th width='15%'><span class='warning'>*</span>共同借款人2类别</th>
                     <td width="32%"><input class="easyui-combogrid" id="coCustomerType2" name="coCustomerType2"
-                               style="width:252px;"
-                               value="${model.coCustomerType2}"
-                               data-options="
+                                           style="width:252px;"
+                                           value="${model.coCustomerType2}"
+                                           data-options="
                                             panelWidth: 255,
                                             idField: 'dictCode',
                                             textField: 'dictName',
@@ -1123,7 +1215,7 @@
                                             nowrap:false"/>
                         <span class="warning">${errors['conCertificateType']}</span>
                     </td>
-                    <th width="15%"><span class='warning'>*</span>委托人证件号码</th>
+                    <th width="15%"><span class='warning'>*</span>共同借款人证件号码</th>
                     <td>
                         <input type="text" id="coCertificateNo2" name="coCertificateNo2"
                                value="${model.coCertificateNo2}" class="inputText"/>
@@ -1188,7 +1280,7 @@
 									nowrap:false"/>
                         <span class="warning">${errors['conCertificateType']}</span>
                     </td>
-                    <th width="15%"><span class='warning'>*</span>委托人证件号码</th>
+                    <th width="15%"><span class='warning'>*</span>共同借款人证件号码</th>
                     <td>
                         <input type="text" id="coCertificateNo3" name="coCertificateNo3"
                                value="${model.coCertificateNo3}" class="inputText"/>
@@ -1253,7 +1345,7 @@
                                             nowrap:false"/>
                         <span class="warning">${errors['conCertificateType']}</span>
                     </td>
-                    <th width="15%"><span class='warning'>*</span>委托人证件号码</th>
+                    <th width="15%"><span class='warning'>*</span>共同借款人证件号码</th>
                     <td>
                         <input type="text" id="coCertificateNo4" name="coCertificateNo4"
                                value="${model.coCertificateNo4}" class="inputText"/>
@@ -1273,7 +1365,7 @@
                                value="${model.coTelephone4}" class="inputText"/>
                     </td>
                 </tbody>
-              
+
             </table>
         </div>
     </div>
@@ -1290,7 +1382,7 @@
             <tr>
                 <th width="15%">签约日期：</th>
                 <td>
-                    <input type="text" id="startDate" name="startDate" data-options="required:true"
+                    <input type="text" id="startDate" name="signStartDate" data-options="required:true"
                            class="easyui-validatebox"
                            style="border:1px solid #95B8E7;*color:#007fca;width:245px;padding:4px 2px;"
                            onclick="WdatePicker()"/>至
@@ -1298,9 +1390,7 @@
 
                 <td>
 
-                    <input type="hidden" name="sendStatusCode" data-options="required:true"
-                           value="1"/>
-                    <input type="text" id="endDate" name="endDate" data-options="required:true" style="border:1px solid #95B8E7;
+                    <input type="text" id="endDate" name="signEndDate" data-options="required:true" style="border:1px solid #95B8E7;
                         *color:#007fca;width:245px;padding:4px 2px;" onclick="WdatePicker()"
                            class="easyui-validatebox"/>
                 </td>
@@ -1314,7 +1404,7 @@
 
             </tr>
             <tr>
-                <th> </th>
+                <th></th>
                 <td>
                     <input id="businessQueryBtn" type="button" class="inputButton" onclick="doBusinessQuery();"
                            value="查询"/>
@@ -1333,7 +1423,7 @@
 <%--申报查询模态框--%>
 <div id="declareQueryWindow" class="easyui-window" title="申报查询"
      data-options="modal:true,closed:true,iconCls:'icon-save'"
-     style="width:900px;height:600px;padding:10px;">
+     style="width:1000px;height:600px;padding:10px;">
 
     <form action="" method="post" id="declareQueryForm">
         <table>
@@ -1350,14 +1440,14 @@
             <tr>
                 <th width="15%">签约日期：</th>
                 <td>
-                    <input type="text" id="insertStartDate" name="signStartDate" data-options="required:true"
+                    <input type="text" id="signStartDate" name="signStartDate" data-options="required:true"
                            class="easyui-validatebox" style="border:1px solid #95B8E7;
                         *color:#007fca;width:180px;padding:4px 2px;"
                            onclick="WdatePicker()" class="inputText"/> 至
                 </td>
 
                 <td>
-                    <input type="text" id="insertEndDate" name="signEndDate" data-options="required:true"
+                    <input type="text" id="signEndDate" name="signEndDate" data-options="required:true"
                            class="easyui-validatebox" style="border:1px solid #95B8E7;
                         *color:#007fca;width:180px;padding:4px 2px;"
                            onclick="WdatePicker()" class="inputText"/>
@@ -1372,9 +1462,15 @@
 
             </tr>
             <tr>
-                <th> </th>
+                <th></th>
                 <td><input id="declareQueryBtn" type="button" class="inputButton" onclick="doDeclareQuery();"
-                           value="查询"/></td>
+                           value="查询"/>
+                    <input id="declaredBatchDelete" type="button" class="inputButton" onclick="doDeclaredBatchDelete()"
+                           value="已申报删除"/>
+                    <input id="setNotSendBtn" type="button" class="inputButton" onclick="doSetNotSend()"
+                           value="设置为未申报"/>
+                </td>
+
             </tr>
         </table>
     </form>

@@ -14,9 +14,9 @@ public interface ContractInfoDao {
 
     void saveOrUpdate(ContractInfoCycleNode contractInfoCycleNode) throws DAOException;
 
-    List<ContractInfoCycleNode> findContractListByDateId(String contractNo) throws DAOException;
+    List<ContractInfoCycleNode> findContractListByDateId(String dateId) throws DAOException;
 
-    ContractInfoCycleNode findContractByDateIdFromPettyLoanContract(String contractNo) throws DAOException;
+    ContractInfoCycleNode findContractByDateIdFromBizSys(String dateId) throws DAOException;
 
     CoCustomerCycleNode findCoCustomerInfoFromDataMemberInfo(String code) throws DAOException;
 
@@ -32,4 +32,5 @@ public interface ContractInfoDao {
 
     void batchUpdateContract(List<ContractInfoCycleNode> list, boolean isUpdateValueNullField) throws DAOException;
 
+    PageBean findLastContractBySendStatus(String sendStatusCode, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException;
 }

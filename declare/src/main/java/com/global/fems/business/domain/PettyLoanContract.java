@@ -75,7 +75,8 @@ public class PettyLoanContract extends Entity {
     private String seqNo;//渠道流水号
     @ColumnMapping(columnName = "netsignno",columnType = "String")
     private String netSignNo;//网签编号
-
+    @ColumnMapping(columnName = "islast" ,columnType = "String")
+    private String isLast; //是否是最新
     private String businessNum;//业务编号，查询时会使用，DC_PETTY_LOAN_CONTRACT表中没有
 
     public String getId() {
@@ -252,5 +253,13 @@ public class PettyLoanContract extends Entity {
 
     public void setNetSignNo(String netSignNo) {
         this.netSignNo = netSignNo;
+    }
+
+    public String getIsLast() {
+        return isLast;
+    }
+
+    public void setIsLast(String isLast) {
+        this.isLast = isLast;
     }
 }

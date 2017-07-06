@@ -1,6 +1,7 @@
 package com.global.fems.business.dao;
 
 import com.global.fems.business.domain.PettyLoanContract;
+import com.global.framework.dbutils.support.DAOException;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 
@@ -32,6 +33,9 @@ public interface PettyLoanContractDao {
 
     int findPettyLoanContractDateIdByContractNo(String contractNo) throws BaseException;
 
-    PageBean findContractByContractNoFromRealTimeContract(String contractNo, String sendStatus, PageBean pageBean) throws BaseException;
+    PageBean findContractByContractNoFromRealTimeContract(String contractNo, String sendStatus, PageBean pageBean) throws DAOException;
 
+    List<PettyLoanContract> findContractListByDateId(String dateId) throws DAOException;
+
+    PageBean findLastPettyLoanContractBySendStatus(Integer sendStatusCode, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException;
 }

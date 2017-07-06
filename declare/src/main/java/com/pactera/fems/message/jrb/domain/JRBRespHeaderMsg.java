@@ -18,6 +18,7 @@ public class JRBRespHeaderMsg extends SerialBean {
     private String destBranchNo;
     private String tranDate;
     private String seqNo;
+    private String  filePath;
 
     public JRBRET getRet() {
         return ret;
@@ -106,5 +107,13 @@ public class JRBRespHeaderMsg extends SerialBean {
 
     public void setSeqNo(String seqNo) {
         this.seqNo = seqNo;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }

@@ -10,35 +10,38 @@ import org.slf4j.LoggerFactory;
 import java.io.InputStream;
 
 /**
- *向SFTP服务器上传文件
+ * 向SFTP服务器上传文件
  */
 public class SFTPClient {
     private static Logger logger = LoggerFactory.getLogger(SFTPClient.class);
 
     /**
-     *
-     * @param src  文件流文件
-     * @param dst  目标文件名
-     * @param mode  传输模式三种:
+     * @param src 文件流文件
+     * @param dst 目标文件名
      */
-    public void put(InputStream src, String dst, int mode)  {
+    public static void put(InputStream src, String dst) throws Exception {
         SFTPChannel sftpChannel = new SFTPChannel();
         ChannelSftp channel = null;
         try {
             channel = sftpChannel.getChannel();
-             channel.put(src,dst,mode);
-        } catch (JSchException e) {
-
+            if (channel == null){
+                throw new Exception("SFTP创建连接失败");
+            }
+            channel.put(src, dst);
+        }catch (JSchException e){
             logger.error("",e);
+            throw e;
         } catch (SftpException e) {
-
             logger.error("",e);
-        }finally {
-            channel.quit();
+            throw e;
+        } finally {
+            if(channel != null){
+                channel.quit();
+            }
             try {
                 sftpChannel.closeChannel();
             } catch (Exception e) {
-                logger.error("",e);
+                logger.error("SFTPClient:put(),关闭Channel异常", e);
             }
         }
     }

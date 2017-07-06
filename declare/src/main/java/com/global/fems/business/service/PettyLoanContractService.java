@@ -22,6 +22,9 @@ public interface PettyLoanContractService {
 
     PageBean findPettyLoanContractByContractNo(String contractNo, PageBean pageBean) throws BaseException;
 
-    PageBean findPettyLoanContractByContractNoFromBizSys(String contractNo, PageBean pageBean)throws BaseException;
+    PageBean findPettyLoanContractByContractNoFromBizSys(String contractNo, PageBean pageBean) throws BaseException;
 
+    void declaredUpdate(PettyLoanContract contract) throws BaseException;
+
+    PageBean findLastPettyLoanContractBySendStatus(Integer sendStatusCode, String signStartDate, String signEndDate, PageBean pageBean) throws BaseException;;
 }

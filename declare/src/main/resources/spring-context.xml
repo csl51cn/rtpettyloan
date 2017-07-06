@@ -121,5 +121,19 @@
 		<property name="cacheSeconds" value="60"/>
 	</bean>
 
+	<bean id="sendBatchFileStrategyFactory" class="com.global.fems.business.Strategy.SendBatchFileStrategyFactory">
+		<property name="sendBatchFileStrategyMap">
+			<map>
+				<!--<entry key="0101" value-ref=""/>-->
+				<entry key="0102" value-ref="sendContractInoBatchFileStrategy"/>
+				<entry key="0103" value-ref="sendContractIssueInfoBatchFileStrategy"/>
+				<entry key="0104" value-ref="sendRepayInfoBatchFileStrategy"/>
+				<entry key="0105" value-ref="sendPayPlanInfoBatchFileStrategy"/>
+				<!--<entry key="0106" value-ref=""/>-->
+				<!--<entry key="0107" value-ref=""/>-->
+			</map>
+		</property>
+
+	</bean>
 
 </beans>

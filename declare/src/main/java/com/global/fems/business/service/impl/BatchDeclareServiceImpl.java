@@ -1,14 +1,12 @@
 package com.global.fems.business.service.impl;
 
-import com.global.fems.business.dao.ContractInfoDao;
-import com.global.fems.business.domain.ContractInfoCycleNode;
+import com.global.fems.business.Strategy.SendBatchFileStrategy;
+import com.global.fems.business.Strategy.SendBatchFileStrategyFactory;
 import com.global.fems.business.service.BatchDeclareService;
-import com.global.fems.message.service.impl.JRBBizInfoDeclareManager;
 import com.global.param.domain.ResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -16,22 +14,23 @@ import java.util.Map;
  */
 @Service
 public class BatchDeclareServiceImpl implements BatchDeclareService {
+
     @Autowired
-    private ContractInfoDao contractInfoDao;
-    @Autowired
-    private JRBBizInfoDeclareManager jrbBizInfoDeclareManager;
+    private SendBatchFileStrategyFactory sendBatchFileStrategyFactory;
 
-
-    public ResultModel sendBatchFile(String ids) throws Exception {
-
-        String[] idsArr = ids.split(",");
-        ArrayList<ContractInfoCycleNode> list = new ArrayList<ContractInfoCycleNode>();
-        for (String id : idsArr) {
-            ContractInfoCycleNode contractById = contractInfoDao.findContractById(id);
-            list.add(contractById);
-        }
-        Map map = jrbBizInfoDeclareManager.sendContractInfoBatchFile(list);
-
-        return null;
+    /**
+     * 根据传入的交易类型获得相应的上传报文的策略
+     *
+     * @param ids 记录的id
+     * @param transactionType
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public ResultModel sendBatchFile(String ids, String transactionType) throws Exception {
+        Map<String, SendBatchFileStrategy> sendBatchFileStrategyMap = sendBatchFileStrategyFactory.getSendBatchFileStrategyMap();
+        SendBatchFileStrategy sendBatchFileStrategy = sendBatchFileStrategyMap.get(transactionType);
+        ResultModel resultModel = sendBatchFileStrategy.sendBatchFile(ids);
+        return resultModel;
     }
 }

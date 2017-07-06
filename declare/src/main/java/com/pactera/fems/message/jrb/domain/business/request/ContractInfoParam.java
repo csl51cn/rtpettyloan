@@ -13,7 +13,7 @@ public class ContractInfoParam extends SerialBean {
     private String reportType;        //上报类型:增 删 改
     private String orgCode;          //组织机构代码
     private String contractNo;       //合同编号
-    private String loanCate;         //合同类别
+    private String loanCate;         //贷款类别
     private String contractName;     //合同名称
     private String customerType;      //借款人类别
     private String customerName;      //借款人名称

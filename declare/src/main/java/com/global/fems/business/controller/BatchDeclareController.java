@@ -23,14 +23,20 @@ public class BatchDeclareController {
         return "business/pettyLoanContract/batchDeclare";
 
     }
+
+    /**
+     * 批量申报
+     * @param ids
+     * @param transactionType
+     * @return
+     */
     @RequestMapping(params = "method=sendBatchFile",produces = "application/json; charset=utf-8")
     @ResponseBody
-    public ResultModel sendBatchFile(String ids){
+    public ResultModel sendBatchFile(String ids,String transactionType){
         try {
-          return   batchDeclareService.sendBatchFile(ids);
+          return   batchDeclareService.sendBatchFile(ids,transactionType);
         } catch (Exception e) {
             e.printStackTrace();
-
         }
         return null;
     }

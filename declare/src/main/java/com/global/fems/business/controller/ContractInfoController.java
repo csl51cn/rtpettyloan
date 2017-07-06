@@ -4,6 +4,7 @@ import com.global.fems.business.domain.ContractInfoCycleNode;
 import com.global.fems.business.service.ContractInfoService;
 import com.global.fems.interfaces.validator.First;
 import com.global.fems.interfaces.validator.Second;
+import com.global.framework.dbutils.support.DAOException;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 import com.global.param.domain.ResultModel;
@@ -44,8 +45,7 @@ public class ContractInfoController {
     }
 
     /**
-     * 保存自营贷款
-     *
+     *  保存自营贷款
      * @param contractInfoCycleNode
      * @param result
      * @param model
@@ -89,17 +89,16 @@ public class ContractInfoController {
                 model.addAttribute("errors", err);
                 throw new BaseException("保存或更新合同记录时，数据校验未通过");
             }
-            if (contractInfoCycleNode.getIsSend() == 1) {
+            if (contractInfoCycleNode.getIsSend() != null && contractInfoCycleNode.getIsSend() == 1) {
                 contractInfoService.declaredUpdate(contractInfoCycleNode);
             } else {
-
                 contractInfoService.saveOrUpdate(contractInfoCycleNode);
             }
             model.addAttribute("msg", "1");//返回操作成功标志
 
-        } catch (BaseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("msg", "0");//返回操作失败标志
+            model.addAttribute("msg", e.getLocalizedMessage());//返回操作失败标志
         }
         model.addAttribute("model", contractInfoCycleNode);
         return "business/pettyLoanContract/fillContractInfo";
@@ -125,16 +124,16 @@ public class ContractInfoController {
     }
 
     /**
-     * 根据合同号联合查询合同详细信息
+     * 根据dateId联合查询合同详细信息
      *
-     * @param contractNo
+     * @param dateId
      * @param model
      * @return
-     * @throws BaseException
+     * @throws DAOException
      */
-    @RequestMapping(params = "method=findContractByContractNo")
-    public String findContractByContractNo(String contractNo, Model model) throws BaseException {
-        ContractInfoCycleNode contractInfoCycleNode = contractInfoService.findContractBycontractNo(contractNo);
+    @RequestMapping(params = "method=findContractByDateId")
+    public String findContractByDateId(String dateId, Model model) throws DAOException {
+        ContractInfoCycleNode contractInfoCycleNode = contractInfoService.findContractByDateId(dateId);
         model.addAttribute("model", contractInfoCycleNode);
         model.addAttribute("disabled", true);
         return "business/pettyLoanContract/fillContractInfo";
@@ -151,8 +150,8 @@ public class ContractInfoController {
      */
     @RequestMapping(params = "method=findContractByContractNoFromRealTimeContract")
     @ResponseBody
-    public Map<String, Object> findContractByContractNoFromRealTimeContract(String contractNo, String sendStatus, PageBean pageBean) throws BaseException {
-        pageBean = contractInfoService.findContractByContractNoFromRealTimeContract(contractNo, sendStatus, pageBean);
+    public Map<String, Object> findContractByContractNoFromRealTimeContract(String contractNo, String sendStatus, PageBean pageBean) throws DAOException {
+        pageBean = contractInfoService.findContractByContractNoFromRealTimeContract(contractNo.trim(), sendStatus, pageBean);
         return pageBean2Map(pageBean);
 
     }
@@ -166,8 +165,8 @@ public class ContractInfoController {
      */
     @RequestMapping(params = "method=findContractBriefInfoByContractNo")
     @ResponseBody
-    public Map<String, Object> findContractBriefInfoByContractNo(String contractNo, PageBean pageBean) throws BaseException {
-        pageBean = contractInfoService.findContractBriefInfoByContractNo(contractNo, pageBean);
+    public Map<String, Object> findContractBriefInfoByContractNo(String contractNo, PageBean pageBean) throws DAOException {
+        pageBean = contractInfoService.findContractBriefInfoByContractNo(contractNo.trim(), pageBean);
         return pageBean2Map(pageBean);
     }
 
@@ -184,8 +183,24 @@ public class ContractInfoController {
      */
     @RequestMapping(params = "method=findContractBySendStatus")
     @ResponseBody
-    public Map<String, Object> findContractBySendStatus(String sendStatusCode, String signStartDate, String signEndDate, PageBean pageBean) throws BaseException {
+    public Map<String, Object> findContractBySendStatus(String sendStatusCode, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException {
         pageBean = contractInfoService.findContractBySendStatus(sendStatusCode, signStartDate, signEndDate, pageBean);
+        return pageBean2Map(pageBean);
+    }
+    /**
+     * 根据申报状态和签约时间段查询最新版本合同简略信息
+     *
+     * @param sendStatusCode
+     * @param startDate
+     * @param endDate
+     * @param pageBean
+     * @return
+     * @throws BaseException
+     */
+    @RequestMapping(params = "method=findLastContractBySendStatus")
+    @ResponseBody
+    public Map<String, Object> findLastContractBySendStatus(String sendStatusCode, String startDate, String endDate, PageBean pageBean) throws DAOException {
+        pageBean = contractInfoService.findLastContractBySendStatus(sendStatusCode, startDate, endDate, pageBean);
         return pageBean2Map(pageBean);
     }
 
@@ -206,12 +221,46 @@ public class ContractInfoController {
         return "business/pettyLoanContract/fillContractInfo";
     }
 
+
+    /**
+     * 已申报删除合同信息---单条记录
+     * @param contractInfoCycleNode
+     * @return
+     * @throws BaseException
+     */
     @RequestMapping(params = "method=deleteRecord", produces = "application/json; charset=utf-8")
     @ResponseBody
-    public ResultModel deleteRecord(ContractInfoCycleNode contractInfoCycleNode, Model model) throws BaseException {
-        ResultModel resultModel = contractInfoService.deleteRecord(contractInfoCycleNode);
+    public ResultModel deleteRecord(ContractInfoCycleNode contractInfoCycleNode) throws BaseException {
+        ResultModel resultModel = contractInfoService.deleteRecord(contractInfoCycleNode.getDateId()+"");
         return resultModel;
     }
+
+    /**
+     * 已申报删除合同信息---多条记录
+     * @param ids
+     * @return
+     * @throws BaseException
+     */
+    @RequestMapping(params = "method=deleteRecordBatch", produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public ResultModel deleteRecordBatch(String ids) throws BaseException {
+        ResultModel resultModel = contractInfoService.deleteRecord(ids);
+        return resultModel;
+    }
+
+   /**
+     * 设置为未申报
+     * @param ids
+     * @return
+     * @throws BaseException
+     */
+    @RequestMapping(params = "method=setNotSend", produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public ResultModel setNotSend(String ids) throws BaseException {
+        ResultModel resultModel = contractInfoService.setNotSend(ids);
+        return resultModel;
+    }
+
 
 
     /**

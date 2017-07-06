@@ -3,6 +3,7 @@ package com.global.fems.business.service.impl;
 import com.global.fems.business.dao.PettyLoanContractDao;
 import com.global.fems.business.domain.PettyLoanContract;
 import com.global.fems.business.service.PettyLoanContractService;
+import com.global.framework.dbutils.support.DAOException;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 import com.global.framework.util.StringUtil;
@@ -31,18 +32,46 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
      * @param contract 包含小额贷款合同的实体类
      * @throws BaseException
      */
+    @Override
     public void saveOrUpdatePettyLoanContract(PettyLoanContract contract) throws BaseException {
-        if (StringUtil.isNullOrEmpty(contract.getSendStatus())) {
-            contract.setSendStatus(0);//设置发送状态,0表示未发送，1表示已发送
+        try {
+
+            if (StringUtil.isNullOrEmpty(contract.getDateId())) {//设置dateId
+                int dateId = pettyLoanContractDao.findPettyLoanContractDateIdByContractNo(contract.getContractNo());
+                contract.setDateId(dateId);
+            }
+            List<PettyLoanContract> existContractList = pettyLoanContractDao.findContractListByDateId(contract.getDateId() + "");
+            if (existContractList != null && existContractList.size() > 0) {
+                for (PettyLoanContract pettyLoanContract : existContractList) {
+                    if ("Y".equals(pettyLoanContract.getIsLast()) && pettyLoanContract.getSendStatus() == 0) {
+                        if (StringUtil.isNullOrEmpty(contract.getIsLast())) {
+                            throw new DAOException("当前记录已录入,请通过申报查询后修改");
+                        }
+                    }
+                }
+            }
+            //身份证或者组织机构码把字母转为大写
+            contract.setCertificateNo(contract.getCertificateNo().toUpperCase());
+            if (contract.getSendStatus() != null && contract.getSendStatus() == 1) {
+                throw new DAOException("当前记录已申报,不能使用保存按钮,请使用已申报修改");
+            }
+            if (StringUtil.isNullOrEmpty(contract.getSendStatus())) {
+                contract.setSendStatus(0);//设置发送状态,0表示未发送，1表示已发送
+            }
+            if (StringUtil.isNullOrEmpty(contract.getInsertDate())) {//设置保存时间
+                contract.setInsertDate(new Date());
+            }
+
+            if (StringUtil.isNullOrEmpty(contract.getIsLast())) {
+                //设置为最新
+                contract.setIsLast("Y");
+            }
+            pettyLoanContractDao.saveOrUpdate(contract);
+
+        } catch (Exception e) {
+            throw new BaseException(e.getLocalizedMessage());
         }
-        if (StringUtil.isNullOrEmpty(contract.getInsertDate())) {//设置保存时间
-            contract.setInsertDate(new Date());
-        }
-        if(StringUtil.isNullOrEmpty(contract.getDateId())){//设置dateId
-             int  dateId =  pettyLoanContractDao.findPettyLoanContractDateIdByContractNo(contract.getContractNo());
-             contract.setDateId(dateId);
-        }
-        pettyLoanContractDao.saveOrUpdate(contract);
+
 
     }
 
@@ -54,6 +83,7 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
      * @param pageBean
      * @return
      */
+    @Override
     public PageBean findPettyLoanContractByDate(String startDate, String endDate, PageBean pageBean) throws BaseException {
 
         return pettyLoanContractDao.findPettyLoanContractByDate(startDate, endDate, pageBean);
@@ -66,19 +96,21 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
      * @param id
      * @return
      */
+    @Override
     public PettyLoanContract findPettyLoanContractById(String id) throws BaseException {
         return pettyLoanContractDao.findPettyLoanContractById(id);
     }
 
     /**
-     * 根据申报状态查询小额贷款合同记录
+     * 根据申报状态查询所有小额贷款合同记录
      *
-     * @param sendStatus      申报状态0:未申报，1：已申报
+     * @param sendStatus 申报状态0:未申报，1：已申报
      * @param startDate
      * @param endDate
      * @param pageBean
      * @return
      */
+    @Override
     public PageBean findPettyLoanContractBySendStatus(Integer sendStatus, String startDate, String endDate, PageBean pageBean) throws BaseException {
         return pettyLoanContractDao.findPettyLoanContractBySendStatus(sendStatus, startDate, endDate, pageBean);
     }
@@ -89,6 +121,7 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
      * @param dateId 业务数据date_id
      * @return
      */
+    @Override
     public PettyLoanContract findPettyLoanContractByWorkInfoId(Integer dateId) throws BaseException {
         PettyLoanContract pettyLoanContract = pettyLoanContractDao.findPettyLoanContractByWorkInfoId(dateId);
         //将以百分之一为单位的月利率转换为以千分之一为单位的月利率，接口文档要求千分之一为单位的利率
@@ -99,6 +132,8 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
         } else {
             pettyLoanContract.setLoanCate("530002");
         }
+        //身份证或组织机构码把字母转为大写
+        pettyLoanContract.setCertificateNo(pettyLoanContract.getCertificateNo().toUpperCase());
         return pettyLoanContract;
     }
 
@@ -108,6 +143,7 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
      * @param ids Data_WorkInfo表中的Date_Id
      * @throws BaseException
      */
+    @Override
     public void batchSavePettyLoanContract(String ids) throws BaseException {
         String[] idsArr = ids.split(",");
         List<PettyLoanContract> list = new ArrayList<PettyLoanContract>();
@@ -133,24 +169,15 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
             if (StringUtil.isNullOrEmpty(pettyLoanContract.getInsertDate())) {//设置保存时间
                 pettyLoanContract.setInsertDate(new Date());
             }
-            if (StringUtils.isBlank(pettyLoanContract.getContractNo())) {
-                logger.error("批量插入合同数据：Date_Id：" + id + "的合同编号为空");
+            //设置为最新
+            pettyLoanContract.setIsLast("Y");
+            //身份证或组织机构码把字母转为大写
+            pettyLoanContract.setCertificateNo(pettyLoanContract.getCertificateNo().toUpperCase());
+            String conCertificateNo = pettyLoanContract.getConCertificateNo();
+            if(!StringUtil.isNullOrEmpty(conCertificateNo)){
+                pettyLoanContract.setConCertificateNo(conCertificateNo.toUpperCase());
             }
-            if (StringUtils.isBlank(pettyLoanContract.getCertificateType())) {
-                logger.error("批量插入合同数据：Date_Id：" + id + "证件类型为空");
-            }
-            if (StringUtils.isBlank(pettyLoanContract.getCertificateNo())) {
-                logger.error("批量插入合同数据：Date_Id：" + id + "证件号码为空");
-            }
-            if (StringUtils.isBlank(pettyLoanContract.getCustomerName())) {
-                logger.error("批量插入合同数据：Date_Id：" + id + "借款人名称为空");
-            }
-            if (null == pettyLoanContract.getContractSignDate()) {
-                logger.error("批量插入合同数据：Date_Id：" + id + "合同签订日期为空");
-            }
-            if (null == pettyLoanContract.getContractAmount()) {
-                logger.error("批量插入合同数据：Date_Id：" + id + "合同金额为空");
-            }
+            validate(id, pettyLoanContract);
             list.add(pettyLoanContract);
         }
         if (list.size() > 0) { //插入0个记录，会抛异常
@@ -159,26 +186,109 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
 
     }
 
+
     /**
      * 根据合同编号从DC_PETTY_LOAN_CONTRACT中查询合同信息
+     *
      * @param contractNo
      * @param pageBean
      * @return
      * @throws BaseException
      */
+    @Override
     public PageBean findPettyLoanContractByContractNo(String contractNo, PageBean pageBean) throws BaseException {
 
-        return pettyLoanContractDao.findPettyLoanContractByContractNo(contractNo,pageBean);
+        return pettyLoanContractDao.findPettyLoanContractByContractNo(contractNo, pageBean);
     }
 
     /**
      * 根据合同编号从业务系统查询合同信息
+     *
      * @param contractNo
      * @param pageBean
      * @return
      * @throws BaseException
      */
+    @Override
     public PageBean findPettyLoanContractByContractNoFromBizSys(String contractNo, PageBean pageBean) throws BaseException {
-        return pettyLoanContractDao.findPettyLoanContractByContractNoFromBizSys(contractNo,pageBean);
+        return pettyLoanContractDao.findPettyLoanContractByContractNoFromBizSys(contractNo, pageBean);
     }
+
+    /**
+     * 更新已申报合同
+     *
+     * @param contract
+     */
+    @Override
+    public void declaredUpdate(PettyLoanContract contract) throws BaseException {
+        //查询已有记录,将是否为最新版本设置为N
+        List<PettyLoanContract> list = pettyLoanContractDao.findContractListByDateId(contract.getDateId() + "");
+
+        for (PettyLoanContract pettyLoanContract : list) {
+
+            if ("N".equals(pettyLoanContract.getIsLast())) {
+                continue;
+            } else {
+                pettyLoanContract.setIsLast("N");
+                pettyLoanContractDao.saveOrUpdate(pettyLoanContract);
+            }
+
+        }
+        //设置id为空
+        contract.setId(null);
+        //设置网签合同号为空
+        contract.setNetSignNo(null);
+        //设置申报状态为未申报,0:否,1:是
+        contract.setSendStatus(0);
+        //设置申报时间为空
+        contract.setSendDate(null);
+        //设置记录保存时间
+        contract.setInsertDate(new Date());
+        contract.setIsLast("Y");
+        //校验属性值是否为空
+        validate(contract.getDateId() + "", contract);
+        pettyLoanContractDao.saveOrUpdate(contract);
+    }
+
+    /**
+     * 根据申报状态查询最新的小额贷款合同记录
+     *
+     * @param sendStatusCode 申报状态0:未申报，1：已申报
+     * @param signStartDate
+     * @param signEndDate
+     * @param pageBean
+     * @return
+     */
+    @Override
+    public PageBean findLastPettyLoanContractBySendStatus(Integer sendStatusCode, String signStartDate, String signEndDate, PageBean pageBean) throws BaseException {
+        return pettyLoanContractDao.findLastPettyLoanContractBySendStatus(sendStatusCode, signStartDate, signEndDate, pageBean);
+    }
+
+    /**
+     * 校验数据是否为空
+     *
+     * @param id
+     * @param pettyLoanContract
+     */
+    private void validate(String id, PettyLoanContract pettyLoanContract) {
+        if (StringUtils.isBlank(pettyLoanContract.getContractNo())) {
+            logger.error("批量插入合同数据：Date_Id：" + id + "的合同编号为空");
+        }
+        if (StringUtils.isBlank(pettyLoanContract.getCertificateType())) {
+            logger.error("批量插入合同数据：Date_Id：" + id + "证件类型为空");
+        }
+        if (StringUtils.isBlank(pettyLoanContract.getCertificateNo())) {
+            logger.error("批量插入合同数据：Date_Id：" + id + "证件号码为空");
+        }
+        if (StringUtils.isBlank(pettyLoanContract.getCustomerName())) {
+            logger.error("批量插入合同数据：Date_Id：" + id + "借款人名称为空");
+        }
+        if (null == pettyLoanContract.getContractSignDate()) {
+            logger.error("批量插入合同数据：Date_Id：" + id + "合同签订日期为空");
+        }
+        if (null == pettyLoanContract.getContractAmount()) {
+            logger.error("批量插入合同数据：Date_Id：" + id + "合同金额为空");
+        }
+    }
+
 }

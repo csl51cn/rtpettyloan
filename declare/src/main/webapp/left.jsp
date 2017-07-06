@@ -47,12 +47,14 @@ function setTitle(title, subTitle, url) {
 		    	<ul class="menuson">
 			    	<c:forEach var="menu" items="${menuList}">
 				    	<c:if test="${menu.parentMenuId eq menuGroup.menuId }">
-			        		<li ><cite></cite><a href="${menu.accessUrl }" target="rightFrame" onclick='setTitle("${menuGroup.menuName}","${menu.menuName}","${menu.accessUrl }");'>${menu.menuName}</a><i></i></li>
+			        		<li ><cite></cite><a href="${menu.accessUrl }" target="rightFrame" onclick='setTitle("${menuGroup.menuName}","${menu.menuName}","");'>${menu.menuName}</a><i></i></li>
 				        </c:if>
-		       		</c:forEach>   
-		        </ul> 
+		       		</c:forEach>
+		        </ul>
 			</dd>
 	    </c:forEach>
+
+
     <%-- <dd>
     <div class="title">
     <span><img src="resources/images/leftico01.png" /></span>管理信息

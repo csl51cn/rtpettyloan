@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--实时网签-委托贷款-->
 <transaction className="com.pactera.fems.message.jrb.domain.business.request.RealTimeOnlineEntrustedContract" fieldName="gettx"
-             nodeName="GetTx" type="Single" extends="JRBReqMsg" extendsfield="transaction.body" isHide="N">
+             nodeName="gettx" type="Single" extends="JRBReqMsg" extendsfield="transaction.body" isHide="N">
     <!--委托贷款-->
     <field fieldName="contractNo" nodeName="CONTRACT_NO" text="合同编号" type = "String" required = "Y" length="[1,100]"/>
     <field fieldName="loanCate" nodeName="LOAN_CATE" text="贷款类型" type = "String" required = "Y" length="[6]"/>
