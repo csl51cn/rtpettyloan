@@ -31,6 +31,12 @@ $(function(){
 function setTitle(title, subTitle, url) {
 	$("#rightHeadFrame", window.parent.document)[0].contentWindow.setTitle(title, subTitle, url);
 }
+
+
+function addTab(title, url) {
+    $("#rightFrame", window.parent.document)[0].contentWindow.addTab(title, url);
+}
+
 </script>
 
 
@@ -47,7 +53,7 @@ function setTitle(title, subTitle, url) {
 		    	<ul class="menuson">
 			    	<c:forEach var="menu" items="${menuList}">
 				    	<c:if test="${menu.parentMenuId eq menuGroup.menuId }">
-			        		<li ><cite></cite><a href="${menu.accessUrl }" target="rightFrame" onclick='setTitle("${menuGroup.menuName}","${menu.menuName}","");'>${menu.menuName}</a><i></i></li>
+			        		<li ><cite></cite><a href="####"  onclick='addTab("${menu.menuName}","${menu.accessUrl }","");'>${menu.menuName}</a><i></i></li>
 				        </c:if>
 		       		</c:forEach>
 		        </ul>
@@ -66,9 +72,9 @@ function setTitle(title, subTitle, url) {
         <li><cite></cite><a href="filelist.html" target="rightFrame">信息管理</a><i></i></li>
         <li><cite></cite><a href="tab.html" target="rightFrame">Tab页</a><i></i></li>
         <li><cite></cite><a href="error.html" target="rightFrame">404页面</a><i></i></li>
-        </ul>    
+        </ul>
     </dd>
-    
+
     <dd>
     <div class="title">
     <span><img src="resources/images/leftico02.png" /></span>其他设置
@@ -77,16 +83,16 @@ function setTitle(title, subTitle, url) {
         <li><cite></cite><a href="#">编辑内容</a><i></i></li>
         <li><cite></cite><a href="#">发布信息</a><i></i></li>
         <li><cite></cite><a href="#">档案列表显示</a><i></i></li>
-        </ul>     
-    </dd> 
-    
+        </ul>
+    </dd>
+
     <dd><div class="title"><span><img src="resources/images/leftico03.png" /></span>编辑器</div>
     <ul class="menuson">
         <li><cite></cite><a href="#">自定义</a><i></i></li>
         <li><cite></cite><a href="#">常用资料</a><i></i></li>
         <li><cite></cite><a href="#">信息列表</a><i></i></li>
         <li><cite></cite><a href="#">其他</a><i></i></li>
-    </ul>    
+    </ul>
     </dd>  --%>
     </dl>
     

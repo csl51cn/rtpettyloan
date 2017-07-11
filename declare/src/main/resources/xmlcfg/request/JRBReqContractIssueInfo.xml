@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--贷款合同信息批量文件上传-->
+<transaction className="com.pactera.fems.message.jrb.domain.business.request.ContractIssueInfoUpload" fieldName="gettx" nodeName="gettx" type="Single" extends="JRBReqBatchFileUploadMsg" extendsfield="transaction.body" isHide="N">
+    <field fieldName="batchNo" nodeName="batch_no" text="批次号" type = "String" required = "Y" length="[1,50]"/>
+    <field fieldName="dataType" nodeName="data_type" text="数据类型" type = "String" required = "Y" length="[1,10]"/>
+    <field fieldName="recordCount" nodeName="record_count" text="总记录数" type = "String" required = "Y" length="[16]"/>
+    <field fieldName="issueInfo" nodeName="issue_info" text="发放信息数组" className="java.util.ArrayList" type = "Group" subNodeName="issue_info" isHide="H" >
+        <field className="com.pactera.fems.message.jrb.domain.business.request.ContractIssueInfoUploadParam" type="Single" fieldName="issueInfo" nodeName="issue_info" isHide="N">
+            <field fieldName="reportType" nodeName="report_type" text="上报类型" type = "String" required = "Y" length="[6]"/>
+            <field fieldName="orgCode" nodeName="org_code" text="组织机构代码" type = "String" required = "Y" length="[1,20]"/>
+            <field fieldName="contractNo" nodeName="contract_no" text="合同编号" type = "String" required = "Y" length="[1,100]" />
+            <field fieldName="dueBillNo" nodeName="due_bill_no" text="发放编号" type = "String" required = "Y" length="[1,100]" />
+            <field fieldName="contractName" nodeName="contract_name" text="合同名称" type = "String" required = "Y" length="[1,100]" />
+            <field fieldName="customerType" nodeName="customer_type" text="借款人类别" type = "String" required = "Y"  length="[1,6]"/>
+            <field fieldName="customerName" nodeName="customer_name" text="借款人名称" type = "String" required = "Y"  length="[1,100]"/>
+            <field fieldName="certificateType" nodeName="certificate_type" text="借款人证件类型" type = "String" required = "Y"  length="[1,100]"/>
+            <field fieldName="certificateNo" nodeName="certificate_no" text="借款人证件号码" type = "String" required = "Y"  length="[1,100]"/>
+            <field fieldName="ddAmt" nodeName="dd_amt" text="发放金额" type = "Double" required = "Y"  length="[1,18]" format="#.##"/>
+            <field fieldName="loanCate" nodeName="loan_cate" text="贷款类别" type = "String" required = "Y" length="[1,40]" />
+            <field fieldName="intRate" nodeName="int_rate" text="逾期月利率" type = "Double" required = "Y" length="[1,18]" format="#.########"/>
+            <field fieldName="priPltyRate" nodeName="pri_plty_rate" text="逾期月利率" type = "Double" required = "Y" length="[1,18]" format="#.########"/>
+            <field fieldName="rateType" nodeName="rate_type" text="利率性质" type = "String" required = "Y"  length="[1,6]"/>
+            <field fieldName="signDate" nodeName="sign_date" text="合同签订日期" type = "Date" required = "Y"  format="yyyyMMdd"/>
+            <field fieldName="ddDate" nodeName="dd_date" text="发放日期" type = "Date" required = "Y"  format="yyyyMMdd"/>
+            <field fieldName="matureDate" nodeName="mature_date" text="到期时间" type = "Date" required = "Y"  format="yyyyMMdd"/>
+            <!--<field fieldName="extStartDate" nodeName="EXT_START_DATE" text="展期开始日期" type = "Date" required = "Y"  format="yyyyMMdd"/>-->
+            <!--<field fieldName="extEndDate" nodeName="EXT_END_DATE" text="展期到期日期" type = "Date" required = "Y"  format="yyyyMMdd"/>-->
+            <!--<field fieldName="extOutstanding" nodeName="EXT_OUTSTANDING" text="展期余额" type = "Double" required = "Y"  length="[1,18]" format="#.##"/>-->
+            <field fieldName="zone" nodeName="zone" text="投放区域" type = "String" required = "Y"  length="[1,6]"/>
+            <field fieldName="guarType" nodeName="guar_type" text="担保方式" type = "String" required = "Y"  length="[1,18]" />
+            <field fieldName="term" nodeName="term" text="贷款期限" type = "String" required = "Y"  length="[1,6]"/>
+            <field fieldName="purpose" nodeName="purpose" text="贷款用途" type = "String" required = "Y"  length="[1,6]"/>
+            <field fieldName="loanObject" nodeName="loan_object" text="贷款对象" type = "String" required = "Y"  length="[1,100]"/>
+            <field fieldName="loanObjectSize" nodeName="loan_object_size" text="贷款对象规模" type = "String" required = "Y"  length="[1,100]"/>
+            <field fieldName="rateCalcMode" nodeName="rate_calc_mode" text="贷款用途" type = "String" required = "Y"  length="[1,6]"/>
+            <field fieldName="repayMode" nodeName="repay_mode" text="扣款方式" type = "String" required = "Y"  length="[1,6]"/>
+            <field fieldName="industry" nodeName="industry" text="投放行业" type = "String" required = "Y"  length="[1,6]"/>
+            <field fieldName="riskLevel" nodeName="risk_level" text="五级分类" type = "String" required = "Y"  length="[1,6]"/>
+            <field fieldName="issueStatus" nodeName="issue_status" text="发放状态" type = "String" required = "Y"  length="[1,6]"/>
+
+            <!--<field fieldName="fairAmt" nodeName="fair_amt" text="公允价值" type = "Double" required = "Y"  length="[1,18]" format="#.## "/>-->
+        </field>
+    </field>
+</transaction>

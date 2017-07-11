@@ -177,9 +177,9 @@
         })
     </script>
 </head>
-<body>
+<body style="width: 93.5%;">
 
-<form id="fo" method="post" action="${basePath}/realTimeDeclare.do?method=sendRealTimeDeclare">
+<form id="fo" method="post" action="${basePath}/realTimeDeclare.do?method=sendRealTimeDeclare" >
     <div region="center" border="false">
         <div class="editBlock">
             <table>

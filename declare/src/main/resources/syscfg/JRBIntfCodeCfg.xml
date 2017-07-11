@@ -37,7 +37,7 @@
            serviceMethod="JRBBizInfoDeclareService.doSendRepayInfoBatchFile"/>
     <field serviceName="上报结果查询"
            reqEntity="com.pactera.fems.message.jrb.domain.business.request.QueryDeclared"
-           rspEntity="com.pactera.fems.message.jrb.domain.business.response.RealTimeContractRtrTx"
-           reqXmlMapping="JRBReqQueryDeclared" rspXmlMapping="JRBRspRealTimeContract"
+           rspEntity="com.pactera.fems.message.jrb.domain.business.response.QueryDeclaredRtrTx"
+           reqXmlMapping="JRBReqQueryDeclared" rspXmlMapping="JRBRspQueryDeclared"
            serviceMethod="JRBBizInfoDeclareService.doQueryDeclared"/>
 </config>

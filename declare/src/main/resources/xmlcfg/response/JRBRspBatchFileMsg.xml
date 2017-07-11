@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transaction fieldName="transaction" nodeName="transaction" className="com.pactera.fems.message.jrb.domain.JRBRespBatchFileMsg" type = "Single" >
+	<field fieldName="header" nodeName="header" className = "com.pactera.fems.message.jrb.domain.JRBRespHeader" type = "Single" isHide="N">
+		<field fieldName="msg" nodeName="msg" className="com.pactera.fems.message.jrb.domain.JRBRespHeaderMsg"  type = "Single"  isHide="N">
+			<field fieldName="ret" nodeName="RET" className="com.pactera.fems.message.jrb.domain.JRBRET"  type = "Single"  isHide="N">
+				<field fieldName="retMsg"  nodeName="RET_MSG" text="返回消息" type = "String" required = "Y" length="[1,32]"/>
+				<field fieldName="retCode"  nodeName="RET_CODE" text="返回代码" type = "String" required = "Y" length="[1,32]"/>
+			</field>
+			<field fieldName="tranTimestamp"  nodeName="TRAN_TIMESTAMP" text="交易时间" type = "String" required = "Y" length="[1,16]"/>
+			<field fieldName="messageType" nodeName="MESSAGE_TYPE" text="报文类型" type = "String" required = "Y" length="[1,32]"/>
+			<field fieldName="sourceBranchNo" nodeName="SOURCE_BRANCH_NO" text="源节点编号" type = "String" required = "Y" length="[1,32]"/>
+			<field fieldName="TRAN_DATE" nodeName="TRAN_DATE" text="交易日期" type = "String" required = "Y"  length="[1,32]"/>
+			<field fieldName="branchId" nodeName="BRANCH_ID" text="组织机构代码" type = "String" required = "Y"  length="[1,32]"/>
+			<field fieldName="messageCode" nodeName="MESSAGE_CODE" text="报文代码" type = "String" required = "Y" length="[1,32]"/>
+			<field fieldName="retStatus" nodeName="RET_STATUS" text="返回状态" type = "String" required = "Y" length="[1,32]"/>
+			<field fieldName="serviceCode" nodeName="SERVICE_CODE" text="服务代码" type = "String" required = "Y" length="[1,32]"/>
+			<field fieldName="destBranchNo" nodeName="DEST_BRANCH_NO" text="目标节点编号" type = "String" required = "Y" length="[1,32]"/>
+			<field fieldName="tranDate" nodeName="TRAN_DATE" text="交易日期" type = "String" required = "Y" length="[1,32]"/>
+			<field fieldName="seqNo" nodeName="SEQ_NO" text="渠道流水号" type = "String" required = "Y" length="[1,32]"/>
+			<field fieldName="filePath" nodeName="FILE_PATH" text="文件路径" type = "String" required = "Y" length="[1,200]"/>
+		</field>
+	</field>
+</transaction>

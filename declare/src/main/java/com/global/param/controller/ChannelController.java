@@ -1,10 +1,10 @@
 package com.global.param.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.global.framework.dbutils.support.PageBean;
+import com.global.framework.exception.BaseException;
+import com.global.param.domain.Channel;
+import com.global.param.service.ChannelService;
+import com.global.web.BaseController;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,12 +12,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.global.fems.interfaces.BizChnlCodeEnum;
-import com.global.framework.dbutils.support.PageBean;
-import com.global.framework.exception.BaseException;
-import com.global.param.domain.Channel;
-import com.global.param.service.ChannelService;
-import com.global.web.BaseController;
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+
+//import com.global.fems.interfaces.BizChnlCodeEnum;
 
 @Controller
 @RequestMapping("/param/channelController.do")
@@ -47,7 +46,7 @@ public class ChannelController extends BaseController {
 			channel = this.channelService.queryChannelById(channel.getChannelId());
 			model.addAttribute("channel", channel);
 		}
-		model.addAttribute("bizChnlCodeList", BizChnlCodeEnum.values());
+		//model.addAttribute("bizChnlCodeList", BizChnlCodeEnum.values());
 		return "param/channel/channelEdit";
 	}
 	

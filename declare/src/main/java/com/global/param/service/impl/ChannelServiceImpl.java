@@ -1,18 +1,18 @@
 package com.global.param.service.impl;
 
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.global.fems.interfaces.BizChnlCodeEnum;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 import com.global.framework.system.service.SysCommonService;
 import com.global.param.dao.ChannelDao;
 import com.global.param.domain.Channel;
 import com.global.param.service.ChannelService;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+//import com.global.fems.interfaces.BizChnlCodeEnum;
 
 @Service("ChannelService")
 public class ChannelServiceImpl implements ChannelService {
@@ -31,7 +31,7 @@ public class ChannelServiceImpl implements ChannelService {
 	
 	public Channel saveOrUpdateChannel(Channel channel) throws BaseException {
 		if (StringUtils.isNotBlank(channel.getBizChnlCode())) {
-			channel.setBizChnlName(BizChnlCodeEnum.getValueByCode(channel.getBizChnlCode()));
+			//channel.setBizChnlName(BizChnlCodeEnum.getValueByCode(channel.getBizChnlCode()));
 		}
 		if(channel != null && StringUtils.isNotBlank(channel.getChannelId())){
 			Channel c = this.queryChannelById(channel.getChannelId());

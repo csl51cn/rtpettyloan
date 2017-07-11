@@ -1,20 +1,7 @@
 package com.global.param.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.global.fems.interfaces.FaceCodeEnum;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 import com.global.param.domain.Channel;
@@ -22,6 +9,19 @@ import com.global.param.domain.ChannelInterface;
 import com.global.param.service.ChannelService;
 import com.global.param.service.InterfaceService;
 import com.global.web.BaseController;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+//import com.global.fems.interfaces.FaceCodeEnum;
 
 /**
  * 类描述： 
@@ -77,12 +77,12 @@ public class InterfaceController extends BaseController {
 	@RequestMapping(params = "method=getFaceCodes")
 	public List<Map<String, String>> getFaceCodes() {
 		List<Map<String, String>> list = new ArrayList<Map<String,String>>();
-		for (FaceCodeEnum _enum : FaceCodeEnum.values()) {
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("code", _enum.getCode());
-			map.put("name", _enum.getValue());
-			list.add(map);
-		}
+//		for (FaceCodeEnum _enum : FaceCodeEnum.values()) {
+//			Map<String, String> map = new HashMap<String, String>();
+//			map.put("code", _enum.getCode());
+//			map.put("name", _enum.getValue());
+//			list.add(map);
+//		}
 		return list;
 	}
 	
@@ -101,7 +101,7 @@ public class InterfaceController extends BaseController {
 			ChannelInterface info = new ChannelInterface();
 			info.setChannelId(channelId);
 			info.setFaceCode(faceCodes[i]);
-			info.setFaceName(FaceCodeEnum.getValueByCode(faceCodes[i]));
+			//info.setFaceName(FaceCodeEnum.getValueByCode(faceCodes[i]));
 			info.setIsValid("Y");
 			list.add(info);
 		}

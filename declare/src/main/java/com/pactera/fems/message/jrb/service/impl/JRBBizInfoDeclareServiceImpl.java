@@ -1,8 +1,8 @@
 package com.pactera.fems.message.jrb.service.impl;
 
 import com.global.fems.business.domain.*;
-import com.global.fems.interfaces.validator.First;
-import com.global.fems.interfaces.validator.Second;
+import com.global.fems.business.interfaces.First;
+import com.global.fems.business.interfaces.Second;
 import com.global.framework.util.StringUtil;
 import com.pactera.fems.message.jrb.domain.JRBReqBatchFileMsg;
 import com.pactera.fems.message.jrb.domain.JRBReqHeaderMsg;

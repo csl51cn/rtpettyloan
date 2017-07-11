@@ -459,7 +459,7 @@
         }
     </script>
 </head>
-<body onkeydown="javascript:keyPress(event);" onkeyup="javascript:keyRelease(event);">
+<body onkeydown="javascript:keyPress(event);" onkeyup="javascript:keyRelease(event);" style="width: 93.5%;">
 
 <form id="fo" action="" method="post">
     <div region="center" border="false">

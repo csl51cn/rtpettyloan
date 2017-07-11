@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--贷款回收信息批量文件上传-->
+<transaction className="com.pactera.fems.message.jrb.domain.business.request.RepayInfoUpload" fieldName="gettx" nodeName="gettx" type="Single" extends="JRBReqBatchFileUploadMsg" extendsfield="transaction.body" isHide="N">
+<field fieldName="batchNo" nodeName="batch_no" text="批次号" type = "String" required = "Y" length="[1,50]"/>
+<field fieldName="dataType" nodeName="data_type" text="数据类型" type = "String" required = "Y" length="[1,10]"/>
+<field fieldName="recordCount" nodeName="record_count" text="总记录数" type = "String" required = "Y" length="[16]"/>
+<field fieldName="repayInfo" nodeName="repay_info" text="贷款回收信息数组" className="java.util.ArrayList" type = "Group" subNodeName="repay_info" isHide="H" >
+    <field className="com.pactera.fems.message.jrb.domain.business.request.RepayInfoUploadParam" type="Single" fieldName="repayInfo" nodeName="repay_info" isHide="N">
+        <field fieldName="reportType" nodeName="report_type" text="上报类型" type = "String" required = "Y" length="[6]"/>
+        <field fieldName="orgCode" nodeName="org_code" text="组织机构代码" type = "String" required = "Y" length="[1,20]"/>
+        <field fieldName="contractNo" nodeName="contract_no" text="合同编号" type = "String" required = "Y" length="[1,100]" />
+        <field fieldName="dueBillNo" nodeName="due_bill_no" text="发放编号" type = "String" required = "Y" length="[1,100]" />
+        <field fieldName="repayDate" nodeName="repay_date" text="回收日期" type = "Date" required = "Y"  format="yyyyMMdd"/>
+        <field fieldName="counter" nodeName="counter" text="还款期数" type = "String" required = "Y" length="[1,5]" />
+        <field fieldName="customerType" nodeName="customer_type" text="借款人类别" type = "String" required = "Y"  length="[1,6]"/>
+        <field fieldName="customerName" nodeName="customer_name" text="借款人名称" type = "String" required = "Y"  length="[1,100]"/>
+        <field fieldName="certificateType" nodeName="certificate_type" text="借款人证件类型" type = "String" required = "Y"  length="[1,100]"/>
+        <field fieldName="certificateNo" nodeName="certificate_no" text="借款人证件号码" type = "String" required = "Y"  length="[1,100]"/>
+        <field fieldName="gatherMode" nodeName="gather_mode" text="扣款方式" type = "String" required = "Y"  length="[1,6]"/>
+        <field fieldName="repayPriAmt" nodeName="repay_pri_amt" text="收回本金" type = "Double" required = "Y"  length="[1,18]" format="#.##"/>
+        <field fieldName="repayIntAmt" nodeName="repay_int_amt" text="收回利息" type = "Double" required = "Y"  length="[1,18]" format="#.##"/>
+        <field fieldName="startDate" nodeName="start_date" text="起息日期" type = "Date" required = "Y"  format="yyyyMMdd"/>
+        <field fieldName="endDate" nodeName="end_date" text="止息日期" type = "Date" required = "Y"  format="yyyyMMdd"/>
+        <field fieldName="receiptType" nodeName="receipt_type" text="回收类型" type = "String" required = "Y"  length="[1,6]"/>
+        <field fieldName="delayDays" nodeName="delay_days" text="逾期天数" type = "String" required = "Y"  length="[1,5]"/>
+        <field fieldName="delayAmt" nodeName="delay_amt" text="逾期本金" type = "Double" required = "Y"  length="[1,18]" format="#.##"/>
+        <field fieldName="delayInterest" nodeName="delay_interest" text="逾期利息" type = "Double" required = "Y"  length="[1,18]" format="#.##"/>
+        <field fieldName="delayFee" nodeName="delay_fee" text="逾期滞纳金" type = "Double" required = "Y"  length="[1,18]" format="#.##"/>
+        <field fieldName="priPltyRate" nodeName="pri_plty_rate" text="逾期月利率" type = "Double" required = "Y" length="[1,18]" format="#.########"/>
+    </field>
+</field>
+</transaction>
+

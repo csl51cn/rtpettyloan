@@ -81,15 +81,15 @@ public abstract class BaseDaoSupport {
 
     protected final <E extends Entity> int[] batchInsert(List<E> list) {
         try {
-            EntityDescribe e = this.getEntityDescribe(((Entity)list.get(0)).getClass());
+            EntityDescribe e = this.getEntityDescribe(((Entity) list.get(0)).getClass());
             Map dtoMap = PropertyUtils.describe(list.get(0));
             SqlHelper sqlHelper = new SqlHelper();
             String sql = sqlHelper.createInsertSql(e, dtoMap);
             LinkedList batchArgs = new LinkedList();
             Iterator i$ = list.iterator();
 
-            while(i$.hasNext()) {
-                Entity entity = (Entity)i$.next();
+            while (i$.hasNext()) {
+                Entity entity = (Entity) i$.next();
                 Object[] args = sqlHelper.getInsertValues(e, PropertyUtils.describe(entity));
                 batchArgs.add(args);
                 logger.debug("Executing SQL batch insert [{}], params: [{}]", sql, args);
@@ -112,32 +112,32 @@ public abstract class BaseDaoSupport {
             logger.debug("Executing SQL insert [{}], params:[{}]", sql, SqlHelper.getArrayToString(args));
             this.jdbcTemplate.execute(sql, new AbstractLobCreatingPreparedStatementCallback(this.lobHandler) {
                 protected void setValues(PreparedStatement ps, LobCreator lobCreator) throws SQLException {
-                    for(int i = 0; i < e.getColumnList().size(); ++i) {
-                        ColumnDescribe cd = (ColumnDescribe)e.getColumnList().get(i);
-                        if(ColumnTypeEnum.VARCHAR.equals(cd.getColumnType())) {
-                            ps.setString(i + 1, (String)args[i]);
-                        } else if(ColumnTypeEnum.SHORT.equals(cd.getColumnType())) {
-                            ps.setShort(i + 1, Short.valueOf((String)args[i]).shortValue());
-                        } else if(ColumnTypeEnum.INTEGER.equals(cd.getColumnType())) {
-                            ps.setInt(i + 1, Integer.valueOf((String)args[i]).intValue());
-                        } else if(ColumnTypeEnum.LONG.equals(cd.getColumnType())) {
-                            ps.setLong(i + 1, Long.valueOf((String)args[i]).longValue());
-                        } else if(ColumnTypeEnum.DOUBLE.equals(cd.getColumnType())) {
-                            ps.setDouble(i + 1, Double.valueOf((String)args[i]).doubleValue());
-                        } else if(ColumnTypeEnum.BigDecimal.equals(cd.getColumnType())) {
-                            ps.setBigDecimal(i + 1, new BigDecimal((String)args[i]));
-                        } else if(ColumnTypeEnum.DATE.equals(cd.getColumnType())) {
-                            ps.setDate(i + 1, DateTimeUtil.getStrToDateTime((String)args[i], (String)null));
-                        } else if(ColumnTypeEnum.TIME.equals(cd.getColumnType())) {
-                            ps.setTime(i + 1, DateTimeUtil.getStrToTime((String)args[i], (String)null));
-                        } else if(ColumnTypeEnum.Timestamp.equals(cd.getColumnType())) {
-                            ps.setTimestamp(i + 1, DateTimeUtil.getStrToTimestamp((String)args[i], (String)null));
-                        } else if(ColumnTypeEnum.FLOAT.equals(cd.getColumnType())) {
-                            ps.setFloat(i + 1, Float.valueOf((String)args[i]).floatValue());
-                        } else if(ColumnTypeEnum.CLOB.equals(cd.getColumnType())) {
-                            lobCreator.setClobAsString(ps, i + 1, (String)args[i]);
-                        } else if(ColumnTypeEnum.BLOB.equals(cd.getColumnType())) {
-                            lobCreator.setBlobAsBytes(ps, i + 1, (byte[])((byte[])args[i]));
+                    for (int i = 0; i < e.getColumnList().size(); ++i) {
+                        ColumnDescribe cd = (ColumnDescribe) e.getColumnList().get(i);
+                        if (ColumnTypeEnum.VARCHAR.equals(cd.getColumnType())) {
+                            ps.setString(i + 1, (String) args[i]);
+                        } else if (ColumnTypeEnum.SHORT.equals(cd.getColumnType())) {
+                            ps.setShort(i + 1, Short.valueOf((String) args[i]).shortValue());
+                        } else if (ColumnTypeEnum.INTEGER.equals(cd.getColumnType())) {
+                            ps.setInt(i + 1, Integer.valueOf((String) args[i]).intValue());
+                        } else if (ColumnTypeEnum.LONG.equals(cd.getColumnType())) {
+                            ps.setLong(i + 1, Long.valueOf((String) args[i]).longValue());
+                        } else if (ColumnTypeEnum.DOUBLE.equals(cd.getColumnType())) {
+                            ps.setDouble(i + 1, Double.valueOf((String) args[i]).doubleValue());
+                        } else if (ColumnTypeEnum.BigDecimal.equals(cd.getColumnType())) {
+                            ps.setBigDecimal(i + 1, new BigDecimal((String) args[i]));
+                        } else if (ColumnTypeEnum.DATE.equals(cd.getColumnType())) {
+                            ps.setDate(i + 1, DateTimeUtil.getStrToDateTime((String) args[i], (String) null));
+                        } else if (ColumnTypeEnum.TIME.equals(cd.getColumnType())) {
+                            ps.setTime(i + 1, DateTimeUtil.getStrToTime((String) args[i], (String) null));
+                        } else if (ColumnTypeEnum.Timestamp.equals(cd.getColumnType())) {
+                            ps.setTimestamp(i + 1, DateTimeUtil.getStrToTimestamp((String) args[i], (String) null));
+                        } else if (ColumnTypeEnum.FLOAT.equals(cd.getColumnType())) {
+                            ps.setFloat(i + 1, Float.valueOf((String) args[i]).floatValue());
+                        } else if (ColumnTypeEnum.CLOB.equals(cd.getColumnType())) {
+                            lobCreator.setClobAsString(ps, i + 1, (String) args[i]);
+                        } else if (ColumnTypeEnum.BLOB.equals(cd.getColumnType())) {
+                            lobCreator.setBlobAsBytes(ps, i + 1, (byte[]) ((byte[]) args[i]));
                         }
                     }
 
@@ -193,15 +193,15 @@ public abstract class BaseDaoSupport {
 
     protected final <E extends Entity> int[] batchUpdate(List<E> list, boolean isUpdateValueNullField) {
         try {
-            EntityDescribe e = this.getEntityDescribe(((Entity)list.get(0)).getClass());
+            EntityDescribe e = this.getEntityDescribe(((Entity) list.get(0)).getClass());
             Map dtoMap = PropertyUtils.describe(list.get(0));
             SqlHelper sqlHelper = new SqlHelper();
             String sql = sqlHelper.createUpdateSql(e, dtoMap, isUpdateValueNullField);
             LinkedList batchArgs = new LinkedList();
             Iterator i$ = list.iterator();
 
-            while(i$.hasNext()) {
-                Entity entity = (Entity)i$.next();
+            while (i$.hasNext()) {
+                Entity entity = (Entity) i$.next();
                 Object[] args = sqlHelper.getUpdateValues(e, PropertyUtils.describe(entity), isUpdateValueNullField);
                 batchArgs.add(args);
                 logger.debug("Executing SQL batch update [{}], params: [{}]", sql, args);
@@ -229,15 +229,15 @@ public abstract class BaseDaoSupport {
             EntityDescribe e = this.getEntityDescribe(dto.getClass());
             Map dtoMap = PropertyUtils.describe(dto);
             SqlHelper sqlHelper = new SqlHelper();
-            TableMapping tm = (TableMapping)e.getClassAnnotation();
+            TableMapping tm = (TableMapping) e.getClassAnnotation();
             String[] pkNames = sqlHelper.getPrimaryKey(tm);
-            if(pkNames == null) {
+            if (pkNames == null) {
                 throw new DAOException(DAOErrorCode.SQL_UPDATE_NOTPK.getCode(), new String[]{e.getEntityName()});
-            } else if(PrimaryKeyTypeEnum.Single.getCode().equals(tm.primaryKeyType()) && StringUtil.isNullOrEmpty(dtoMap.get(pkNames[0]))) {
+            } else if (PrimaryKeyTypeEnum.Single.getCode().equals(tm.primaryKeyType()) && StringUtil.isNullOrEmpty(dtoMap.get(pkNames[0]))) {
                 return this.insert(dto);
             } else {
                 Entity entity = this.findForObject(dto);
-                if(entity != null) {
+                if (entity != null) {
                     this.updateWithNullField(dto);
                 } else {
                     this.insert(dto);
@@ -292,15 +292,15 @@ public abstract class BaseDaoSupport {
 
     protected final <E extends Entity> int[] batchDelete(List<E> list) {
         try {
-            EntityDescribe e = this.getEntityDescribe(((Entity)list.get(0)).getClass());
+            EntityDescribe e = this.getEntityDescribe(((Entity) list.get(0)).getClass());
             Map dtoMap = PropertyUtils.describe(list.get(0));
             SqlHelper sqlHelper = new SqlHelper();
             String sql = sqlHelper.createDeleteSql(e, dtoMap);
             LinkedList batchArgs = new LinkedList();
             Iterator i$ = list.iterator();
 
-            while(i$.hasNext()) {
-                Entity entity = (Entity)i$.next();
+            while (i$.hasNext()) {
+                Entity entity = (Entity) i$.next();
                 Object[] args = sqlHelper.getPKWhereList(e, PropertyUtils.describe(entity));
                 batchArgs.add(args);
                 logger.debug("Executing SQL batch delete [{}], params: [{}]", sql, args);
@@ -319,12 +319,12 @@ public abstract class BaseDaoSupport {
             String sql = e.createQuerySql(this.getEntityDescribe(dtoClazz));
             logger.debug("Executing SQL query [{}], params: [{}]", sql, primaryKeyValue);
             Object[] list = new Object[]{primaryKeyValue};
-            Entity dto = (Entity)this.jdbcTemplate.queryForObject(sql, list, new BeanPropertyRowMapper(dtoClazz));
+            Entity dto = (Entity) this.jdbcTemplate.queryForObject(sql, list, new BeanPropertyRowMapper(dtoClazz));
             return (E) dto;
         } catch (Exception var7) {
-            if(var7 instanceof EmptyResultDataAccessException) {
+            if (var7 instanceof EmptyResultDataAccessException) {
                 return null;
-            } else if(var7 instanceof IncorrectResultSizeDataAccessException) {
+            } else if (var7 instanceof IncorrectResultSizeDataAccessException) {
                 logger.error("Executing SQL query error: errorCode[{}]", DAOErrorCode.DAO_SINGLE_RECORD.getValue() + ":" + DAOErrorCode.DAO_SINGLE_RECORD.getValue(), var7);
                 throw new DAOException(DAOErrorCode.DAO_SINGLE_RECORD.getCode(), var7);
             } else {
@@ -345,9 +345,9 @@ public abstract class BaseDaoSupport {
             dto = (E) this.jdbcTemplate.queryForObject(sql, args, new BeanPropertyRowMapper(dto.getClass()));
             return dto;
         } catch (Exception var7) {
-            if(var7 instanceof EmptyResultDataAccessException) {
+            if (var7 instanceof EmptyResultDataAccessException) {
                 return null;
-            } else if(var7 instanceof IncorrectResultSizeDataAccessException) {
+            } else if (var7 instanceof IncorrectResultSizeDataAccessException) {
                 logger.error("Executing SQL query error: errorCode[{}]", DAOErrorCode.DAO_SINGLE_RECORD.getValue() + ":" + DAOErrorCode.DAO_SINGLE_RECORD.getValue(), var7);
                 throw new DAOException(DAOErrorCode.DAO_SINGLE_RECORD.getCode(), var7);
             } else {
@@ -362,9 +362,9 @@ public abstract class BaseDaoSupport {
             logger.debug("Executing SQL query [{}], params: [{}]", sql, SqlHelper.getArrayToString(args));
             return (E) this.jdbcTemplate.queryForObject(sql, args, new BeanPropertyRowMapper(dtoClazz));
         } catch (Exception var5) {
-            if(var5 instanceof EmptyResultDataAccessException) {
+            if (var5 instanceof EmptyResultDataAccessException) {
                 return null;
-            } else if(var5 instanceof IncorrectResultSizeDataAccessException) {
+            } else if (var5 instanceof IncorrectResultSizeDataAccessException) {
                 logger.error("Executing SQL query error: errorCode[{}]", DAOErrorCode.DAO_SINGLE_RECORD.getValue() + ":" + DAOErrorCode.DAO_SINGLE_RECORD.getValue(), var5);
                 throw new DAOException(DAOErrorCode.DAO_SINGLE_RECORD.getCode(), var5);
             } else {
@@ -379,7 +379,7 @@ public abstract class BaseDaoSupport {
             logger.debug("Executing SQL query [{}], params: [{}]", sql, SqlHelper.getArrayToString(args));
             return this.jdbcTemplate.queryForObject(sql, args, Integer.class);
         } catch (DataAccessException var4) {
-            if(var4 instanceof EmptyResultDataAccessException) {
+            if (var4 instanceof EmptyResultDataAccessException) {
                 return 0;
             } else {
                 logger.error("Executing SQL query error: " + var4.getMessage(), var4);
@@ -393,7 +393,7 @@ public abstract class BaseDaoSupport {
             logger.debug("Executing SQL query [{}], params: [{}]", sql, SqlHelper.getArrayToString(args));
             return Long.valueOf(this.jdbcTemplate.queryForObject(sql, args, Long.class));
         } catch (DataAccessException var4) {
-            if(var4 instanceof EmptyResultDataAccessException) {
+            if (var4 instanceof EmptyResultDataAccessException) {
                 return Long.valueOf(0L);
             } else {
                 logger.error("Executing SQL query error: " + var4.getMessage(), var4);
@@ -407,9 +407,9 @@ public abstract class BaseDaoSupport {
             logger.debug("Executing SQL query [{}], params: [{}]", sql, SqlHelper.getArrayToString(args));
             return this.jdbcTemplate.queryForObject(sql, args, new BeanPropertyRowMapper(clazz));
         } catch (Exception var5) {
-            if(var5 instanceof EmptyResultDataAccessException) {
+            if (var5 instanceof EmptyResultDataAccessException) {
                 return null;
-            } else if(var5 instanceof IncorrectResultSizeDataAccessException) {
+            } else if (var5 instanceof IncorrectResultSizeDataAccessException) {
                 logger.error("Executing SQL query error: errorCode[{}]", DAOErrorCode.DAO_SINGLE_RECORD.getValue() + ":" + DAOErrorCode.DAO_SINGLE_RECORD.getValue(), var5);
                 throw new DAOException(DAOErrorCode.DAO_SINGLE_RECORD.getCode(), var5);
             } else {
@@ -470,14 +470,14 @@ public abstract class BaseDaoSupport {
             List e = this.jdbcTemplate.queryForList(sql, args);
             ArrayList rtList = new ArrayList();
 
-            for(int i = 0; i < e.size(); ++i) {
-                Map map = (Map)e.get(i);
+            for (int i = 0; i < e.size(); ++i) {
+                Map map = (Map) e.get(i);
                 Set s = map.entrySet();
                 Object[] obj = new Object[s.size()];
                 int j = 0;
 
-                for(Iterator i$ = s.iterator(); i$.hasNext(); ++j) {
-                    Entry entry = (Entry)i$.next();
+                for (Iterator i$ = s.iterator(); i$.hasNext(); ++j) {
+                    Entry entry = (Entry) i$.next();
                     obj[j] = entry.getValue();
                 }
 
@@ -492,7 +492,7 @@ public abstract class BaseDaoSupport {
     }
 
     protected PageBean findForPage(String sql, Object[] args, PageBean page, Class<? extends Entity> clazz) {
-        if(StringUtils.isNotBlank(page.getSort())) {
+        if (StringUtils.isNotBlank(page.getSort())) {
             sql = sql + " order by " + page.getSort() + " " + page.getOrder();
         }
 
@@ -501,7 +501,7 @@ public abstract class BaseDaoSupport {
         try {
             PageBean e = null;
             Long totalRows = this.getTotalRows(sql, args);
-            if(totalRows.longValue() > 0L) {
+            if (totalRows.longValue() > 0L) {
                 Integer startIndex = Integer.valueOf((page.getPage().intValue() - 1) * page.getRows().intValue());
                 Integer endIndex = Integer.valueOf(page.getPage().intValue() * page.getRows().intValue());
                 sql = this.getPageSql(sql, startIndex, endIndex);
@@ -530,28 +530,28 @@ public abstract class BaseDaoSupport {
             int i = 0;
             Iterator rs = inParams.iterator();
 
-            while(rs.hasNext()) {
-                LinkedHashMap ret = (LinkedHashMap)rs.next();
+            while (rs.hasNext()) {
+                LinkedHashMap ret = (LinkedHashMap) rs.next();
                 Set typeEnumSet = ret.keySet();
                 Object[] values = ret.values().toArray();
                 Iterator it = typeEnumSet.iterator();
 
-                while(it.hasNext()) {
-                    ColumnTypeEnum typeEnum = (ColumnTypeEnum)it.next();
-                    if(ColumnTypeEnum.VARCHAR.getTypeCode().equals(typeEnum.getTypeCode())) {
-                        cs.setString(i + 1, (String)values[i]);
-                    } else if(ColumnTypeEnum.INTEGER.getTypeCode().equals(typeEnum.getTypeCode())) {
-                        cs.setInt(i + 1, Integer.valueOf((String)values[i]).intValue());
-                    } else if(ColumnTypeEnum.LONG.getTypeCode().equals(typeEnum.getTypeCode())) {
-                        cs.setLong(i + 1, Long.valueOf((String)values[i]).longValue());
-                    } else if(ColumnTypeEnum.DOUBLE.getTypeCode().equals(typeEnum.getTypeCode())) {
-                        cs.setDouble(i + 1, Double.valueOf((String)values[i]).doubleValue());
-                    } else if(ColumnTypeEnum.BigDecimal.getTypeCode().equals(typeEnum.getTypeCode())) {
-                        cs.setBigDecimal(i + 1, new BigDecimal((String)values[i]));
-                    } else if(ColumnTypeEnum.DATE.getTypeCode().equals(typeEnum.getTypeCode())) {
-                        cs.setDate(i + 1, DateTimeUtil.getStrToDateTime((String)values[i], (String)null));
-                    } else if(ColumnTypeEnum.Timestamp.getTypeCode().equals(typeEnum.getTypeCode())) {
-                        cs.setTimestamp(i + 1, DateTimeUtil.getStrToTimestamp((String)values[i], (String)null));
+                while (it.hasNext()) {
+                    ColumnTypeEnum typeEnum = (ColumnTypeEnum) it.next();
+                    if (ColumnTypeEnum.VARCHAR.getTypeCode().equals(typeEnum.getTypeCode())) {
+                        cs.setString(i + 1, (String) values[i]);
+                    } else if (ColumnTypeEnum.INTEGER.getTypeCode().equals(typeEnum.getTypeCode())) {
+                        cs.setInt(i + 1, Integer.valueOf((String) values[i]).intValue());
+                    } else if (ColumnTypeEnum.LONG.getTypeCode().equals(typeEnum.getTypeCode())) {
+                        cs.setLong(i + 1, Long.valueOf((String) values[i]).longValue());
+                    } else if (ColumnTypeEnum.DOUBLE.getTypeCode().equals(typeEnum.getTypeCode())) {
+                        cs.setDouble(i + 1, Double.valueOf((String) values[i]).doubleValue());
+                    } else if (ColumnTypeEnum.BigDecimal.getTypeCode().equals(typeEnum.getTypeCode())) {
+                        cs.setBigDecimal(i + 1, new BigDecimal((String) values[i]));
+                    } else if (ColumnTypeEnum.DATE.getTypeCode().equals(typeEnum.getTypeCode())) {
+                        cs.setDate(i + 1, DateTimeUtil.getStrToDateTime((String) values[i], (String) null));
+                    } else if (ColumnTypeEnum.Timestamp.getTypeCode().equals(typeEnum.getTypeCode())) {
+                        cs.setTimestamp(i + 1, DateTimeUtil.getStrToTimestamp((String) values[i], (String) null));
                     } else {
                         ++i;
                     }
@@ -561,7 +561,7 @@ public abstract class BaseDaoSupport {
             cs.execute();
             ResultSet var15 = cs.getResultSet();
             LinkedList var16 = new LinkedList();
-            if(var15.next()) {
+            if (var15.next()) {
                 var16.add(var15.getString(0));
             }
 
@@ -588,15 +588,14 @@ public abstract class BaseDaoSupport {
             e.append("FROM (SELECT * FROM (SELECT ROW_.*, row_number () OVER (ORDER BY (SELECT 1)) AS ROWNUM FROM (");
             e.append(sql);
             e.append(") ROW_) ROW__ ");
-            if(endIndex.intValue() > 0) {
+            if (endIndex.intValue() > 0) {
                 e.append("WHERE ROWNUM <= ").append(endIndex);
             }
 
             e.append(") RRRRR_ ");
-            if(startIndex.intValue() > 0) {
+            if (startIndex.intValue() > 0) {
                 e.append("WHERE RRRRR_.ROWNUM  >= ").append(startIndex.intValue() + 1);
             }
-
             return e.toString();
         } catch (Exception var5) {
             throw new DAOException("Generate page SQL error: " + var5.getMessage(), var5);
@@ -622,29 +621,29 @@ public abstract class BaseDaoSupport {
         ColumnMapping column = null;
         ColumnDescribe columnDescribe = null;
         Map var9 = dtoDescMap;
-        synchronized(dtoDescMap) {
-            entityDescribe = (EntityDescribe)dtoDescMap.get(entity);
-            if(entityDescribe != null) {
+        synchronized (dtoDescMap) {
+            entityDescribe = (EntityDescribe) dtoDescMap.get(entity);
+            if (entityDescribe != null) {
                 return entityDescribe;
             } else {
                 entityDescribe = new EntityDescribe();
                 entityDescribe.setEntityName(entity.getSimpleName());
                 Annotation[] classAnnotations = entity.getDeclaredAnnotations();
-                if(classAnnotations.length == 0) {
+                if (classAnnotations.length == 0) {
                     throw new DAOException(DAOErrorCode.ENT_NOTFOUND_TABANNO.getCode(), new String[]{entity.getName()});
                 } else {
                     Annotation[] arr$ = classAnnotations;
                     int len$ = classAnnotations.length;
 
                     int i$;
-                    for(i$ = 0; i$ < len$; ++i$) {
+                    for (i$ = 0; i$ < len$; ++i$) {
                         Annotation field = arr$[i$];
-                        if(field instanceof TableMapping) {
+                        if (field instanceof TableMapping) {
                             entityDescribe.setClassAnnotation(field);
                         }
                     }
 
-                    if(entityDescribe.getClassAnnotation() == null) {
+                    if (entityDescribe.getClassAnnotation() == null) {
                         throw new DAOException(DAOErrorCode.ENT_INVALID_TABANNO.getCode(), new String[]{entity.getName()});
                     } else {
                         fields = entity.getDeclaredFields();
@@ -653,17 +652,17 @@ public abstract class BaseDaoSupport {
                         Field[] var21 = fields;
                         len$ = fields.length;
 
-                        for(i$ = 0; i$ < len$; ++i$) {
+                        for (i$ = 0; i$ < len$; ++i$) {
                             Field var22 = var21[i$];
                             fieldAnnotations = var22.getDeclaredAnnotations();
-                            if(fieldAnnotations.length != 0) {
+                            if (fieldAnnotations.length != 0) {
                                 Annotation[] arr$1 = fieldAnnotations;
                                 int len$1 = fieldAnnotations.length;
 
-                                for(int i$1 = 0; i$1 < len$1; ++i$1) {
+                                for (int i$1 = 0; i$1 < len$1; ++i$1) {
                                     Annotation an = arr$1[i$1];
-                                    if(an instanceof ColumnMapping) {
-                                        column = (ColumnMapping)an;
+                                    if (an instanceof ColumnMapping) {
+                                        column = (ColumnMapping) an;
                                         columnDescribe = new ColumnDescribe();
                                         columnDescribe.setFieldName(var22.getName());
                                         columnDescribe.setColumnName(column.columnName());

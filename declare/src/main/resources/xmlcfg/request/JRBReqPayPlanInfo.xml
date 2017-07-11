@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!--还款计划信息批量文件上传-->
+<transaction className="com.pactera.fems.message.jrb.domain.business.request.PayPlanInfoUpload" fieldName="gettx" nodeName="gettx" type="Single" extends="JRBReqBatchFileUploadMsg" extendsfield="transaction.body" isHide="N">
+<field fieldName="batchNo" nodeName="batch_no" text="批次号" type = "String" required = "Y" length="[1,50]"/>
+<field fieldName="dataType" nodeName="data_type" text="数据类型" type = "String" required = "Y" length="[1,10]"/>
+<field fieldName="recordCount" nodeName="record_count" text="总记录数" type = "String" required = "Y" length="[16]"/>
+<field fieldName="payPlanInfo" nodeName="payplan_info" text="还款计划信息数组" className="java.util.ArrayList" type = "Group" subNodeName="payplan_info" isHide="H" >
+    <field className="com.pactera.fems.message.jrb.domain.business.request.PayPlanInfoUploadParam" type="Single" fieldName="payPlanInfo" nodeName="payplan_info" isHide="N">
+        <field fieldName="reportType" nodeName="report_type" text="上报类型" type = "String" required = "Y" length="[6]"/>
+        <field fieldName="orgCode" nodeName="org_code" text="组织机构代码" type = "String" required = "Y" length="[1,20]"/>
+        <field fieldName="contractNo" nodeName="contract_no" text="合同编号" type = "String" required = "Y" length="[1,100]" />
+        <field fieldName="dueBillNo" nodeName="due_bill_no" text="发放编号" type = "String" required = "Y" length="[1,100]" />
+        <field fieldName="counter" nodeName="counter" text="还款期数" type = "String" required = "Y" length="[1,5]" />
+        <field fieldName="repayDate" nodeName="repay_date" text="应还日期" type = "Date" required = "Y"  format="yyyyMMdd"/>
+        <field fieldName="repayPriAmt" nodeName="repay_pri_amt" text="应还本金" type = "Double" required = "Y"  length="[1,18]" format="#.##"/>
+        <field fieldName="repayIntAmt" nodeName="repay_int_amt" text="应还利息" type = "Double" required = "Y"  length="[1,18]" format="#.##"/>
+        <field fieldName="startDate" nodeName="start_date" text="起息日期" type = "Date" required = "Y"  format="yyyyMMdd"/>
+        <field fieldName="endDate" nodeName="end_date" text="止息日期" type = "Date" required = "Y"  format="yyyyMMdd"/>
+    </field>
+</field>
+</transaction>
+

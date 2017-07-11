@@ -1,7 +1,8 @@
 package com.global.fems.business.domain;
 
-import com.global.fems.interfaces.validator.First;
-import com.global.fems.interfaces.validator.Second;
+
+import com.global.fems.business.interfaces.First;
+import com.global.fems.business.interfaces.Second;
 import com.global.framework.dbutils.annotation.ColumnMapping;
 import com.global.framework.dbutils.annotation.TableMapping;
 import com.global.framework.dbutils.support.Entity;

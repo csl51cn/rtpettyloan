@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<msg className="com.global.fems.message.domain.business.response.RspIndividualLCYRegCheck" fieldName="dataStores" nodeName="DataStores" type="Single" extends="Msg" extendsfield="Msg.Body" isHide="N">
-  	<field fieldName="SYNC_FILE_NAME" nodeName="SYNC_FILE_NAME" type = "String" required = "Y" length="[19]"/>
-</msg>

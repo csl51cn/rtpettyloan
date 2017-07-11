@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--查询上报结果-->
+<transaction className="com.pactera.fems.message.jrb.domain.business.request.QueryDeclared" fieldName="gettx"
+             nodeName="gettx" type="Single" extends="JRBReqMsg" extendsfield="transaction.body" isHide="N">
+    <field fieldName="batchNo" nodeName="batch_no" text="批次号" type = "String" required = "Y" length="[1,50]"/>
+    <field fieldName="dataType" nodeName="data_type" text="数据类型" type = "String" required = "Y" length="[1,20]"/>
+</transaction>

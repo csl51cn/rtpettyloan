@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--上报结果查询-->
+<transaction className="com.pactera.fems.message.jrb.domain.business.response.QueryDeclaredRtrTx" fieldName="rtrtx"
+             nodeName="RtrTx" type="Single" extends="JRBRspMsg" extendsfield="transaction.body" isHide="N">
+
+    <field fieldName="msgCode" nodeName="MSG_CODE" text="上报结果代码" type = "String" required = "Y" length="[1,6]"/>
+    <field fieldName="msgInfo" nodeName="MSG_INFO" text="上报结果信息" type = "String" required = "Y" length="[1,200]"/>
+</transaction>

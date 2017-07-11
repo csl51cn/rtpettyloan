@@ -65,4 +65,10 @@ public class ResultModel extends Entity {
         model.setMsg(msg);
         return  model;
     }
+
+    public static ResultModel ok(String msg) {
+        ResultModel model =  new ResultModel();
+        model.setMsg(msg);
+        return  model;
+    }
 }

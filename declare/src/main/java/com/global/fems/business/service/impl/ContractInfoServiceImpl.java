@@ -108,7 +108,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             if (existContractList != null && existContractList.size() > 0) {//如果存在且上报类型不是删除，跳过,避免重复插入
                 Boolean isDelete = false; //是否删除的标记
                 for (ContractInfoCycleNode contractInfoCycleNode : existContractList) {
-                    if ("100003".equals(contractInfoCycleNode.getReportType())) {
+                    if (!"100003".equals(contractInfoCycleNode.getReportType())) {
                         isDelete = true;
                         break;
                     }

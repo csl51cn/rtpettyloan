@@ -1,9 +1,9 @@
 package com.global.fems.business.controller;
 
 import com.global.fems.business.domain.ContractInfoCycleNode;
+import com.global.fems.business.interfaces.First;
+import com.global.fems.business.interfaces.Second;
 import com.global.fems.business.service.ContractInfoService;
-import com.global.fems.interfaces.validator.First;
-import com.global.fems.interfaces.validator.Second;
 import com.global.framework.dbutils.support.DAOException;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;

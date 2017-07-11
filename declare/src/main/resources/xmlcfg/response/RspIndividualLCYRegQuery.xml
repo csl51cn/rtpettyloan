@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<msg className="com.global.fems.message.domain.business.response.RspIndividualLCYRegQuery" fieldName="dataStores" nodeName="DataStores" type="Single" extends="Msg" extendsfield="Msg.Body" isHide="N">
-  	<field fieldName="SEQNO" nodeName="SEQNO" type = "String" required = "Y" length="[19]"/>
-  	<field fieldName="BIZNO" nodeName="BIZNO" type = "String" required = "Y" length="[1,50]"/>
-  	<field fieldName="REFNO" nodeName="REFNO" type = "String" required = "N" length="[29]"/>
-  	<field fieldName="DEAL_DATE" nodeName="DEAL_DATE" type = "String" required = "Y" length="[19]" format="YYYY-MM-DD HH:MM:SS"/>
-  	<field fieldName="DEAL_STATUS" nodeName="DEAL_STATUS" type = "String" required = "Y" length="[1]"/>
-</msg>
