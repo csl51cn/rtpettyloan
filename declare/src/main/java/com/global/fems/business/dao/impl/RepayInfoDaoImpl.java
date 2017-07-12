@@ -39,7 +39,7 @@ public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
                 "(CASE b.是否逾期 WHEN 0 THEN 550001 WHEN 1 THEN 550002 ELSE 55001 END) AS receipt_type, b.逾期天数 AS delayDays FROM Data_WorkInfo a LEFT JOIN Date_还款登记表 b ON a.Date_Id = b.Date_Id " +
                 "LEFT JOIN Data_CompanyInfo c ON a.授信主体编号 = c.Id LEFT JOIN Data_MemberInfo d ON a.授信主体编号 = d.ID LEFT JOIN Date_还款计划表 e ON a.date_id = e.Date_Id WHERE  b.还款计划类别 = 1212 " +
                 "AND e.还款计划类别 = 1212 AND b.还款期数 = e.计划期数 AND  还款总额 > 0  AND a.合同编号 = ?  ";
-        pageBean.setSort("a.Date_Id");
+        pageBean.setSort("c.id,b.还款期数");
         return super.findForPage(sql, new Object[]{contractNo}, pageBean, RepayInfo.class);
     }
 
@@ -61,7 +61,7 @@ public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
                 "(CASE b.是否逾期 WHEN 0 THEN 550001 WHEN 1 THEN 550002 ELSE 55001 END) AS receipt_type, b.逾期天数 AS delayDays FROM Data_WorkInfo a LEFT JOIN Date_还款登记表 b ON a.Date_Id = b.Date_Id " +
                 "LEFT JOIN Data_CompanyInfo c ON a.授信主体编号 = c.Id LEFT JOIN Data_MemberInfo d ON a.授信主体编号 = d.ID LEFT JOIN Date_还款计划表 e ON a.date_id = e.Date_Id WHERE  b.还款计划类别 = 1212 " +
                 "AND e.还款计划类别 = 1212 AND b.还款期数 = e.计划期数 AND  还款总额 > 0  AND b.还款日期 >= ? AND b.还款日期 <= ?";
-        pageBean.setSort("a.Date_Id");
+        pageBean.setSort("c.id,b.还款期数");
         return super.findForPage(sql, new Object[]{repayStartDate, repayEndDate}, pageBean, RepayInfo.class);
     }
 
