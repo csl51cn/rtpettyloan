@@ -1,16 +1,15 @@
 package com.global.param.dao.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Repository;
-
 import com.global.framework.dbutils.support.BaseDaoSupport;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 import com.global.param.dao.ChannelInterfaceDao;
 import com.global.param.domain.ChannelInterface;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 类描述：
@@ -48,7 +47,7 @@ public class ChannelInterfaceDaoImpl extends BaseDaoSupport implements
 			sql.append(" AND c.isvalid = ?");
 			args.add(channelInterface.getIsValid());
 		}
-		
+		page.setSort("channelid");
 		return super.findForPage(sql.toString(), args.toArray(), page, ChannelInterface.class);
 	}
 

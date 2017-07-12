@@ -1,16 +1,15 @@
 package com.global.framework.system.dao.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Repository;
-
 import com.global.framework.dbutils.support.BaseDaoSupport;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 import com.global.framework.system.dao.OrgDao;
 import com.global.framework.system.domain.Org;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author cqchenf@qq.com
@@ -28,7 +27,7 @@ public class OrgDaoImpl extends BaseDaoSupport implements OrgDao {
 	public PageBean queryOrgForPage(Org org, PageBean page)
 			throws BaseException {
 		StringBuilder sql = new StringBuilder(256);
-		sql.append("SELECT TOP (100) PERCENT t.*,(select orgName from dc_sys_org where orgId=t.parentOrgId) parentOrgName FROM dc_sys_org t WHERE 1 = 1 ");
+		sql.append("SELECT  t.*,(select orgName from dc_sys_org where orgId=t.parentOrgId) parentOrgName FROM dc_sys_org t WHERE 1 = 1 ");
 		List<Object> args = new ArrayList<Object>();
 		if (StringUtils.isNotBlank(org.getOrgName())) {
 			sql.append(" and t.orgName like ? ");
@@ -42,6 +41,7 @@ public class OrgDaoImpl extends BaseDaoSupport implements OrgDao {
 			sql.append(" and t.orgCode = ? ");
 			args.add(org.getOrgCode());
 		}
+		page.setSort("orgid");
 		return super.findForPage(sql.toString(), args.toArray(), page,
 				Org.class);
 	}

@@ -34,6 +34,7 @@ public class DataDictDaoImpl extends BaseDaoSupport implements DataDictDao {
 			sql.append(" and className like ? ");
 			args.add("%"+dictClass.getClassName()+"%");
 		}
+		pageBean.setSort("classid");
 		return super.findForPage(sql.toString(), args.toArray(), pageBean, DataDictClass.class);
 	}
 
@@ -68,7 +69,7 @@ public class DataDictDaoImpl extends BaseDaoSupport implements DataDictDao {
 	//================================================================数据字典代码
 	public PageBean queryDataDictForPage(DataDict dataDict,
 			PageBean pageBean) throws BaseException {
-		StringBuffer sql = new StringBuffer("select  Top 100 percent t.*,(select className from dc_sys_datadictclass where classid=t.classid) className from dc_sys_datadict t where 1=1 ");
+		StringBuffer sql = new StringBuffer("select  t.*,(select className from dc_sys_datadictclass where classid=t.classid) className from dc_sys_datadict t where 1=1 ");
 		List<Object> args = new ArrayList<Object>();
 		if(StringUtils.isNotBlank(dataDict.getDictCode())){
 			sql.append(" and t.dictCode = ? ");
@@ -82,6 +83,7 @@ public class DataDictDaoImpl extends BaseDaoSupport implements DataDictDao {
 			sql.append(" and t.classid = ? ");
 			args.add(dataDict.getClassId());
 		}
+		pageBean.setSort("dictid");
 		return super.findForPage(sql.toString(), args.toArray(), pageBean, DataDict.class);
 	}
 

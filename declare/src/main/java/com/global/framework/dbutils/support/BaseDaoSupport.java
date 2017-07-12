@@ -492,19 +492,18 @@ public abstract class BaseDaoSupport {
     }
 
     protected PageBean findForPage(String sql, Object[] args, PageBean page, Class<? extends Entity> clazz) {
-        if (StringUtils.isNotBlank(page.getSort())) {
-            sql = sql + " order by " + page.getSort() + " " + page.getOrder();
-        }
 
         logger.debug("Executing SQL query [{}], params: [{}]", sql, args);
 
         try {
             PageBean e = null;
             Long totalRows = this.getTotalRows(sql, args);
+            if (StringUtils.isNotBlank(page.getSort())) {
+                sql = sql + " order by " + page.getSort() + " " + page.getOrder();
+            }
             if (totalRows.longValue() > 0L) {
                 Integer startIndex = Integer.valueOf((page.getPage().intValue() - 1) * page.getRows().intValue());
-                Integer endIndex = Integer.valueOf(page.getPage().intValue() * page.getRows().intValue());
-                sql = this.getPageSql(sql, startIndex, endIndex);
+                sql = this.getPageSql(sql, startIndex, page.getRows());
                 logger.debug("Executing SQL query [{}], params: [{}]", sql, args);
                 List dataList = this.jdbcTemplate.query(sql, args, new BeanPropertyRowMapper(clazz));
                 e = new PageBean(totalRows, dataList, page.getPage(), page.getRows());
@@ -581,21 +580,15 @@ public abstract class BaseDaoSupport {
         }
     }
 
-    private final String getPageSql(String sql, Integer startIndex, Integer endIndex) {
+    private final String getPageSql(String sql, Integer startIndex, Integer rows) {
         try {
             StringBuilder e = new StringBuilder(sql.length() + 512);
-            e.append("SELECT RRRRR_.* ");
-            e.append("FROM (SELECT * FROM (SELECT ROW_.*, row_number () OVER (ORDER BY (SELECT 1)) AS ROWNUM FROM (");
             e.append(sql);
-            e.append(") ROW_) ROW__ ");
-            if (endIndex.intValue() > 0) {
-                e.append("WHERE ROWNUM <= ").append(endIndex);
-            }
-
-            e.append(") RRRRR_ ");
-            if (startIndex.intValue() > 0) {
-                e.append("WHERE RRRRR_.ROWNUM  >= ").append(startIndex.intValue() + 1);
-            }
+            e.append("  offset ");
+            e.append(startIndex);
+            e.append(" row fetch next ");
+            e.append(rows);
+            e.append(" row only");
             return e.toString();
         } catch (Exception var5) {
             throw new DAOException("Generate page SQL error: " + var5.getMessage(), var5);

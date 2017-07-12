@@ -1,14 +1,13 @@
 package com.global.workflow.dao.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Repository;
-
 import com.global.framework.dbutils.support.BaseDaoSupport;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 import com.global.workflow.dao.ProcessHistoryDao;
 import com.global.workflow.domain.ProcessHistory;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * 
@@ -31,6 +30,7 @@ public class ProcessHistoryDaoImpl extends BaseDaoSupport implements
 	public PageBean getProcessHistoryForPage(String txnSerialNo, PageBean page)
 			throws BaseException {
 		String sql = "select ph.*,(select username from dc_sys_user where userid=ph.procuserid) procUserName from dc_wfl_processhistory ph where ph.txnserialno=?";
+		page.setSort("ph.stepname");
 		return super.findForPage(sql, new Object[] { txnSerialNo }, page,
 				ProcessHistory.class);
 	}

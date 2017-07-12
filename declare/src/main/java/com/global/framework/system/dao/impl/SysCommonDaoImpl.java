@@ -127,7 +127,7 @@ public class SysCommonDaoImpl extends BaseDaoSupport implements SysCommonDao {
 			sql.append(" AND c.COMMON_USER_CODE = ?");
 			args.add(user.getCOMMON_USER_CODE());
 		}
-		
+		page.setSort("operno");
 		return super.findForPage(sql.toString(), args.toArray(), page, CommonOrgUser.class);
 	}
 	

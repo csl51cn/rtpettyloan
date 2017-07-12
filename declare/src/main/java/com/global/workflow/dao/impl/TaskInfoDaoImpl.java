@@ -1,12 +1,5 @@
 package com.global.workflow.dao.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Repository;
-
 import com.global.framework.dbutils.support.BaseDaoSupport;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
@@ -15,6 +8,12 @@ import com.global.workflow.dao.TaskInfoDao;
 import com.global.workflow.domain.ProcessHistory;
 import com.global.workflow.domain.TaskInfo;
 import com.global.workflow.domain.TaskInfoHis;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -163,6 +162,7 @@ public class TaskInfoDaoImpl extends BaseDaoSupport implements TaskInfoDao {
 			sql += " and convert(varchat(100),tt.createdate,23) <= ? ";
 			args.add(task.getEndCreateTime());
 		}
+		page.setSort("tt.txnSerialNo");
 		return super.findForPage(sql, args.toArray(), page, TaskInfo.class);
 	}
 	
@@ -229,7 +229,7 @@ public class TaskInfoDaoImpl extends BaseDaoSupport implements TaskInfoDao {
 			sql += " and tt.sfzx=? ";
 			args.add(task.getSfzx());
 		}
-		
+		page.setSort("tt.txnSerialNo");
 		return super.findForPage(sql, args.toArray(), page, TaskInfo.class);
 	}
 	
@@ -270,6 +270,7 @@ public class TaskInfoDaoImpl extends BaseDaoSupport implements TaskInfoDao {
 			sql += " and convert(varchar(100), tt.createdate, 23)<= ? ";
 			args.add(task.getEndCreateTime());
 		}
+		page.setSort("tt.txnSerialNo");
 		return super.findForPage(sql, args.toArray(), page, TaskInfo.class);
 	}
 	
@@ -279,6 +280,7 @@ public class TaskInfoDaoImpl extends BaseDaoSupport implements TaskInfoDao {
 		String sql = "select p.*,u.username operName from dc_wfl_processhistory p"
 				+ "	join sys_user u on p.operid = u.userid"
 				+ " where p.txnserialno=?";
+		page.setSort("u.username");
 		return (PageBean) super.findForPage(sql, new Object[]{txnSerialNo},page, ProcessHistory.class);
 	}
 	

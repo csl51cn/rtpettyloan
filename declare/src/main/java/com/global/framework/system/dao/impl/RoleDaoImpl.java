@@ -1,12 +1,5 @@
 package com.global.framework.system.dao.impl;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Repository;
-
 import com.global.framework.dbutils.support.BaseDaoSupport;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
@@ -15,13 +8,19 @@ import com.global.framework.system.domain.DataRight;
 import com.global.framework.system.domain.Role;
 import com.global.framework.system.domain.RoleRight;
 import com.global.framework.system.domain.UserRole;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 @Repository("roleDao")
 public class RoleDaoImpl extends BaseDaoSupport implements RoleDao {
 
 	public PageBean queryRoleForPage(Role role, PageBean pageBean, String userId) throws BaseException {
 		StringBuilder sql = new StringBuilder(256);
-		sql.append("SELECT TOP (100) PERCENT t.* FROM dc_sys_role t WHERE 1 = 1 ");
+		sql.append("SELECT  t.* FROM dc_sys_role t WHERE 1 = 1 ");
 		if (!"admin".equals(userId)) {//不是超级管理员不允许操作超级管理员这个角色信息
 			sql.append(" and t.isfix = 'N'");
 		}
@@ -33,7 +32,7 @@ public class RoleDaoImpl extends BaseDaoSupport implements RoleDao {
 				args.add("%"+role.getRoleName()+"%");
 			}
 		}
-		
+		pageBean.setSort("roleid");
 		return super.findForPage(sql.toString(), args.toArray(), pageBean, Role.class);
 	}
 

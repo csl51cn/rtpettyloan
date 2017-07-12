@@ -176,6 +176,7 @@ public class ContractInfoDaoImpl extends BaseDaoSupport implements ContractInfoD
     @Override
     public PageBean findContractBriefInfoByContractNo(String contractNo, PageBean pageBean) throws DAOException {
         String sql = "SELECT id,date_id,contract_no,customer_name,contract_amount,contract_sign_date,is_send,is_last,report_type,net_sign_no FROM DC_CONTRACT_INFO WHERE contract_no = ?";
+        pageBean.setSort("id");
         return super.findForPage(sql, new Object[]{contractNo}, pageBean, ContractInfoCycleNode.class);
 
     }
@@ -205,6 +206,7 @@ public class ContractInfoDaoImpl extends BaseDaoSupport implements ContractInfoD
             list.add(signStartDate);
             list.add(signEndDate);
         }
+        pageBean.setSort("id");
         return super.findForPage(sql.toString(), list.toArray(), pageBean, ContractInfoCycleNode.class);
 
     }
@@ -259,6 +261,7 @@ public class ContractInfoDaoImpl extends BaseDaoSupport implements ContractInfoD
             list.add(signStartDate);
             list.add(signEndDate);
         }
+        pageBean.setSort("id");
         return super.findForPage(sql.toString(), list.toArray(), pageBean, ContractInfoCycleNode.class);
     }
 

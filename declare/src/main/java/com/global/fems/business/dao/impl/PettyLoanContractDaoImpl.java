@@ -84,6 +84,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
             endDate = DateTimeUtil.dayAdd(endDate, 1);
             list.add(endDate);
         }
+        pageBean.setSort("w.date_id");
         PageBean forPage = super.findForPage(sql.toString(), list.toArray(), pageBean, PettyLoanContract.class);
         return forPage;
     }
@@ -131,7 +132,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
             endDate = DateTimeUtil.dayAdd(endDate, 1);
             list.add(endDate);
         }
-
+        pageBean.setSort("id");
         PageBean forPage = super.findForPage(sql.toString(), list.toArray(), pageBean, PettyLoanContract.class);
         return forPage;
     }
@@ -250,6 +251,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
     @Override
     public PageBean findPettyLoanContractByContractNo(String contractNo, PageBean pageBean) throws BaseException {
         String sql = "select * from DC_PETTY_LOAN_CONTRACT where contractno = ?";
+        pageBean.setSort("id");
         PageBean forPage = super.findForPage(sql, new Object[]{contractNo}, pageBean, PettyLoanContract.class);
         return forPage;
     }
@@ -294,6 +296,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
                 "      Flow_Title = '现场签约'  " +
                 "  ) AND d.form_arrno = 2 AND d.GoBackId = 0 AND " +
                 " w.合同编号 = ?");
+        pageBean.setSort("w.date_id");
         PageBean forPage = super.findForPage(sql.toString(), new Object[]{contractNo}, pageBean, PettyLoanContract.class);
         return forPage;
     }
@@ -329,6 +332,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
             sql.append(" AND sendstatus = ? ");
             list.add(sendStatus);
         }
+        pageBean.setSort("id");
         PageBean forPage = super.findForPage(sql.toString(), list.toArray(), pageBean, PettyLoanContract.class);
         return forPage;
     }
@@ -373,7 +377,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
             endDate = DateTimeUtil.dayAdd(endDate, 1);
             list.add(endDate);
         }
-
+        pageBean.setSort("id");
         PageBean forPage = super.findForPage(sql.toString(), list.toArray(), pageBean, PettyLoanContract.class);
         return forPage;
     }

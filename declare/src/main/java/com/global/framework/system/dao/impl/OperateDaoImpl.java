@@ -1,13 +1,5 @@
 package com.global.framework.system.dao.impl;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Repository;
-
 import com.global.framework.dbutils.support.BaseDaoSupport;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
@@ -15,6 +7,13 @@ import com.global.framework.system.dao.OperateDao;
 import com.global.framework.system.domain.Operate;
 import com.global.framework.system.domain.RoleRight;
 import com.global.framework.system.domain.ZTreeNode;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author chen.feng
@@ -50,6 +49,7 @@ public class OperateDaoImpl extends BaseDaoSupport implements OperateDao {
             sql.append(" and t.operateName = ? ");
             list.add(operate.getOperateName());
         }
+        page.setSort("operateid");
         return super.findForPage(sql.toString(), list.toArray(), page,
                 Operate.class);
     }

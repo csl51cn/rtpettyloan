@@ -38,7 +38,8 @@ public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
                 "(CASE a.还款方式 WHEN 1835 THEN DATEADD(d ,-1,DATEADD(m, 1, e.计划还款日)) WHEN 818 THEN DATEADD(d,-1, DATEADD(m, 1, e.计划还款日)) ELSE DATEADD(d, - 1, e.计划还款日) END) AS end_date," +
                 "(CASE b.是否逾期 WHEN 0 THEN 550001 WHEN 1 THEN 550002 ELSE 55001 END) AS receipt_type, b.逾期天数 AS delayDays FROM Data_WorkInfo a LEFT JOIN Date_还款登记表 b ON a.Date_Id = b.Date_Id " +
                 "LEFT JOIN Data_CompanyInfo c ON a.授信主体编号 = c.Id LEFT JOIN Data_MemberInfo d ON a.授信主体编号 = d.ID LEFT JOIN Date_还款计划表 e ON a.date_id = e.Date_Id WHERE  b.还款计划类别 = 1212 " +
-                "AND e.还款计划类别 = 1212 AND b.还款期数 = e.计划期数 AND 实还本金 <> 0 AND 实还利息 <> 0 AND a.合同编号 = ?  ";
+                "AND e.还款计划类别 = 1212 AND b.还款期数 = e.计划期数 AND  还款总额 > 0  AND a.合同编号 = ?  ";
+        pageBean.setSort("a.Date_Id");
         return super.findForPage(sql, new Object[]{contractNo}, pageBean, RepayInfo.class);
     }
 
@@ -59,7 +60,8 @@ public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
                 "(CASE a.还款方式 WHEN 1835 THEN DATEADD(d ,-1,DATEADD(m, 1, e.计划还款日)) WHEN 818 THEN DATEADD(d,-1, DATEADD(m, 1, e.计划还款日)) ELSE DATEADD(d, - 1, e.计划还款日) END) AS end_date," +
                 "(CASE b.是否逾期 WHEN 0 THEN 550001 WHEN 1 THEN 550002 ELSE 55001 END) AS receipt_type, b.逾期天数 AS delayDays FROM Data_WorkInfo a LEFT JOIN Date_还款登记表 b ON a.Date_Id = b.Date_Id " +
                 "LEFT JOIN Data_CompanyInfo c ON a.授信主体编号 = c.Id LEFT JOIN Data_MemberInfo d ON a.授信主体编号 = d.ID LEFT JOIN Date_还款计划表 e ON a.date_id = e.Date_Id WHERE  b.还款计划类别 = 1212 " +
-                "AND e.还款计划类别 = 1212 AND b.还款期数 = e.计划期数 AND 实还本金 <> 0 AND 实还利息 <> 0 AND b.还款日期 >= ? AND b.还款日期 <= ? ";
+                "AND e.还款计划类别 = 1212 AND b.还款期数 = e.计划期数 AND  还款总额 > 0  AND b.还款日期 >= ? AND b.还款日期 <= ?";
+        pageBean.setSort("a.Date_Id");
         return super.findForPage(sql, new Object[]{repayStartDate, repayEndDate}, pageBean, RepayInfo.class);
     }
 
@@ -146,6 +148,7 @@ public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
     @Override
     public PageBean findBriefInfoByContractNo(String contractNo, PageBean pageBean) throws DAOException {
         String sql = "SELECT id,date_id,contract_no,customer_name,counter,repay_date,repay_pri_amt,repay_int_amt,receipt_type,delay_days,is_last,is_send,report_type FROM DC_REPAY_INFO WHERE contract_no = ?";
+        pageBean.setSort("id");
         return super.findForPage(sql, new Object[]{contractNo}, pageBean, RepayInfo.class);
     }
 
@@ -186,6 +189,7 @@ public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
             list.add(repayStartDate);
             list.add(repayEndDate);
         }
+        pageBean.setSort("id");
         return super.findForPage(sql.toString(), list.toArray(), pageBean, RepayInfo.class);
     }
 
@@ -226,6 +230,7 @@ public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
             list.add(repayStartDate);
             list.add(repayEndDate);
         }
+        pageBean.setSort("id");
         return super.findForPage(sql.toString(), list.toArray(), pageBean, RepayInfo.class);
     }
 

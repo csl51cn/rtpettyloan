@@ -1,16 +1,15 @@
 package com.global.param.dao.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Repository;
-
 import com.global.framework.dbutils.support.BaseDaoSupport;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 import com.global.param.dao.CommModeDao;
 import com.global.param.domain.CommMode;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 类描述： 
@@ -34,7 +33,7 @@ public class CommModeDaoImpl extends BaseDaoSupport implements CommModeDao {
 			sql.append(" AND c.ChannelId = ?");
 			args.add(info.getChannelId());
 		}
-		
+		page.setSort("channelid");
 		return super.findForPage(sql.toString(), args.toArray(), page, CommMode.class);
 	}
 

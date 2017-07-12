@@ -64,6 +64,7 @@ public class PayPlanInfoDaoImpl extends BaseDaoSupport implements PayPlanInfoDao
     @Override
     public PageBean findContractInfoByContractNo(String contractNo, PageBean pageBean) throws DAOException {
         StringBuilder sql = new StringBuilder("SELECT id,date_id,due_bill_no,contract_no,customer_name,dd_amt AS contract_amount,sign_date AS contract_sign_date,loan_cate,is_send,is_last,report_type,net_sign_no FROM DC_CONTRACT_ISSUE_INFO WHERE is_last = 'Y' AND contract_no = ? ");
+        pageBean.setSort("id");
         PageBean forPage = super.findForPage(sql.toString(),new Object[]{contractNo}, pageBean, ContractInfoCycleNode.class);
         return forPage;
     }
@@ -91,6 +92,7 @@ public class PayPlanInfoDaoImpl extends BaseDaoSupport implements PayPlanInfoDao
             list.add(signStartDate);
             list.add(signEndDate);
         }
+        pageBean.setSort("id");
         return super.findForPage(sql.toString(), list.toArray(), pageBean, PayPlanInfo.class);
 
     }
@@ -164,6 +166,7 @@ public class PayPlanInfoDaoImpl extends BaseDaoSupport implements PayPlanInfoDao
             list.add(signStartDate);
             list.add(signEndDate);
         }
+        pageBean.setSort("id");
         return super.findForPage(sql.toString(), list.toArray(), pageBean, PayPlanInfo.class);
 
     }

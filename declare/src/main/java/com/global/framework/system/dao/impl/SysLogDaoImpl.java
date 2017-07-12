@@ -1,16 +1,15 @@
 package com.global.framework.system.dao.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Repository;
-
 import com.global.framework.dbutils.support.BaseDaoSupport;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 import com.global.framework.system.dao.SysLogDao;
 import com.global.framework.system.domain.ExceptionLog;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 /**
  * 异常操日志DAO
  * 
@@ -36,7 +35,7 @@ public class SysLogDaoImpl extends BaseDaoSupport implements SysLogDao{
 			list.add(log.getStartDate());
 			list.add(log.getEndDate());
 		}
-		
+		page.setSort("exceptionlogid");
 		return super.findForPage(sql.toString(), list.toArray(), page,
 				ExceptionLog.class);
 	}

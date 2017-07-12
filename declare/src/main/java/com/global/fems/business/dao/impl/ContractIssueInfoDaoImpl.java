@@ -35,7 +35,7 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
             sql.append(" AND is_send = ? ");
             list.add(sendStatus);
         }
-
+        pageBean.setSort("id");
         PageBean forPage = super.findForPage(sql.toString(), list.toArray(), pageBean, ContractInfoCycleNode.class);
         return forPage;
     }
@@ -119,6 +119,7 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
             list.add(signStartDate);
             list.add(signEndDate);
         }
+        pageBean.setSort("id");
         return super.findForPage(sql.toString(), list.toArray(), pageBean, ContractIssueInfo.class);
 
     }
@@ -167,6 +168,7 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
     @Override
     public PageBean findContractBriefInfoByContractNo(String contractNo, PageBean pageBean) throws DAOException {
         String  sql = "SELECT id,date_id,due_bill_no,contract_no,customer_name,dd_amt,sign_date,is_send,is_last,report_type,net_sign_no FROM DC_CONTRACT_ISSUE_INFO WHERE contract_no = ?";
+        pageBean.setSort("id");
         return super.findForPage(sql,new Object[]{contractNo},pageBean,ContractIssueInfo.class);
     }
 
@@ -193,6 +195,7 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
             list.add(signStartDate);
             list.add(signEndDate);
         }
+        pageBean.setSort("id");
         return super.findForPage(sql.toString(), list.toArray(), pageBean, ContractInfoCycleNode.class);
     }
 
@@ -219,6 +222,7 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
             list.add(signStartDate);
             list.add(signEndDate);
         }
+        pageBean.setSort("id");
         return super.findForPage(sql.toString(), list.toArray(), pageBean, ContractInfoCycleNode.class);
     }
 }

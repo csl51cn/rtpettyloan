@@ -1,17 +1,16 @@
 package com.global.framework.system.dao.impl;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Repository;
-
 import com.global.framework.dbutils.support.BaseDaoSupport;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 import com.global.framework.system.dao.ILogDao;
 import com.global.framework.system.domain.OperateLog;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * 操作日志DAO
@@ -48,6 +47,7 @@ public class LogDao extends BaseDaoSupport implements ILogDao {
 			sql.append(" and to_char(t.operatedate,'yyyy-MM-dd') <= ? ");
 			list.add(log.getEndDate());
 		}
+		page.setSort("logid");
 		return super.findForPage(sql.toString(), list.toArray(), page,
 				OperateLog.class);
 	}
