@@ -73,6 +73,7 @@ public class RepayInfoServiceImpl implements RepayInfoService {
             }
             return 1;
         });
+        a:
         for (String id : idsArr) {
             RepayInfo repayInfo = repayInfoDao.findRepayInfoByIdFromBizSys(id);
             boolean isAdd = treeSet.add(repayInfo);
@@ -84,6 +85,8 @@ public class RepayInfoServiceImpl implements RepayInfoService {
                         if (!"100003".equals(repayInfoCycleNode.getReportType())) {
                             isDelete = true;
                             break;
+                        }else if (repayInfoCycleNode.getIsSend() == 0 && "Y".equals(repayInfoCycleNode.getIsLast())) {//上报类型不为删除,跳过
+                            continue a;
                         }
                     }
                     if (!isDelete) { //已经被删除时,允许保存
@@ -129,8 +132,8 @@ public class RepayInfoServiceImpl implements RepayInfoService {
     private void setRepayPrincipalInterest(RepayInfo repayInfo) {
 
         Map map = repayInfoDao.findRepayPrincipalInterest(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());
-        String repay_pri_amt = map.get("repay_pri_amt") + "";
-        String repay_int_amt = map.get("repay_int_amt") + "";
+        String repay_pri_amt = map.get("repay_pri_amt") == null ? "0" : map.get("repay_pri_amt") + "";
+        String repay_int_amt = map.get("repay_int_amt") == null ? "0" : map.get("repay_int_amt") + "";
         if (Integer.parseInt(repayInfo.getDelayDays()) > 0) {
             //如果逾期将实还本金和实还利息赋值给逾期本金,逾期利息
             repayInfo.setDelayAmt(repay_pri_amt);

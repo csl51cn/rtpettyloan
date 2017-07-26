@@ -39,7 +39,7 @@
                 multiple:true,
                 singleSelect:false,
                 pageSize: 20,
-                pageList: [5, 10, 15, 20, 30 ,40],
+                pageList: [5, 10, 15, 20, 30 ,40 , 100 , 500 ],
                 columns: [[{
                     field: "id",
                     title: "主键",
@@ -131,7 +131,7 @@
                     singleSelect:false,
                     multiple:true,
                     pageSize: 20,
-                    pageList: [5, 10, 15, 20, 30,40],
+                    pageList: [5, 10, 15, 20, 30,40, 100 , 500],
                     columns: [[{
                         field: "id",
                         title: "主键",
@@ -250,7 +250,7 @@
                 checkOnSelect: true,
                 pagination: true,
                 pageSize: 15,
-                pageList: [5, 10, 15, 20, 30],
+                pageList: [5, 10, 15, 20, 30 , 100 , 500],
                 columns: [[{
                     field: "id",
                     title: "主键",

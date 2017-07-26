@@ -63,6 +63,7 @@ public class ContractIssueInfoServiceImpl implements ContractIssueInfoService {
     public void batchSaveContract(String ids) throws DAOException {
         String[] idsArr = ids.split(",");
         List<ContractIssueInfo> list = new ArrayList<ContractIssueInfo>();
+        a:
         for (String dateId : idsArr) {
             List<ContractIssueInfo> existContractIssueInfoList = contractIssueInfoDao.findContractListByDateId(dateId);
             if (existContractIssueInfoList != null && existContractIssueInfoList.size() > 0) {//如果存在且上报类型不是删除，跳过,避免重复插入
@@ -71,7 +72,10 @@ public class ContractIssueInfoServiceImpl implements ContractIssueInfoService {
                     if (!"100003".equals(contractIssueInfo.getReportType())) {
                         isDelete = true;
                         break;
+                    }else if (contractIssueInfo.getIsSend() == 0 && "Y".equals(contractIssueInfo.getIsLast())) {
+                        continue a;
                     }
+
                 }
                 if (!isDelete) { //已经被删除时,允许保存
                     continue;
@@ -260,7 +264,7 @@ public class ContractIssueInfoServiceImpl implements ContractIssueInfoService {
                 contractIssueInfo.setIsSend(0);
                 contractIssueInfoArrayList.add(contractIssueInfo);
             }
-            contractIssueInfoDao.batchUpdateContract(contractIssueInfoArrayList,true);
+            contractIssueInfoDao.batchUpdateContract(contractIssueInfoArrayList, true);
         } catch (DAOException e) {
             logger.debug("ContractIssueInfoServiceImpl:setNotSend()", e.getLocalizedMessage());
             return ResultModel.fail();
@@ -379,7 +383,7 @@ public class ContractIssueInfoServiceImpl implements ContractIssueInfoService {
         contractIssueInfo.setZone(zone);
         //贷款期限
         Long term = calTerm(contractIssueInfo);
-        if (term > 0) {
+        if (term >= 0) {
             if (term <= 1) {
                 //(0,1]个月内
                 contractIssueInfo.setTerm("250001");
@@ -452,6 +456,7 @@ public class ContractIssueInfoServiceImpl implements ContractIssueInfoService {
         long term = ddDate.until(matureDate, ChronoUnit.MONTHS);
         return term;
     }
+
 
     private String getDateStr(String dateStr) {
 

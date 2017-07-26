@@ -45,7 +45,7 @@ public class ContractIssueInfoController {
      * @param ids
      * @return 是否操作成功：1保存成功，0保存失败
      */
-    @RequestMapping(params = "method=batchSaveContract")
+    @RequestMapping(params = "method=batchSaveContract" , produces = "application/json; charset=utf-8")
     @ResponseBody
     public String batchSaveContract(String ids) throws DAOException {
         try {

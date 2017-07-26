@@ -124,8 +124,7 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
     @Override
     public PettyLoanContract findPettyLoanContractByWorkInfoId(Integer dateId) throws BaseException {
         PettyLoanContract pettyLoanContract = pettyLoanContractDao.findPettyLoanContractByWorkInfoId(dateId);
-        //将以百分之一为单位的月利率转换为以千分之一为单位的月利率，接口文档要求千分之一为单位的利率
-        pettyLoanContract.setIntRate(pettyLoanContract.getIntRate() * 10);
+        setIntRate(pettyLoanContract);
         //当前查询的业务数据贷款类型都是自营贷款，委托贷款未走业务系统，设置贷款类型为自营贷款530001
         if (StringUtils.isEmpty(pettyLoanContract.getConCustomerName())) {
             pettyLoanContract.setLoanCate("530001");
@@ -135,6 +134,20 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
         //身份证或组织机构码把字母转为大写
         pettyLoanContract.setCertificateNo(pettyLoanContract.getCertificateNo().toUpperCase());
         return pettyLoanContract;
+    }
+
+    //设置利率
+    private void setIntRate(PettyLoanContract pettyLoanContract) {
+        Integer dateId =pettyLoanContract.getDateId() ;
+        String productType = pettyLoanContractDao.findProductType(dateId);
+        //将以百分之一为单位的利率转换为以千分之一为单位的利率，接口文档要求千分之一为单位的利率
+        Double intRate = pettyLoanContract.getIntRate();
+        intRate *= 10;
+        String termUnit = pettyLoanContractDao.findTermUnit(dateId);
+        if ("付易贷".equals(productType) && "周".equals(termUnit)) {//
+            intRate /= 7;
+        }
+        pettyLoanContract.setIntRate(intRate);
     }
 
     /**
@@ -155,8 +168,7 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
                 continue;
             }
             PettyLoanContract pettyLoanContract = pettyLoanContractDao.findPettyLoanContractByWorkInfoId(dateId);
-            //将以百分之一为单位的月利率转换为以千分之一为单位的月利率，接口文档要求千分之一为单位的利率
-            pettyLoanContract.setIntRate(pettyLoanContract.getIntRate() * 10);
+            setIntRate(pettyLoanContract);
             //当前查询的业务数据贷款类型都是自营贷款，委托贷款未走业务系统，设置贷款类型为自营贷款530001
             if (StringUtils.isEmpty(pettyLoanContract.getConCustomerName())) {
                 pettyLoanContract.setLoanCate("530001");
@@ -174,7 +186,7 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
             //身份证或组织机构码把字母转为大写
             pettyLoanContract.setCertificateNo(pettyLoanContract.getCertificateNo().toUpperCase());
             String conCertificateNo = pettyLoanContract.getConCertificateNo();
-            if(!StringUtil.isNullOrEmpty(conCertificateNo)){
+            if (!StringUtil.isNullOrEmpty(conCertificateNo)) {
                 pettyLoanContract.setConCertificateNo(conCertificateNo.toUpperCase());
             }
             validate(id, pettyLoanContract);

@@ -75,7 +75,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
                 "    WHERE  " +
                 "      Flow_Title = '现场签约'  " +
                 "  )  " +
-                " AND d.form_arrno = 2  " +
+                " AND d.form_arrno = 24  " +
                 " AND d.GoBackId = 0  ");
         List<Object> list = new ArrayList<Object>();
         if (StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
@@ -152,7 +152,15 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
                         "  w.合同编号 AS contractno,  " +
                         "  w.授信金额 AS contractamount,  " +
                         "  d.content AS contractsigndate,  " +
-                        "  w.利率 AS intrate,  " +
+                        " ISNULL( " +
+                        "  CASE w.产品类型名称 " +
+                        "  WHEN '付易贷' THEN " +
+                        "   w.利率 * 30 " +
+                        "  ELSE " +
+                        "   w.利率 " +
+                        "  END, " +
+                        "  NULL " +
+                        " ) AS intrate, " +
                         "  ISNULL(  " +
                         "    CASE w.授信主体类型  " +
                         "    WHEN 1 THEN  " +
@@ -201,7 +209,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
                         "      WorkFlowConstruction  " +
                         "    WHERE  " +
                         "      Flow_Title = '现场签约'  " +
-                        "  ) AND d.form_arrno = 2 AND  d.GoBackId = 0 AND " +
+                        "  ) AND d.form_arrno = 24 AND  d.GoBackId = 0 AND " +
                         " w.date_id = ? ");
         logger.debug("Executing SQL query [{}], params: [{}]", sql, dateId);
         List list = super.getJdbcTemplate().query(sql.toString(), new Object[]{dateId}, new BeanPropertyRowMapper(PettyLoanContract.class));
@@ -294,7 +302,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
                 "      WorkFlowConstruction  " +
                 "    WHERE  " +
                 "      Flow_Title = '现场签约'  " +
-                "  ) AND d.form_arrno = 2 AND d.GoBackId = 0 AND " +
+                "  ) AND d.form_arrno = 24 AND d.GoBackId = 0 AND " +
                 " w.合同编号 = ?");
         pageBean.setSort("w.date_id");
         PageBean forPage = super.findForPage(sql.toString(), new Object[]{contractNo}, pageBean, PettyLoanContract.class);
@@ -380,6 +388,31 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
         pageBean.setSort("id");
         PageBean forPage = super.findForPage(sql.toString(), list.toArray(), pageBean, PettyLoanContract.class);
         return forPage;
+    }
+
+    /**
+     * 查询授信期限单位
+     * @param dateId
+     * @return
+     */
+    @Override
+    public String findTermUnit(Integer dateId)  throws DAOException {
+        String sql = "SELECT b.Word FROM Data_WorkInfo a LEFT JOIN Dictionary b ON a.[授信期限单位] = b.Id WHERE  Date_Id =  ?";
+        logger.debug("Executing SQL query [{}], params: [{}]", sql, new Object[]{dateId});
+        return (String) super.getJdbcTemplate().queryForObject(sql, new Object[]{dateId}, String.class);
+    }
+
+    /**
+     * 查询产品类型
+     * @param dateId
+     * @return
+     * @throws DAOException
+     */
+    @Override
+    public String findProductType(Integer dateId) throws DAOException {
+        String sql = "SELECT 产品类型名称 FROM Data_WorkInfo WHERE Date_Id = ? ";
+        logger.debug("Executing SQL query [{}], params: [{}]", sql, new Object[]{dateId});
+        return (String) super.getJdbcTemplate().queryForObject(sql, new Object[]{dateId}, String.class);
     }
 
 

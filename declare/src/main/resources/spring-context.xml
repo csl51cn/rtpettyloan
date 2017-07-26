@@ -29,9 +29,9 @@
 		scope="singleton" destroy-method="close">
 		<property name="driverClass" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
 		<!--生产环境使用数据库-->
-		<!--<property name="jdbcUrl" value="jdbc:sqlserver://10.200.1.20:1433;DatabaseName=AutoSet_RunTong" />-->
+		<property name="jdbcUrl" value="jdbc:sqlserver://10.200.1.20:1433;DatabaseName=AutoSet_RunTong" />
 		<!--测试环境使用数据库-->
-		<property name="jdbcUrl" value="jdbc:sqlserver://10.200.1.20:1433;DatabaseName=AutoSet_RunTongTest" />
+		<!--<property name="jdbcUrl" value="jdbc:sqlserver://10.200.1.20:1433;DatabaseName=AutoSet_RunTongTest" />-->
 		<property name="user" value="AutoSet_RunTong" />
 		<property name="password" value="AutoSet_RunTong@15"/>
 

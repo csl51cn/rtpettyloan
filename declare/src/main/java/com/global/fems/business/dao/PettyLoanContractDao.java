@@ -38,4 +38,8 @@ public interface PettyLoanContractDao {
     List<PettyLoanContract> findContractListByDateId(String dateId) throws DAOException;
 
     PageBean findLastPettyLoanContractBySendStatus(Integer sendStatusCode, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException;
+
+    String findTermUnit(Integer dateId) throws DAOException;
+
+    String findProductType(Integer dateId) throws DAOException;
 }

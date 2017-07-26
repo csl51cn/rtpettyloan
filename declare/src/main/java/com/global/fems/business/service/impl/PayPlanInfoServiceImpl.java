@@ -42,6 +42,7 @@ public class PayPlanInfoServiceImpl implements PayPlanInfoService {
     public void batchSaveContract(String ids) throws DAOException {
         String[] idsArr = ids.split(",");
         List<PayPlanInfo> list = new ArrayList<PayPlanInfo>();
+        a:
         for (String dateId : idsArr) {
             List<PayPlanInfo> existPayPlanInfoList = payPlanInfoDao.findPayPlanInfoListByDateId(dateId);
             if (existPayPlanInfoList != null && existPayPlanInfoList.size() > 0) {//如果存在且上报类型不是删除，跳过,避免重复插入
@@ -50,6 +51,8 @@ public class PayPlanInfoServiceImpl implements PayPlanInfoService {
                     if (!"100003".equals(payPlanInfo.getReportType())) {
                         isDelete = true;
                         break;
+                    }else if (payPlanInfo.getIsSend() == 0 && "Y".equals(payPlanInfo.getIsLast())) {//上报类型不为删除,跳过
+                        continue a;
                     }
                 }
                 if (!isDelete) { //已经被删除时,允许保存
@@ -283,6 +286,7 @@ public class PayPlanInfoServiceImpl implements PayPlanInfoService {
 
     /**
      * 设置为未申报
+     *
      * @param ids
      * @return
      * @throws DAOException
@@ -297,7 +301,7 @@ public class PayPlanInfoServiceImpl implements PayPlanInfoService {
                 payPlanInfoById.setIsSend(0);
                 payPlanInfoArrayList.add(payPlanInfoById);
             }
-            payPlanInfoDao.batchUpdateContract(payPlanInfoArrayList,true);
+            payPlanInfoDao.batchUpdateContract(payPlanInfoArrayList, true);
         } catch (DAOException e) {
             logger.debug("PayPlanInfoServiceImpl:setNotSend()", e.getLocalizedMessage());
             return ResultModel.fail();

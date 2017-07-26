@@ -102,17 +102,21 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         String[] idsArr = ids.split(",");
 
         List<ContractInfoCycleNode> list = new ArrayList<ContractInfoCycleNode>();
+        a:
         for (String dateId : idsArr) {
 
             List<ContractInfoCycleNode> existContractList = contractInfoDao.findContractListByDateId(dateId);
             if (existContractList != null && existContractList.size() > 0) {//如果存在且上报类型不是删除，跳过,避免重复插入
                 Boolean isDelete = false; //是否删除的标记
                 for (ContractInfoCycleNode contractInfoCycleNode : existContractList) {
-                    if (!"100003".equals(contractInfoCycleNode.getReportType())) {
+                    if ("100003".equals(contractInfoCycleNode.getReportType())) {
                         isDelete = true;
                         break;
+                    } else if (contractInfoCycleNode.getIsSend() == 0 && "Y".equals(contractInfoCycleNode.getIsLast())) {//上报类型不为删除,跳过
+                        continue a;
                     }
                 }
+
                 if (!isDelete) { //已经被删除时,允许保存
                     continue;
                 }
@@ -365,7 +369,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 contractById.setIsSend(0);
                 contractInfoCycleNodeList.add(contractById);
             }
-            contractInfoDao.batchUpdateContract(contractInfoCycleNodeList,true);
+            contractInfoDao.batchUpdateContract(contractInfoCycleNodeList, true);
         } catch (DAOException e) {
             logger.debug("ContractInfoServiceImpl:setNotSend()", e.getLocalizedMessage());
             return ResultModel.fail();
