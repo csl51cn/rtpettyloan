@@ -23,9 +23,8 @@
             //双击某条数据后，返回详细信息，根据返回的值，设置不可编辑状态，点"手动录入"按钮后解除锁定
             if ("${disabled}") {
                 $("#fo input[type=text]").prop("disabled", "disabled");
-                $("#loanCate").combogrid({disabled: true});
-                $("#customerType").combogrid({disabled: true});
-                $("#certificateType").combogrid({disabled: true});
+//                $("#customerType").combogrid({disabled: true});
+//                $("#certificateType").combogrid({disabled: true});
             }
 
             //如果编辑已申报的记录,保存按钮失效,编辑未申报的记录,已申报修改,已申报删除按钮失效
@@ -78,9 +77,8 @@
         //点击“手工填写"按钮触发，解除锁定
         function manualFill() {
             $("#fo input[type=text]").removeProp("disabled");
-            $("#loanCate").combogrid({disabled: false});
-            $("#customerType").combogrid({disabled: false});
-            $("#certificateType").combogrid({disabled: false});
+//            $("#customerType").combogrid({disabled: false});
+//            $("#certificateType").combogrid({disabled: false});
         }
         //保存记录
         function doSave() {
@@ -606,11 +604,11 @@
 									textField: 'dictName',
 									url: '${basePath }/param/paramCommonController.do?method=getDatadict&code=CUSTOMER_TYPE',
 									columns: [[
-										{field:'dictCode',title:'借款人类别代码',width:60},
-										{field:'dictName',title:'借款人类别',width:195}
+										{field:'dictCode',title:'扣款方式代码',width:100},
+										{field:'dictName',title:'扣款方式',width:195}
 									]],
 									fitColumns: true,
-									nowrap:false"/>
+									nowrap:false">
                         <span class="warning">${errors['customerType']}</span>
                     </td>
 

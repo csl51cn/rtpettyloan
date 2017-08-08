@@ -97,6 +97,8 @@ public class ContractInfoDaoImpl extends BaseDaoSupport implements ContractInfoD
                 "   '280002' " +
                 "  WHEN '展业贷' THEN " +
                 "   '280002' " +
+                "  WHEN '付易贷' THEN " +
+                "   '280002' " +
                 "  ELSE  " +
                 "   '280003' " +
                 "  END, " +
@@ -111,6 +113,8 @@ public class ContractInfoDaoImpl extends BaseDaoSupport implements ContractInfoD
                 " ISNULL( " +
                 "  CASE c.产品类型名称 " +
                 "  WHEN '质房贷' THEN " +
+                "   a.intrate * 1.5 " +
+                "  WHEN '付易贷' THEN " +
                 "   a.intrate * 1.5 " +
                 "  ELSE " +
                 "   20 " +

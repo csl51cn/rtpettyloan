@@ -6,6 +6,7 @@ import com.global.framework.dbutils.support.DAOException;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
 import com.global.param.domain.ResultModel;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -122,6 +123,18 @@ public class RepayInfoController {
                 }
                 model.addAttribute("errors", erorrMap);
                 throw new DAOException("保存或更新记录时，数据校验未通过");
+            }
+            if(StringUtils.isEmpty(repayInfo.getPriPltyRate())){
+                repayInfo.setPriPltyRate("0");
+            }
+            if(StringUtils.isEmpty(repayInfo.getDelayInterest())){
+                repayInfo.setDelayInterest("0");
+            }
+            if(StringUtils.isEmpty(repayInfo.getDelayFee())){
+                repayInfo.setDelayFee("0");
+            }
+            if (StringUtils.isEmpty(repayInfo.getDelayAmt())) {
+                repayInfo.setDelayAmt("0");
             }
             if (repayInfo.getIsSend() != null && repayInfo.getIsSend() == 1) {
                 repayInfoService.declaredUpdate(repayInfo);

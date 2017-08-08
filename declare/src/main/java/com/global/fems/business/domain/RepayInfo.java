@@ -54,7 +54,7 @@ public class RepayInfo extends Entity {
     @NotBlank(message = "{RepayInfo.gatherMode.null}")
     @ColumnMapping(columnName = "gather_mode", columnType = "String")
     private String gatherMode; //扣款方式
-    @NotBlank(message = "{RepayInfo.gatherMode.null}")
+    @NotBlank(message = "{RepayInfo.repayPriAmt.null}")
     @ColumnMapping(columnName = "repay_pri_amt", columnType = "BigDecimal")
     private String repayPriAmt = "0"; //收回本金
     @NotBlank(message = "{RepayInfo.repayIntAmt.null}")
