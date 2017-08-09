@@ -41,4 +41,6 @@ public interface RepayInfoDao {
     Float findPenaltyServiceFee(Integer dateId) throws DAOException;
 
     Map findRepayPrincipalInterest(Integer dateId, String counter, String repayDate) throws DAOException;
+
+    String findRepayModeByDateId(Integer dateId) throws DAOException;
 }

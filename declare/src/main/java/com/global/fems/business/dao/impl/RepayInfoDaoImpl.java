@@ -85,7 +85,7 @@ public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
                 " DATEADD(m, - 1,e.计划还款日)END) ELSE DATEADD(m, - 1, e.计划还款日)END) AS start_date,(CASE a.还款方式 WHEN 1835 THEN DATEADD(d ,-1,DATEADD(m, 1, e.计划还款日))WHEN 818 THEN DATEADD(d ,- 1, " +
                 " DATEADD(m, 1, e.计划还款日))ELSE DATEADD(d, - 1, e.计划还款日) END) AS end_date,(CASE b.是否逾期 WHEN 0 THEN 550001 WHEN 1 THEN 550002 ELSE 55001 END) AS receipt_type, " +
                 " (CASE b.是否逾期 WHEN 0 THEN 0 WHEN 1 THEN b.实还本金 ELSE 0 END ) AS delay_amt,(CASE b.是否逾期 WHEN 0 THEN 0 WHEN 1 THEN b.实还利息 ELSE 0 END) AS delay_interest,ISNULL( " +
-                " CASE a.产品类型名称 WHEN '质房贷' THEN a.利率 * 10 * 1.5 ELSE 20 END, NULL) AS pri_plty_rate,b.逾期天数 AS delay_days FROM Date_还款登记表 b LEFT JOIN Data_WorkInfo a ON a.Date_Id = b.Date_Id LEFT JOIN " +
+                " CASE a.产品类型名称 WHEN '质房贷' THEN a.利率 * 10 * 1.5 WHEN '付易贷' THEN a.利率 * 10 * 1.5 ELSE 20 END, NULL) AS pri_plty_rate,b.逾期天数 AS delay_days FROM Date_还款登记表 b LEFT JOIN Data_WorkInfo a ON a.Date_Id = b.Date_Id LEFT JOIN " +
                 " Data_CompanyInfo c ON a.授信主体编号 = c.Id LEFT JOIN Data_MemberInfo d ON a.授信主体编号 = d.ID LEFT JOIN Date_还款计划表 e ON a.Date_Id = e.Date_Id  LEFT JOIN Dictionary f ON a.授信期限单位 = f.Id  WHERE b.还款计划类别 = 1212 " +
                 " AND e.还款计划类别 = 1212 AND b.还款期数 = e.计划期数 AND b.Id = ? ";
         return super.findForObjectBySql(sql, new Object[]{id}, RepayInfo.class);
@@ -290,6 +290,20 @@ public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
         logger.debug("Executing SQL query [{}], params: [{}]", sql, new Object[]{dateId,counter,repayDate});
         Map<String, Object> map = super.getJdbcTemplate().queryForMap(sql, new Object[]{dateId, counter, repayDate});
         return map;
+    }
+
+    /**
+     * 根据dateId查询还款方式
+     * @param dateId
+     * @return
+     * @throws DAOException
+     */
+    @Override
+    public String findRepayModeByDateId(Integer dateId) throws DAOException {
+        String sql = "SELECT 还款方式 AS repayMode FROM Data_WorkInfo WHERE date_id = ? ";
+        logger.debug("Executing SQL query [{}], params: [{}]", sql, new Object[]{dateId});
+        String repayMode = super.getJdbcTemplate().queryForObject(sql, new Object[]{dateId}, String.class);
+        return repayMode;
     }
 
 

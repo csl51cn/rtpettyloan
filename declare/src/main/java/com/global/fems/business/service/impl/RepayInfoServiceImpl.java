@@ -85,7 +85,7 @@ public class RepayInfoServiceImpl implements RepayInfoService {
                         if (!"100003".equals(repayInfoCycleNode.getReportType())) {
                             isDelete = true;
                             break;
-                        }else if (repayInfoCycleNode.getIsSend() == 0 && "Y".equals(repayInfoCycleNode.getIsLast())) {//上报类型不为删除,跳过
+                        } else if (repayInfoCycleNode.getIsSend() == 0 && "Y".equals(repayInfoCycleNode.getIsLast())) {//上报类型不为删除,跳过
                             continue a;
                         }
                     }
@@ -130,8 +130,12 @@ public class RepayInfoServiceImpl implements RepayInfoService {
     }
 
     private void setRepayPrincipalInterest(RepayInfo repayInfo) {
-
-        Map map = repayInfoDao.findRepayPrincipalInterest(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());
+        String counter = repayInfo.getCounter();
+        String repayMode = repayInfoDao.findRepayModeByDateId(repayInfo.getDateId());
+        if ("1835".equals(repayMode) || "818".equals(repayMode)) { //查询时,这两种还款方式数据库中还款期数是从0开始计算,根据Date_Id查询时加了1,此时需要减1才能与数据库数据匹配
+            counter = (Integer.parseInt(counter) - 1) + "";
+        }
+        Map map = repayInfoDao.findRepayPrincipalInterest(repayInfo.getDateId(), counter, repayInfo.getRepayDate());
         String repay_pri_amt = map.get("repay_pri_amt") == null ? "0" : map.get("repay_pri_amt") + "";
         String repay_int_amt = map.get("repay_int_amt") == null ? "0" : map.get("repay_int_amt") + "";
         if (Integer.parseInt(repayInfo.getDelayDays()) > 0) {
