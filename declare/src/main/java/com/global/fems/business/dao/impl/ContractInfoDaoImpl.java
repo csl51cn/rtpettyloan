@@ -90,7 +90,7 @@ public class ContractInfoDaoImpl extends BaseDaoSupport implements ContractInfoD
                 "  '' " +
                 " ) AS loan_object, " +
                 " ISNULL( " +
-                "  CASE c.产品类型名称 " +
+                "  CASE dic.Word " +
                 "  WHEN '商易贷' THEN " +
                 "   '280002' " +
                 "  WHEN '优易贷' THEN " +
@@ -111,7 +111,7 @@ public class ContractInfoDaoImpl extends BaseDaoSupport implements ContractInfoD
                 " b.余额 AS outstanding, " +
                 " a.intrate AS int_rate, " +
                 " ISNULL( " +
-                "  CASE c.产品类型名称 " +
+                "  CASE dic.Word " +
                 "  WHEN '质房贷' THEN " +
                 "   a.intrate * 1.5 " +
                 "  WHEN '付易贷' THEN " +
@@ -126,6 +126,7 @@ public class ContractInfoDaoImpl extends BaseDaoSupport implements ContractInfoD
                 " DC_PETTY_LOAN_CONTRACT a " +
                 "LEFT JOIN 已放款客户表 b ON a.dateid = b.Date_Id " +
                 "LEFT JOIN Data_WorkInfo c ON a.dateid = c.Date_Id " +
+                "Left Join Dictionary As dic On c.产品类别 = dic.Id " +
                 "WHERE " +
                 "a.islast = 'Y' AND a.dateid = ?;";
 

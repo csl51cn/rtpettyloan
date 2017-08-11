@@ -153,7 +153,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
                         "  w.授信金额 AS contractamount,  " +
                         "  d.content AS contractsigndate,  " +
                         " ISNULL( " +
-                        "  CASE w.产品类型名称 " +
+                        "  CASE dic.Word " +
                         "  WHEN '付易贷' THEN " +
                         "   w.利率 * 30 " +
                         "  ELSE " +
@@ -202,6 +202,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
                         " LEFT JOIN Data_CompanyInfo c ON w.授信主体编号 = c.Id  " +
                         " LEFT JOIN Data_MemberInfo m ON w.授信主体编号 = m.ID  " +
                         " LEFT JOIN WorkData_Date d ON d.date_id = w.Date_Id " +
+                        "Left Join Dictionary As dic On w.产品类别 = dic.Id " +
                         " WHERE  d.Flow_NO IN( " +
                         " SELECT  " +
                         "      Flow_No  " +
@@ -410,7 +411,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
      */
     @Override
     public String findProductType(Integer dateId) throws DAOException {
-        String sql = "SELECT 产品类型名称 FROM Data_WorkInfo WHERE Date_Id = ? ";
+        String sql = "SELECT dic.Word FROM Data_WorkInfo a LEFT JOIN  Dictionary As dic On a.产品类别 = dic.Id WHERE Date_Id = ? ";
         logger.debug("Executing SQL query [{}], params: [{}]", sql, new Object[]{dateId});
         return (String) super.getJdbcTemplate().queryForObject(sql, new Object[]{dateId}, String.class);
     }
