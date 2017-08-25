@@ -6,7 +6,6 @@ import com.global.framework.dbutils.support.BaseDaoSupport;
 import com.global.framework.dbutils.support.DAOException;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
-import com.global.framework.util.DateTimeUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,7 +80,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
         if (StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
             sql.append(" AND d.content >= ? AND d.content <= ?");
             list.add(startDate);
-            endDate = DateTimeUtil.dayAdd(endDate, 1);
+            endDate = endDate + " 23:59:59";
             list.add(endDate);
         }
         pageBean.setSort("w.date_id");
@@ -129,7 +128,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
         if (StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
             sql.append(" AND contractsigndate >= ? AND contractsigndate <= ?");
             list.add(startDate);
-            endDate = DateTimeUtil.dayAdd(endDate, 1);
+            endDate = endDate + " 23:59:59";;
             list.add(endDate);
         }
         pageBean.setSort("id");
@@ -383,7 +382,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
         if (StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
             sql.append(" AND contractsigndate >= ? AND contractsigndate <= ?");
             list.add(startDate);
-            endDate = DateTimeUtil.dayAdd(endDate, 1);
+            endDate = endDate + " 23:59:59";;
             list.add(endDate);
         }
         pageBean.setSort("id");
