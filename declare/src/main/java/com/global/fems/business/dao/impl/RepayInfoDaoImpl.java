@@ -241,15 +241,17 @@ public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
      * 查询违约金--本息
      *
      * @param dateId
+     * @param counter
+     * @param repayDate
      * @return
      * @throws DAOException
      */
     @Override
-    public Float findPenaltyPrincipalInterest(Integer dateId) throws DAOException {
+    public Float findPenaltyPrincipalInterest(Integer dateId, String counter, String repayDate) throws DAOException {
         try {
-            String sql = "select  ISNULL(Sum(实还费用Two),0) From Date_还款登记表 Where 还款计划类别=1212  AND Date_Id = ?  Group by Date_Id";
-            logger.debug("Executing SQL query [{}], params: [{}]", sql, dateId);
-            return super.getJdbcTemplate().queryForObject(sql, new Object[]{dateId}, Float.class);
+            String sql = "select  ISNULL(Sum(实还费用Two),0) From Date_还款登记表 Where 还款计划类别=1212  AND Date_Id = ? AND 还款期数 = ? AND  还款日期 = ? Group by Date_Id";
+            logger.debug("Executing SQL query [{}], params: [{}]", sql, new Object[]{dateId,counter,repayDate});
+            return super.getJdbcTemplate().queryForObject(sql, new Object[]{dateId,counter,repayDate}, Float.class);
         } catch (EmptyResultDataAccessException e) {
             logger.debug("RepayInfoDaoImpl:findPenaltyPrincipalInterest() " + e.getLocalizedMessage());
             return 0F;
@@ -260,15 +262,17 @@ public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
      * 查询违约金--服务费
      *
      * @param dateId
+     * @param counter
+     * @param repayDate
      * @return
      * @throws DAOException
      */
     @Override
-    public Float findPenaltyServiceFee(Integer dateId) throws DAOException {
+    public Float findPenaltyServiceFee(Integer dateId, String counter, String repayDate) throws DAOException {
         try {
-            String sql = "select ISNULL(Sum(实还费用Two),0) From Date_还款登记表 Where 还款计划类别=1214  AND Date_Id = ?  Group by Date_Id";
-            logger.debug("Executing SQL query [{}], params: [{}]", sql, dateId);
-            return super.getJdbcTemplate().queryForObject(sql, new Object[]{dateId}, Float.class);
+            String sql = "select ISNULL(Sum(实还费用Two),0) From Date_还款登记表 Where 还款计划类别=1214  AND Date_Id = ? AND 还款期数 = ? AND  还款日期 = ? Group by Date_Id";
+            logger.debug("Executing SQL query [{}], params: [{}]", sql, new Object[]{dateId,counter,repayDate});
+            return super.getJdbcTemplate().queryForObject(sql, new Object[]{dateId,counter,repayDate}, Float.class);
         } catch (EmptyResultDataAccessException e) {
             logger.debug("RepayInfoDaoImpl:findPenaltyServiceFee() " + e.getLocalizedMessage());
             return 0F;

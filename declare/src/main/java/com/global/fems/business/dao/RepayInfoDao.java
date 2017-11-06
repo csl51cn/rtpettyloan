@@ -36,9 +36,9 @@ public interface RepayInfoDao {
 
     PageBean findLastRepayInfoSendStatus(String sendStatusCode, String repayStartDate, String repayEndDate, PageBean pageBean) throws DAOException;
 
-    Float findPenaltyPrincipalInterest(Integer dateId) throws DAOException;
+    Float findPenaltyPrincipalInterest(Integer dateId, String counter, String repayDate) throws DAOException;
 
-    Float findPenaltyServiceFee(Integer dateId) throws DAOException;
+    Float findPenaltyServiceFee(Integer dateId, String counter, String repayDate) throws DAOException;
 
     Map findRepayPrincipalInterest(Integer dateId, String counter, String repayDate) throws DAOException;
 
