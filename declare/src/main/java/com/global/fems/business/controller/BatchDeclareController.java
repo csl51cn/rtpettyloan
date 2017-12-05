@@ -26,7 +26,7 @@ public class BatchDeclareController {
 
     /**
      * 批量申报
-     * @param ids
+     * @param ids  记录的id
      * @param transactionType
      * @return
      */
