@@ -26,8 +26,8 @@ public class BatchDeclareController {
 
     /**
      * 批量申报
-     * @param ids  记录的id
-     * @param transactionType
+     * @param ids  记录的id,可以为多个
+     * @param transactionType 交易类型
      * @return
      */
     @RequestMapping(params = "method=sendBatchFile",produces = "application/json; charset=utf-8")
