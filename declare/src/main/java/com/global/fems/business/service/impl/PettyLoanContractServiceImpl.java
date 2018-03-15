@@ -144,8 +144,10 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
         Double intRate = pettyLoanContract.getIntRate();
         intRate *= 10;
         String termUnit = pettyLoanContractDao.findTermUnit(dateId);
-        if ("付易贷".equals(productType) && "周".equals(termUnit)) {//
+        if ("付易贷".equals(productType) && "周".equals(termUnit)) {
             intRate /= 7;
+        }else if ("付易贷".equals(productType) && "月".equals(termUnit)){
+            intRate /= 30;
         }
         pettyLoanContract.setIntRate(intRate);
     }
