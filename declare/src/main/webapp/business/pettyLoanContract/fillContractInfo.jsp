@@ -346,7 +346,7 @@
                         return formatDatebox(value);
                     }
                 }, {
-                    field: "sendStatus",
+                    field: "is_send",
                     title: "是否已申报",
                     width: 100,
                     formatter: function (value, row) {
