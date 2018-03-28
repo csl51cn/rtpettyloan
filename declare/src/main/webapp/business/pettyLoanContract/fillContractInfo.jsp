@@ -22,12 +22,12 @@
 
             //双击某条数据后，返回详细信息，根据返回的值，设置不可编辑状态，点"手动录入"按钮后解除锁定
             if ("${disabled}") {
-                $("#fo input[type=text]").prop("disabled", "disabled");
-                $("#loanCate").combogrid({disabled: true});
-                $("#customerType").combogrid({disabled: true});
-                $("#certificateType").combogrid({disabled: true});
-                $("#conCustomerType").combogrid({disabled: true});
-                $("#concertificatetype").combogrid({disabled: true});
+                $("#fo input[type=text]").prop("disabled", true);
+                $("#loanCate").combogrid('disabled');
+                $("#customerType").combogrid('disabled');
+                $("#certificateType").combogrid('disabled');
+                $("#conCustomerType").combogrid('disabled');
+                $("#concertificatetype").combogrid('disabled');
             }
 
             //默认委托人相关项隐藏,如果是查询会数据且贷款类型为委托贷款：530002，展示相关项
@@ -55,11 +55,11 @@
             $("#contract_no2").change(function () {
                 var value = $("#contract_no2").val();
                 if (value != "") {
-                    $("#sendStatusCode").combogrid({disabled: true});
-                    $("#signStartDate").prop("disabled", "disabled");
-                    $("#signEndDate").prop("disabled", "disabled");
+                    $("#sendStatusCode").combogrid('disabled');
+                    $("#signStartDate").prop("disabled", true);
+                    $("#signEndDate").prop("disabled", true);
                 } else {
-                    $("#sendStatusCode").combogrid({disabled: false});
+                    $("#sendStatusCode").combogrid('enable');
                     $("#signStartDate").removeProp("disabled");
                     $("#signEndDate").removeProp("disabled");
                 }
@@ -68,8 +68,8 @@
             $("#contract_no1").change(function () {
                 var value = $("#contract_no1").val();
                 if (value != "") {
-                    $("#startDate").prop("disabled", "disabled");
-                    $("#endDate").prop("disabled", "disabled");
+                    $("#startDate").prop("disabled", true);
+                    $("#endDate").prop("disabled", true);
                 } else {
                     $("#startDate").removeProp("disabled");
                     $("#endDate").removeProp("disabled");
@@ -114,11 +114,11 @@
         //点击“手工填写"按钮触发，解除锁定
         function manualFill() {
             $("#fo input[type=text]").removeProp("disabled");
-            $("#loanCate").combogrid({disabled: false});
-            $("#customerType").combogrid({disabled: false});
-            $("#certificateType").combogrid({disabled: false});
-            $("#conCustomerType").combogrid({disabled: false});
-            $("#concertificatetype").combogrid({disabled: false});
+            $("#loanCate").combogrid('enable');
+            $("#customerType").combogrid('enable');
+            $("#certificateType").combogrid('enable');
+            $("#conCustomerType").combogrid('enable');
+            $("#concertificatetype").combogrid('enable');
 
         }
 

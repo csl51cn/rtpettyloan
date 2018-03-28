@@ -36,11 +36,11 @@
             $("#contract_no2").change(function () {
                 var value = $("#contract_no2").val();
                 if (value != "") {
-                    $("#sendStatusCode").combogrid({disabled: true});
-                    $("#signStartDate").prop("disabled", "disabled");
-                    $("#signEndDate").prop("disabled", "disabled");
+                    $("#sendStatusCode").combogrid('disabled');
+                    $("#signStartDate").prop("disabled", true);
+                    $("#signEndDate").prop("disabled", true);
                 } else {
-                    $("#sendStatusCode").combogrid({disabled: false});
+                    $("#sendStatusCode").combogrid('enable');
                     $("#signStartDate").removeProp("disabled");
                     $("#signEndDate").removeProp("disabled");
                 }
@@ -49,8 +49,8 @@
             $("#contract_no1").change(function () {
                 var value = $("#contract_no1").val();
                 if (value != "") {
-                    $("#startDate1").prop("disabled", "disabled");
-                    $("#endDate1").prop("disabled", "disabled");
+                    $("#startDate1").prop("disabled", true);
+                    $("#endDate1").prop("disabled", true);
                 } else {
                     $("#startDate1").removeProp("disabled");
                     $("#endDate1").removeProp("disabled");

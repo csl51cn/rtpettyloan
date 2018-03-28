@@ -5,7 +5,7 @@
 var $dp,WdatePicker;(function(){var _={
 $wdate:true,
 $dpPath:"",
-$crossFrame:true,
+$crossFrame:false,
 doubleCalendar:false,
 enableKeyboard:true,
 enableInputMask:true,

@@ -75,8 +75,15 @@
 </div>
 
 
-<div class="loginbm">版权所有 2017 重庆两江新区润通小额贷款有限公司</div>
+<div class="loginbm" id="footer"></div>
+<script type="application/javascript">
+        $(function () {
+            var now = new Date();
+            var year = now.getFullYear();
+            $("#footer").html("版权所有 2011-" + year + " 重庆市两江新区润通小额贷款有限公司 ")
 
+        })
+</script>
 
 </body>
 

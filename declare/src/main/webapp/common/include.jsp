@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sys" uri="http://com.global.framework/buttonRight"%>
+<%@ page import="java.util.Date"%>
 <%
 String basePath = request.getContextPath();
 request.setAttribute("basePath", basePath);
@@ -18,7 +19,7 @@ request.setAttribute("basePath", basePath);
 <script src="${basePath}/resources/lhgdialog/lhgdialog.min.js?skin=iblue" charset="UTF-8" type="text/javascript"></script>
 <script src="${basePath}/resources/easyui/jquery.easyui.min.js" type="text/javascript"></script>
 <script src="${basePath}/resources/easyui/locale/easyui-lang-zh_CN.js" charset="UTF-8" type="text/javascript"></script>
-<script src="${basePath}/resources/DatePicker/WdatePicker.js" type="text/javascript"></script>
+<script src="${basePath}/resources/DatePicker/WdatePicker.js?time=<%=new Date().getTime() %>" type="text/javascript"></script>
 <script src="${basePath}/resources/jqDatePicker/jquery.DatePicker.js" type="text/javascript"></script>
 <script src="${basePath}/resources/js/sys.msg.tip.js" type="text/javascript"></script>
 <script src="${basePath}/resources/js/Validform_v5.3.1.js" type="text/javascript"></script>

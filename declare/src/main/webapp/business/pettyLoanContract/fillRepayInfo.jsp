@@ -22,7 +22,7 @@
 
             //双击某条数据后，返回详细信息，根据返回的值，设置不可编辑状态，点"手动录入"按钮后解除锁定
             if ("${disabled}") {
-                $("#fo input[type=text]").prop("disabled", "disabled");
+                $("#fo input[type=text]").prop("disabled", true);
 //                $("#customerType").combogrid({disabled: true});
 //                $("#certificateType").combogrid({disabled: true});
             }
@@ -38,11 +38,11 @@
             $("#contract_no2").change(function () {
                 var value = $("#contract_no2").val();
                 if (value != "") {
-                    $("#sendStatusCode").combogrid({disabled: true});
-                    $("#signStartDate").prop("disabled", "disabled");
-                    $("#signEndDate").prop("disabled", "disabled");
+                    $("#sendStatusCode").combogrid('disabled');
+                    $("#signStartDate").prop("disabled", true);
+                    $("#signEndDate").prop("disabled", true);
                 } else {
-                    $("#sendStatusCode").combogrid({disabled: false});
+                    $("#sendStatusCode").combogrid('enable');
                     $("#signStartDate").removeProp("disabled");
                     $("#signEndDate").removeProp("disabled");
                 }
@@ -80,11 +80,13 @@
 //            $("#customerType").combogrid({disabled: false});
 //            $("#certificateType").combogrid({disabled: false});
         }
+
         //保存记录
         function doSave() {
             manualFill();
             $("#fo").submit();
         }
+
         function openBusinessQueryWindow() {
 
             //初始化业务查询的datagrid
@@ -93,7 +95,7 @@
                 pagination: true,
                 checkOnSelect: true,
                 pageSize: 15,
-                pageList: [5, 10, 15, 20, 30,100,500],
+                pageList: [5, 10, 15, 20, 30, 100, 500],
                 columns: [[{
                     field: "id",
                     title: "主键",
@@ -146,22 +148,22 @@
                         return formatDatebox(value);
                     }
 
-                },{
+                }, {
                     field: "receiptType",
                     title: "回收类型",
                     width: 80,
                     formatter: function (value, row) {
-                        if(value == 550001){
+                        if (value == 550001) {
                             return '正常还款';
-                        }else if(value == 550002){
+                        } else if (value == 550002) {
                             return '逾期还款';
                         }
                     }
-                },{
+                }, {
                     field: "delayDays",
                     title: "逾期天数",
                     width: 80
-                } ]],
+                }]],
                 onDblClickRow: function (rowIndex, rowData) {
                     queryRepayInfoById(rowData.id);
                 },
@@ -181,11 +183,12 @@
         }
 
         function queryRepayInfoById(id) {
-            if(dateId != undefined){
-                 window.location.href = "${basePath}/repayInfo.do?method=findRepayInfoByIdFromBizSys&id=" + id;
+            if (dateId != undefined) {
+                window.location.href = "${basePath}/repayInfo.do?method=findRepayInfoByIdFromBizSys&id=" + id;
                 $('#businessQueryWindow').window('close');
             }
         }
+
         //批量保存
         function doBatchSave() {
             var ids = [];
@@ -208,6 +211,7 @@
                 }
             });
         }
+
         //根据签订时间段从贷款合同信息的表中查询
         function doBusinessQuery() {
             var value = $("#contract_no1").val();
@@ -229,6 +233,7 @@
                 }
             }
         }
+
         function openDeclareQueryWindow() {
 
             //初始化申报查询的datagrid
@@ -237,7 +242,7 @@
                 checkOnSelect: true,
                 pagination: true,
                 pageSize: 15,
-                pageList: [5, 10, 15, 20, 30,100,500],
+                pageList: [5, 10, 15, 20, 30, 100, 500],
                 columns: [[{
                     field: "id",
                     title: "主键",
@@ -275,18 +280,18 @@
                     title: "实还利息",
                     width: 80
 
-                },{
+                }, {
                     field: "receiptType",
                     title: "回收类型",
                     width: 80,
                     formatter: function (value, row) {
-                        if(value == 550001){
+                        if (value == 550001) {
                             return '正常还款';
-                        }else if(value == 550002){
+                        } else if (value == 550002) {
                             return '逾期还款';
                         }
                     }
-                },{
+                }, {
                     field: "delayDays",
                     title: "逾期天数",
                     width: 80
@@ -345,6 +350,7 @@
 
             $('#declareQueryWindow').window('open');
         }
+
         //根据申报状态查询合同简略信息
         function doDeclareQuery() {
             var value = $("#contract_no2").val();
@@ -406,6 +412,7 @@
                 }
             )
         }
+
         //已申报批量删除
         function doDeclaredBatchDelete() {
             var ids = [];
@@ -454,6 +461,7 @@
                 }
             });
         }
+
         //刷新当前页
         function doReset() {
             window.location.href = "${basePath}/contractInfo.do?method=showContractInfo";
@@ -470,6 +478,7 @@
             }
             return true;
         }
+
         //将表单数据转为json
         function form2Json(id) {
 
@@ -486,6 +495,7 @@
             var json = JSON.parse(jsonStr)
             return json
         }
+
         //格式化时间
         Date.prototype.format = function (format) {
             var o = {
@@ -506,6 +516,7 @@
                     format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
             return format;
         }
+
         function formatDatebox(value) {
             if (value == null || value == '') {
                 return '';
@@ -557,7 +568,7 @@
             <table width="99%">
                 <tr>
                     <td colspan="4" class="subtitle">合同信息</td>
-                    <input type="hidden" name="id" id="id"  value="${model.id}"/>
+                    <input type="hidden" name="id" id="id" value="${model.id}"/>
                     <input type="hidden" name="isSend" id="isSend" value="${model.isSend }"/>
                     <input type="hidden" name="dateId" id="dateId" value="${model.dateId }"/>
                     <input type="hidden" name="isLast" id="isLast" value="${model.isLast }"/>
@@ -576,7 +587,7 @@
                     <td width="32%">
                         <input type="text" id="dueBillNo" name="dueBillNo"
                                value="${model.dueBillNo}" class="inputText">
-                         <span class="warning">${errors['dueBillNo']}</span>
+                        <span class="warning">${errors['dueBillNo']}</span>
                     </td>
                 </tr>
                 <tr>
@@ -589,7 +600,7 @@
                     </td>
                     <th width="15%"><span class="warning">*</span>还款期数</th>
                     <td width="32%">
-                        <input type="text" id="counter" name="counter" value="${model.counter }"class="inputText"/>
+                        <input type="text" id="counter" name="counter" value="${model.counter }" class="inputText"/>
                         <span class="warning">${errors['counter']}</span>
                     </td>
                 </tr>
@@ -680,7 +691,8 @@
                     </td>
                     <th width="15%"><span class="warning">*</span>逾期天数</th>
                     <td width="32%">
-                        <input type="text" id="delayDays" name="delayDays"  value="${model.delayDays}" class="inputText"/>
+                        <input type="text" id="delayDays" name="delayDays" value="${model.delayDays}"
+                               class="inputText"/>
                         <span class="warning">${errors['delayDays']}</span>
                     </td>
                 </tr>
@@ -751,7 +763,7 @@
                     </td>
                     <th width="15%">备注</th>
                     <td width="32%">
-                        <input type="text" id="remark" name="remark"value="${model.remark }"class="inputText"/>
+                        <input type="text" id="remark" name="remark" value="${model.remark }" class="inputText"/>
                     </td>
                 </tr>
             </table>
@@ -852,7 +864,8 @@
                            value="查询"/>
                     <input id="declaredBatchDelete" type="button" class="inputButton" onclick="doDeclaredBatchDelete()"
                            value="已申报删除"/>
-                    <input id="setNotSendBtn" type="button" class="inputButton" onclick="doSetNotSend()" value="设置为未申报" />
+                    <input id="setNotSendBtn" type="button" class="inputButton" onclick="doSetNotSend()"
+                           value="设置为未申报"/>
                 </td>
 
             </tr>

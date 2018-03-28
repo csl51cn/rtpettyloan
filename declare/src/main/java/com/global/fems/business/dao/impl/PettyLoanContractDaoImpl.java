@@ -48,7 +48,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
         StringBuilder sql = new StringBuilder("SELECT  " +
                 "  w.date_id AS dateid,  " +
                 "  w.业务编号 AS businessNum,  " +
-                "  w.合同编号 AS contractno,  " +
+                "  (case w.是否为循环授信贷款 when 870 then   w.循环授信合同编号 else  w.合同编号 END ) AS contractno,  " +
                 "  w.授信金额 AS contractamount,  " +
                 "  d.content AS contractsigndate,  " +
                 "  ISNULL(  " +
@@ -148,7 +148,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
         StringBuilder sql = new StringBuilder(
                 "SELECT  " +
                         "  w.date_id AS dateid ," +
-                        "  w.合同编号 AS contractno,  " +
+                        " (case w.是否为循环授信贷款 when 870 then   w.循环授信合同编号 else  w.合同编号 END ) AS contractno, " +
                         "  w.授信金额 AS contractamount,  " +
                         "  d.content AS contractsigndate,  " +
                         " ISNULL( " +
