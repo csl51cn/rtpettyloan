@@ -28,8 +28,6 @@ public class PayPlanInfoController {
     private PayPlanInfoService payPlanInfoService;
 
 
-
-
     /**
      * 跳转到编辑页面
      *
@@ -94,6 +92,7 @@ public class PayPlanInfoController {
      * 从DC_PAYPLAN_INFO表中根据签约时间和发送状态查询最新还款计划信息,申报时使用
      *
      * @param sendStatusCode
+     * @param contactNo
      * @param startDate
      * @param endDate
      * @param pageBean
@@ -102,14 +101,30 @@ public class PayPlanInfoController {
      */
     @RequestMapping(params = "method=findLastPayPlanInfoBySendStatus")
     @ResponseBody
-    public Map<String, Object> findLastPayPlanInfoBySendStatus(String sendStatusCode, String startDate, String endDate, PageBean pageBean) throws DAOException {
-        pageBean = payPlanInfoService.findLastPayPlanInfoBySendStatus(sendStatusCode, startDate, endDate, pageBean);
+    public Map<String, Object> findLastPayPlanInfoBySendStatus(String sendStatusCode, String contactNo, String startDate, String endDate, PageBean pageBean) throws DAOException {
+        pageBean = payPlanInfoService.findLastPayPlanInfoBySendStatus(sendStatusCode, contactNo, startDate, endDate, pageBean);
+        return pageBean2Map(pageBean);
+    }
+
+    /**
+     * 从DC_PAYPLAN_INFO表中根据签约时间和发送状态查询最新还款计划信息,申报时使用
+     *
+     * @param contractNo
+     * @param pageBean
+     * @return
+     * @throws DAOException
+     */
+    @RequestMapping(params = "method=findPayPlanBriefInfoByContractNo")
+    @ResponseBody
+    public Map<String, Object> findPayPlanBriefInfoByContractNo(String contractNo, PageBean pageBean) throws DAOException {
+        pageBean = payPlanInfoService.findPayPlanBriefInfoByContractNo(contractNo.trim(), pageBean);
         return pageBean2Map(pageBean);
     }
 
 
     /**
      * 已申报批量删除记录
+     *
      * @param ids
      * @return
      * @throws DAOException
@@ -120,8 +135,10 @@ public class PayPlanInfoController {
         ResultModel resultModel = payPlanInfoService.deleteRecord(ids);
         return resultModel;
     }
+
     /**
      * 已申报删除单条记录
+     *
      * @param payPlanInfo
      * @return
      * @throws DAOException
@@ -134,19 +151,21 @@ public class PayPlanInfoController {
     }
 
     /**
-     *  根据id查询记录
+     * 根据id查询记录
+     *
      * @param id
      * @param model
      * @return
      * @throws DAOException
      */
     @RequestMapping(params = "method=findPayPlanInfoById")
-    public String findPayPlanInfoById(String id,Model model) throws DAOException {
+    public String findPayPlanInfoById(String id, Model model) throws DAOException {
         PayPlanInfo payPlanInfo = payPlanInfoService.findPayPlanInfoById(id);
         model.addAttribute("model", payPlanInfo);
         model.addAttribute("disabled", true);
-        return  "business/pettyLoanContract/fillPayPlanInfo";
+        return "business/pettyLoanContract/fillPayPlanInfo";
     }
+
     /**
      * 保存或更新带款放款信息
      *
@@ -180,11 +199,12 @@ public class PayPlanInfoController {
             model.addAttribute("msg", e.getLocalizedMessage());//返回操作失败标志
         }
         model.addAttribute("model", payPlanInfo);
-        return  "business/pettyLoanContract/fillPayPlanInfo";
+        return "business/pettyLoanContract/fillPayPlanInfo";
     }
 
     /**
      * 设置为未申报
+     *
      * @param ids
      * @return
      * @throws DAOException

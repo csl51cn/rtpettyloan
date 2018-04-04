@@ -8,14 +8,14 @@
     <title>批量报文发送</title>
     <jsp:include page="../../common/include.jsp"></jsp:include>
     <script type="application/javascript" src="../../resources/js/multiSelectSupport.js"></script>
+
     <script type="text/javascript">
-            var  arr = new Array();
-            arr.push(null);
-            arr.push(null);//0101交易类型 授信额度信息上报
-            arr.push("${basePath}/contractInfo.do?method=findLastContractBySendStatus");//0102交易类型 贷款合同信息上报
-            arr.push("${basePath}/contractIssueInfo.do?method=findLastContractBySendStatus");//0103交易类型 贷款放款信息上报
-            arr.push("${basePath}/repayInfo.do?method=findLastRepayInfoSendStatus");//0104交易类型 贷款回收信息上报
-            arr.push("${basePath}/payPlanInfo.do?method=findLastPayPlanInfoBySendStatus");//0105交易类型 还款计划信息信息上报
+            var  urlMap  = new Map();
+            urlMap.set("0101","${basePath}/");//0101交易类型 授信额度信息上报
+            urlMap.set("0102","${basePath}/contractInfo.do?method=findLastContractBySendStatus");//0102交易类型 贷款合同信息上报
+            urlMap.set("0103","${basePath}/contractIssueInfo.do?method=findLastContractBySendStatus");//0103交易类型 贷款放款信息上报
+            urlMap.set("0104","${basePath}/repayInfo.do?method=findLastRepayInfoSendStatus");//0104交易类型 贷款回收信息上报
+            urlMap.set("0105","${basePath}/payPlanInfo.do?method=findLastPayPlanInfoBySendStatus");//0105交易类型 还款计划信息信息上报
 
         $(function () {
             $("#transactionType").combogrid( {
@@ -39,7 +39,7 @@
                 multiple:true,
                 singleSelect:false,
                 pageSize: 20,
-                pageList: [5, 10, 15, 20, 30 ,40 , 100 , 500 ],
+                pageList: [5, 10, 15, 20, 30 ,50 ],
                 columns: [[{
                     field: "id",
                     title: "主键",
@@ -116,6 +116,21 @@
                             return '删除记录';
                         }
                     }
+                },{
+                    field: "isRealQuotaLoan",
+                    title: "是否额度项下贷款",
+                    width: 120,
+                    formatter: function (value, row) {
+                        if ('740001' == value) {
+                            return "是";
+                        } else {
+                            return "否";
+                        }
+                    }
+                }, {
+                    field: "realQuotaNo",
+                    title: "授信额度协议编号",
+                    width: 230
                 }
                 ]]
 
@@ -131,7 +146,7 @@
                     singleSelect:false,
                     multiple:true,
                     pageSize: 20,
-                    pageList: [5, 10, 15, 20, 30,40, 100 , 500],
+                    pageList: [5, 10, 15, 20, 30,50],
                     columns: [[{
                         field: "id",
                         title: "主键",
@@ -152,11 +167,11 @@
                     }, {
                         field: "counter",
                         title: "还款期数",
-                        width: 100
+                        width: 80
                     }, {
                         field: "totalCounter",
                         title: "总期数",
-                        width: 100,
+                        width: 80
                     }, {
                         field: "repayDate",
                         title: "应还日期",
@@ -221,6 +236,21 @@
                                 return '删除记录';
                             }
                         }
+                    },{
+                        field: "isRealQuotaLoan",
+                        title: "是否额度项下贷款",
+                        width: 120,
+                        formatter: function (value, row) {
+                            if ('740001' == value) {
+                                return "是";
+                            } else {
+                                return "否";
+                            }
+                        }
+                    }, {
+                        field: "realQuotaNo",
+                        title: "授信额度协议编号",
+                        width: 230
                     }
                     ]],
                     onClickRow:function(index,row){
@@ -338,6 +368,21 @@
                             return '删除记录';
                         }
                     }
+                },{
+                    field: "isRealQuotaLoan",
+                    title: "是否额度项下贷款",
+                    width: 120,
+                    formatter: function (value, row) {
+                        if ('740001' == value) {
+                            return "是";
+                        } else {
+                            return "否";
+                        }
+                    }
+                }, {
+                    field: "realQuotaNo",
+                    title: "授信额度协议编号",
+                    width: 230
                 }
                 ]]
             })
@@ -382,8 +427,7 @@
                     return;
                 }
                 if (flag) {
-                    var code  = $("#transactionType").combobox("getValue").substr(3);
-                    var url =arr[code];
+                    var url = urlMap.get($("#transactionType").combobox("getValue"));
                     $("#declareQueryResultTb").datagrid({
                        queryParams: form2Json("fo"),
                       url: url
@@ -467,9 +511,9 @@
             <table>
                 <tr>
                     <th width="15%">交易类型：</th>
-                    <td width="28%">
+                    <td width="35%">
                         <input class="easyui-combogrid" id="transactionType" name="transactionType"
-                               style="border:1px solid #95B8E7;*color:#007fca;width:251px;padding:4px 2px;"
+                               style="border:1px solid #95B8E7;*color:#007fca;width:200px;padding:4px 2px;"
                                data-options="
                                     panelWidth: 255,
 									idField: 'dictCode',
@@ -483,21 +527,24 @@
 									nowrap:false,
 								">
                         <input type="hidden" name="sendStatusCode" id="sendStatus" value="0"/>
-                    </td>
 
+                    </td>
+                    <th >合同编号:</th>
+                    <td> <input type="text" id="contractNo" name="contractNo" style="border:1px solid #95B8E7;
+                        *color:#007fca;width:220px;padding:4px 2px;"></td>
                 </tr>
                 <tr>
-                    <th width="15%">签约日期(或还款日期)：</th>
-                    <td  width="28%">
-                        <input type="text" id="startDate" name="startDate" data-options="required:true"
-                               class="easyui-validatebox"
-                               style="border:1px solid #95B8E7;*color:#007fca;width:245px;padding:4px 2px;"
+                    <th width="15%">签约日期(或还款日期):</th>
+                    <td >
+                        <input type="text" id="startDate" name="startDate"
+                               style="border:1px solid #95B8E7;*color:#007fca;width:170px;padding:4px 2px;"
                                onclick="WdatePicker()"/>  至
+                        <input type="text" id="endDate" name="endDate"  style="border:1px solid #95B8E7;
+                        *color:#007fca;width:170px;padding:4px 2px;" onclick="WdatePicker()"/>
                     </td>
+                    <th width="15%">操作:</th>
                     <td>
-                        <input type="text" id="endDate" name="endDate" data-options="required:true" style="border:1px solid #95B8E7;
-                        *color:#007fca;width:245px;padding:4px 2px;" onclick="WdatePicker()"
-                               class="easyui-validatebox"/>
+
                         <input id="declareQueryBtn" type="button" class="inputButton" onclick="doDeclareQuery();"
                                value="查询"/>
                         <input id="businessQueryBtn" type="button" class="inputButton" onclick="doDeclare();"

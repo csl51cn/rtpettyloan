@@ -124,6 +124,17 @@ public class ContractIssueInfo  extends Entity{
     @ColumnMapping(columnName = "net_sign_no", columnType = "String")
     private String netSignNo; //网签编号
 
+    /**
+     * 是否循环授信
+     */
+    @ColumnMapping(columnName = "is_real_quota_loan", columnType = "String")
+    private String isRealQuotaLoan;
+    /**
+     * 循环授信合同编号
+     */
+    @ColumnMapping(columnName = "real_quota_no", columnType = "String")
+    private String realQuotaNo;
+
     public String getId() {
         return id;
     }
@@ -458,5 +469,21 @@ public class ContractIssueInfo  extends Entity{
 
     public void setFairAmt(Double fairAmt) {
         this.fairAmt = fairAmt;
+    }
+
+    public String getIsRealQuotaLoan() {
+        return isRealQuotaLoan;
+    }
+
+    public void setIsRealQuotaLoan(String isRealQuotaLoan) {
+        this.isRealQuotaLoan = isRealQuotaLoan;
+    }
+
+    public String getRealQuotaNo() {
+        return realQuotaNo;
+    }
+
+    public void setRealQuotaNo(String realQuotaNo) {
+        this.realQuotaNo = realQuotaNo;
     }
 }

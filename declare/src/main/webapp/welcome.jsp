@@ -19,14 +19,14 @@
                 tt.tabs('select', title);
             } else {
                 if (href){
-                    var content = '<iframe scrolling="no" frameborder="0"  src="'+href+'" style="width:100%;height:100%;"></iframe>';
+                    var content = '<iframe frameborder="0"  src="'+href+'" style="width:100%;height:100%;"></iframe>';
                 } else {
                     var content = '未实现';
                 }
                 tt.tabs('add',{
                     title:title,
                     closable:true,
-                    content:content,
+                    content:content
                 });
             }
         }
@@ -34,9 +34,9 @@
 </head>
 
 
-<body>
+<body >
 
-<div id="tabs" class="easyui-tabs"  style="width:1300px;height: 900px;">
+<div id="tabs" class="easyui-tabs" style="width:1400px;height: 1000px">
     <div title="欢迎页"  data-options="closable:true">
         <div class="mainindex">
             <div class="welinfo">

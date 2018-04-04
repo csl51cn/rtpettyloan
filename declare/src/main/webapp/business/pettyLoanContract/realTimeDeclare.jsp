@@ -125,7 +125,7 @@
                 pagination: true,
                 checkOnSelect: true,
                 pageSize: 15,
-                pageList: [5, 10, 15, 20, 30],
+                pageList: [5, 10, 15, 20, 30,50],
                 columns: [[{
                     field: "id",
                     title: "主键",
@@ -166,12 +166,23 @@
                         }
 
                     }
+                },{
+                    field: "isRealQuotaLoan",
+                    title: "是否额度项下贷款",
+                    width: 120,
+                    formatter: function (value, row) {
+                        if ('740001' == value) {
+                            return "是";
+                        } else {
+                            return "否";
+                        }
+                    }
+                }, {
+                    field: "realQuotaNo",
+                    title: "授信额度协议编号",
+                    width: 230
                 }
-                ]],
-
-                onDblClickRow: function (rowIndex, rowData) {
-                    queryContractByContractId(rowData.id);
-                }
+                ]]
             })
 
         })
@@ -185,7 +196,7 @@
             <table>
                 <tr>
                     <th>交易类型：</th>
-                    <td>
+                    <td colspan="3">
                         实时网签 &nbsp <span id="dateCheckMsg" style="color:red;"/>
                     </td>
 
@@ -193,18 +204,23 @@
                 <tr>
                     <th width="15%">签约日期：</th>
                     <td>
-                        <input type="text" id="signStartDate" name="signStartDate" data-options="required:true"
-                               class="easyui-validatebox"
-                               style="border:1px solid #95B8E7;*color:#007fca;width:245px;padding:4px 2px;"
+                        <input type="text" id="signStartDate" name="signStartDate"
+                               style="border:1px solid #95B8E7;*color:#007fca;width:230px;padding:4px 2px;"
                                onclick="WdatePicker()"/>至
-                        <input type="text" id="signEndDate" name="signEndDate" data-options="required:true" style="border:1px solid #95B8E7;
-                        *color:#007fca;width:245px;padding:4px 2px;" onclick="WdatePicker()"
-                               class="easyui-validatebox"/>
-                        <input type="hidden" name="sendStatusCode" id="sendStatus" value="0"/>
+                        <input type="text" id="signEndDate" name="signEndDate"  style="border:1px solid #95B8E7;
+                        *color:#007fca;width:230px;padding:4px 2px;" onclick="WdatePicker()"/>
+
+                    </td>
+                    <th >合同编号:</th>
+                    <td>
+                        <input type="text" id="contractNo" name="contractNo" style="border:1px solid #95B8E7;
+                        *color:#007fca;width:180px;padding:4px 2px;">
+                        <input type="hidden" name="sendStatusCode" id="sendStatus" value="1"/>
                         <input id="declareQueryBtn" type="button" class="inputButton" onclick="doDeclareQuery();"
                                value="查询"/>
                         <input id="declareBtn" type="button" class="inputButton" onclick="doDeclare();"
                                value="报文发送"/>
+                    </td>
                     </td>
                 </tr>
             </table>
@@ -212,7 +228,7 @@
     </div>
 </form>
 <div >
-    <table id="declareQueryResultTb"></table>
+    <table id="declareQueryResultTb" ></table>
 </div>
 </body>
 </html>

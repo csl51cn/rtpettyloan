@@ -169,8 +169,8 @@ public class RepayInfoServiceImpl implements RepayInfoService {
         int totalCounter = repayInfoDao.findTotalCounter(repayInfo.getDateId());
         repayInfo.setTotalCounter(Integer.toString(totalCounter));//设置总期数
         //设置回收利息:提前结清时有违约金,违约金加到回收利息中
-        Float penalty1 = repayInfoDao.findPenaltyPrincipalInterest(repayInfo.getDateId(),repayInfo.getCounter(),repayInfo.getRepayDate());
-        Float penalty2 = repayInfoDao.findPenaltyServiceFee(repayInfo.getDateId(),repayInfo.getCounter(),repayInfo.getRepayDate());
+        Float penalty1 = repayInfoDao.findPenaltyPrincipalInterest(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());
+        Float penalty2 = repayInfoDao.findPenaltyServiceFee(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());
         Double repayIntAmt = Double.parseDouble(repayInfo.getRepayIntAmt()) + Double.parseDouble(String.valueOf(penalty1)) + Double.parseDouble(String.valueOf(penalty2));
         repayInfo.setRepayIntAmt(String.valueOf(repayIntAmt));
         //将证件号字母转换为大写
@@ -365,6 +365,7 @@ public class RepayInfoServiceImpl implements RepayInfoService {
      * 根据还款日期和发送状态查询最新版本的还款信息
      *
      * @param sendStatusCode
+     * @param contractNo
      * @param repayStartDate
      * @param repayEndDate
      * @param pageBean
@@ -372,8 +373,8 @@ public class RepayInfoServiceImpl implements RepayInfoService {
      * @throws DAOException
      */
     @Override
-    public PageBean findLastRepayInfoSendStatus(String sendStatusCode, String repayStartDate, String repayEndDate, PageBean pageBean) throws DAOException {
-        return repayInfoDao.findLastRepayInfoSendStatus(sendStatusCode, repayStartDate, repayEndDate, pageBean);
+    public PageBean findLastRepayInfoSendStatus(String sendStatusCode, String contractNo, String repayStartDate, String repayEndDate, PageBean pageBean) throws DAOException {
+        return repayInfoDao.findLastRepayInfoSendStatus(sendStatusCode, contractNo, repayStartDate, repayEndDate, pageBean);
     }
 
     /**

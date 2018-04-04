@@ -51,7 +51,7 @@ public class PayPlanInfoServiceImpl implements PayPlanInfoService {
                     if (!"100003".equals(payPlanInfo.getReportType())) {
                         isDelete = true;
                         break;
-                    }else if (payPlanInfo.getIsSend() == 0 && "Y".equals(payPlanInfo.getIsLast())) {//上报类型不为删除,跳过
+                    } else if (payPlanInfo.getIsSend() == 0 && "Y".equals(payPlanInfo.getIsLast())) {//上报类型不为删除,跳过
                         continue a;
                     }
                 }
@@ -273,6 +273,7 @@ public class PayPlanInfoServiceImpl implements PayPlanInfoService {
      * 从DC_PAYPLAN_INFO表中根据签约时间和发送状态查询最新还款计划信息,申报时使用
      *
      * @param sendStatusCode
+     * @param contactNo
      * @param signStartDate
      * @param signEndDate
      * @param pageBean
@@ -280,8 +281,8 @@ public class PayPlanInfoServiceImpl implements PayPlanInfoService {
      * @throws DAOException
      */
     @Override
-    public PageBean findLastPayPlanInfoBySendStatus(String sendStatusCode, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException {
-        return payPlanInfoDao.findLastPayPlanInfoBySendStatus(sendStatusCode, signStartDate, signEndDate, pageBean);
+    public PageBean findLastPayPlanInfoBySendStatus(String sendStatusCode, String contactNo, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException {
+        return payPlanInfoDao.findLastPayPlanInfoBySendStatus(sendStatusCode, contactNo, signStartDate, signEndDate, pageBean);
     }
 
     /**
@@ -307,6 +308,18 @@ public class PayPlanInfoServiceImpl implements PayPlanInfoService {
             return ResultModel.fail();
         }
         return ResultModel.ok();
+    }
+
+    /**
+     * 根据合同编号查询还款计划信息
+     *
+     * @param contractNo
+     * @param pageBean
+     * @return
+     */
+    @Override
+    public PageBean findPayPlanBriefInfoByContractNo(String contractNo, PageBean pageBean) {
+        return payPlanInfoDao.findPayPlanBriefInfoByContractNo(contractNo, pageBean);
     }
 
 

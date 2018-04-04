@@ -72,7 +72,7 @@ public class ContractIssueInfoServiceImpl implements ContractIssueInfoService {
                     if (!"100003".equals(contractIssueInfo.getReportType())) {
                         isDelete = true;
                         break;
-                    }else if (contractIssueInfo.getIsSend() == 0 && "Y".equals(contractIssueInfo.getIsLast())) {
+                    } else if (contractIssueInfo.getIsSend() == 0 && "Y".equals(contractIssueInfo.getIsLast())) {
                         continue a;
                     }
 
@@ -236,6 +236,7 @@ public class ContractIssueInfoServiceImpl implements ContractIssueInfoService {
      * 根据申报状态查询和签约日期查询贷款放款信息
      *
      * @param sendStatusCode
+     * @param contractNo
      * @param signStartDate
      * @param signEndDate
      * @param pageBean
@@ -243,8 +244,8 @@ public class ContractIssueInfoServiceImpl implements ContractIssueInfoService {
      * @throws DAOException
      */
     @Override
-    public PageBean findLastContractBySendStatus(String sendStatusCode, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException {
-        return contractIssueInfoDao.findLastContractBySendStatus(sendStatusCode, signStartDate, signEndDate, pageBean);
+    public PageBean findLastContractBySendStatus(String sendStatusCode, String contractNo, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException {
+        return contractIssueInfoDao.findLastContractBySendStatus(sendStatusCode, contractNo, signStartDate, signEndDate, pageBean);
     }
 
     /**

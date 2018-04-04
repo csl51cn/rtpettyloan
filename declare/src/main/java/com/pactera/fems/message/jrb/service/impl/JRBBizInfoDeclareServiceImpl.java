@@ -12,6 +12,7 @@ import com.pactera.fems.message.jrb.domain.business.request.*;
 import com.pactera.fems.message.jrb.service.JRBBizInfoDeclareService;
 import com.pactera.fems.message.jrb.support.JRBGetTxValidator;
 import com.pactera.fems.message.jrb.support.JRBMsgHandler;
+import org.apache.commons.lang.StringUtils;
 import org.global.framework.xmlbeans.bean.DataCheckException;
 import org.global.framework.xmlbeans.util.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,10 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
         Map map = new HashMap();
         PropertyUtils.copyBean2Map(contract, map);
         JRBGetTxValidator.setFeild(realTimeOnlineContract, map);
+        //判断是否是循环授信,如果是,将循环授信合同编号赋给实时网签的合同号
+        if(StringUtils.equals("740001",contract.getIsRealQuotaLoan())){
+            realTimeOnlineContract.setContractNo(contract.getRealQuotaNo());
+        }
         //设置签约时间格式
         realTimeOnlineContract.setContractSignDate(realTimeOnlineContract.getContractSignDate());
         //发送数据
@@ -138,6 +143,10 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
             //将合同信息循环节点转换为与xml对应的实体类
             JRBGetTxValidator.setFeild(contractInfoParam, fieldAndValue, "coCustomerInfo");
             setCoCustomer(fieldAndValue, contractInfoParam);
+            //判断是否是循环授信,如果是,将循环授信合同编号赋给实时网签的合同号
+            if(StringUtils.equals("740001",node.getIsRealQuotaLoan())){
+                contractInfoParam.setContractNo(node.getRealQuotaNo());
+            }
             contractInfoParam.setContractSignDate(contractInfoParam.getContractSignDate());
             contractInfoParam.setContractBeginDate(contractInfoParam.getContractBeginDate());
             contractInfoParam.setContractEndDate(contractInfoParam.getContractEndDate());
@@ -213,6 +222,10 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
             PropertyUtils.copyBean2Map(node, fieldAndValue);
             //将合同信息循环节点转换为与xml对应的实体类
             JRBGetTxValidator.setFeild(contractIssueInfoUploadParam, fieldAndValue);
+            //判断是否是循环授信,如果是,将循环授信合同编号赋给实时网签的合同号
+            if(StringUtils.equals("740001",node.getIsRealQuotaLoan())){
+                contractIssueInfoUploadParam.setContractNo(node.getRealQuotaNo());
+            }
             //设置时间格式
             contractIssueInfoUploadParam.setSignDate(contractIssueInfoUploadParam.getSignDate());
             contractIssueInfoUploadParam.setDdDate(contractIssueInfoUploadParam.getDdDate());
@@ -266,6 +279,10 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
             PropertyUtils.copyBean2Map(node, fieldAndValue);
             //将还款计划信息循环节点转换为与xml对应的实体类
             JRBGetTxValidator.setFeild(payPlanInfoUploadParam, fieldAndValue);
+            //判断是否是循环授信,如果是,将循环授信合同编号赋给实时网签的合同号
+            if(StringUtils.equals("740001",node.getIsRealQuotaLoan())){
+                payPlanInfoUploadParam.setContractNo(node.getRealQuotaNo());
+            }
             //设置时间格式
             payPlanInfoUploadParam.setRepayDate(payPlanInfoUploadParam.getRepayDate());
             payPlanInfoUploadParam.setStartDate(payPlanInfoUploadParam.getStartDate());
@@ -312,6 +329,11 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
             PropertyUtils.copyBean2Map(node, fieldAndValue);
             //将还款计划信息循环节点转换为与xml对应的实体类
             JRBGetTxValidator.setFeild(repayInfoUploadParam, fieldAndValue);
+            //判断是否是循环授信,如果是,将循环授信合同编号赋给实时网签的合同号
+            if(StringUtils.equals("740001",node.getIsRealQuotaLoan())){
+                repayInfoUploadParam.setContractNo(node.getRealQuotaNo());
+            }
+
             //设置时间格式
             repayInfoUploadParam.setRepayDate(repayInfoUploadParam.getRepayDate());
             repayInfoUploadParam.setStartDate(repayInfoUploadParam.getStartDate());

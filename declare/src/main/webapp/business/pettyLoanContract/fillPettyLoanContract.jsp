@@ -146,7 +146,7 @@
                 pagination: true,
                 checkOnSelect: true,
                 pageSize: 15,
-                pageList: [5, 10, 15, 20, 30],
+                pageList: [5, 10, 15, 20, 30, 50,100,300],
                 columns: [[{
                     field: "id",
                     title: "主键",
@@ -158,15 +158,15 @@
                 }, {
                     field: "businessNum",
                     title: "业务号",
-                    width: 100
+                    width: 90
                 }, {
                     field: "contractNo",
                     title: "合同编号",
-                    width: 100
+                    width: 95
                 }, {
                     field: "customerName",
                     title: "借款人名称",
-                    width: 100
+                    width: 90
 
                 }, {
                     field: "contractAmount",
@@ -179,6 +179,21 @@
                     formatter: function (value, row) {
                         return formatDatebox(value);
                     }
+                }, {
+                    field: "isRealQuotaLoan",
+                    title: "是否额度项下贷款",
+                    width: 120,
+                    formatter: function (value, row) {
+                        if ('740001' == value) {
+                            return "是";
+                        } else {
+                            return "否";
+                        }
+                    }
+                }, {
+                    field: "realQuotaNo",
+                    title: "授信额度协议编号",
+                    width: 230
                 }]],
                 onDblClickRow: function (rowIndex, rowData) {
                     queryContractByWorkInfoId(rowData.dateId);
@@ -310,7 +325,7 @@
                 singleSelect: true,
                 pagination: true,
                 pageSize: 15,
-                pageList: [5, 10, 15, 20, 30],
+                pageList: [5, 10, 15, 20, 30, 50],
                 columns: [[{
                     field: "id",
                     title: "主键",
@@ -322,16 +337,16 @@
                 }, {
                     field: "contractNo",
                     title: "合同编号",
-                    width: 100
+                    width: 95
                 }, {
                     field: "customerName",
                     title: "借款人名称",
-                    width: 150
+                    width: 95
 
                 }, {
                     field: "contractAmount",
                     title: "合同金额",
-                    width: 100,
+                    width: 95,
                 }, {
                     field: "contractSignDate",
                     title: "合同签订日期",
@@ -365,6 +380,21 @@
                     field: "netSignNo",
                     title: "网签编号",
                     width: 220
+                },{
+                    field: "isRealQuotaLoan",
+                    title: "是否额度项下贷款",
+                    width: 120,
+                    formatter: function (value, row) {
+                        if ('740001' == value) {
+                            return "是";
+                        } else {
+                            return "否";
+                        }
+                    }
+                }, {
+                    field: "realQuotaNo",
+                    title: "授信额度协议编号",
+                    width: 230
                 }
                 ]],
                 //
@@ -458,7 +488,7 @@
         </div>
     </div>
     <div region="center" border="false">
-        <div class="editBlock easyui-panel">
+        <div class="editBlock">
             <table width="99%">
                 <tr>
                     <td colspan="4" class="subtitle">合同信息</td>
@@ -581,6 +611,31 @@
                         <span class="warning">${errors['contractAmount']}</span>
                     </td>
 
+                    <th width="15%">是否额度项下贷款</th>
+                    <td>
+                        <input class="easyui-combogrid" id="isRealQuotaLoan" name="isRealQuotaLoan"
+                               value="${model.isRealQuotaLoan}"
+                               style="width:251px;"
+                               data-options="
+									panelWidth: 255,
+									idField: 'dictCode',
+									textField: 'dictName',
+									value:'740002',
+									url: '${basePath }/param/paramCommonController.do?method=getDatadict&code=IS_OR_NOT',
+									columns: [[
+										{field:'dictCode',title:'代码',width:60},
+										{field:'dictName',title:'名称',width:195}
+									]],
+									fitColumns: true,
+									nowrap:false"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th width="15%">授信额度协议编号</th>
+                    <td width="32%">
+                        <input type="text" id="realQuotaNo" name="realQuotaNo"
+                               value="${model.realQuotaNo}" class="inputText"/>
+                    </td>
                     <th width="15%">网签编号</th>
                     <td>
                         <input type="text" id="netSignNo" name="netSignNo" value="${model.netSignNo}"
@@ -658,8 +713,8 @@
 
 <%--业务查询模态框--%>
 <div id="businessQueryWindow" class="easyui-window" title="业务查询"
-     data-options="modal:true,closed:true,iconCls:'icon-save'"
-     style="width:900px;height:600px;padding:10px;">
+     data-options="modal:true,closed:true,iconCls:'icon-save',left:'100px',top:'100px'"
+     style="width:1000px;height:600px;padding:10px;">
 
     <form action="" method="post" id="businessQueryForm">
         <table>
@@ -705,8 +760,8 @@
 
 <%--申报查询模态框--%>
 <div id="declareQueryWindow" class="easyui-window" title="申报查询"
-     data-options="modal:true,closed:true,iconCls:'icon-save'"
-     style="width:900px;height:600px;padding:10px;">
+     data-options="modal:true,closed:true,iconCls:'icon-save',left:'100px',top:'100px'"
+     style="width:1150px;height:600px;padding:10px;">
 
     <form action="" method="post" id="declareQueryForm">
         <table>

@@ -132,8 +132,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             contractInfoCycleNode.setGuarType("240001");
             //设置币种,人民币:730001
             contractInfoCycleNode.setCcy("730001");
-            //是否是额度项下贷款,目前在业务系统内的都不是额度项下贷款,2017年5月31日
-            contractInfoCycleNode.setIsRealQuotaLoan("740002");
             //设置合同状态,有效 :490001
             contractInfoCycleNode.setContractStatus("490001");
             //设置客户经理
@@ -153,8 +151,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             contractInfoCycleNode.setInsertDate(new Date());
             //是否最新版本
             contractInfoCycleNode.setIsLast("Y");
-            //业务系统内没有额度项下贷款,设置为否
-            contractInfoCycleNode.setIsRealQuotaLoan("740002");
+
 
             //校验属性值是否为空
             validate(contractInfoCycleNode.getContractNo(), contractInfoCycleNode);
@@ -192,6 +189,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      * @return
      * @throws DAOException
      */
+    @Override
     public PageBean findContractByContractNoFromRealTimeContract(String contractNo, String sendStatus, PageBean pageBean) throws DAOException {
 
         return pettyLoanContractDao.findContractByContractNoFromRealTimeContract(contractNo, sendStatus, pageBean);
@@ -340,6 +338,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      * 根据申报状态和签约时间段查询最新的合同信息
      *
      * @param sendStatusCode 0:未发送,1:已发送
+     * @param contractNo
      * @param signStartDate
      * @param signEndDate
      * @param pageBean
@@ -347,9 +346,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      * @throws DAOException
      */
     @Override
-    public PageBean findLastContractBySendStatus(String sendStatusCode, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException {
+    public PageBean findLastContractBySendStatus(String sendStatusCode, String contractNo, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException {
 
-        return contractInfoDao.findLastContractBySendStatus(sendStatusCode, signStartDate, signEndDate, pageBean);
+        return contractInfoDao.findLastContractBySendStatus(sendStatusCode, contractNo, signStartDate, signEndDate, pageBean);
     }
 
     /**

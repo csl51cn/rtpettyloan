@@ -19,11 +19,13 @@ public interface PayPlanInfoService {
 
     PayPlanInfo findPayPlanInfoById(String id) throws DAOException;
 
-    void declaredUpdate(PayPlanInfo payPlanInfo)  throws DAOException;
+    void declaredUpdate(PayPlanInfo payPlanInfo) throws DAOException;
 
     void saveOrUpdate(PayPlanInfo payPlanInfo) throws DAOException;
 
-    PageBean findLastPayPlanInfoBySendStatus(String sendStatusCode, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException;
+    PageBean findLastPayPlanInfoBySendStatus(String sendStatusCode, String contractNo, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException;
 
     ResultModel setNotSend(String ids) throws DAOException;
+
+    PageBean findPayPlanBriefInfoByContractNo(String contractNo, PageBean pageBean);
 }

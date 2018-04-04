@@ -45,7 +45,7 @@ public class ContractIssueInfoController {
      * @param ids
      * @return 是否操作成功：1保存成功，0保存失败
      */
-    @RequestMapping(params = "method=batchSaveContract" , produces = "application/json; charset=utf-8")
+    @RequestMapping(params = "method=batchSaveContract", produces = "application/json; charset=utf-8")
     @ResponseBody
     public String batchSaveContract(String ids) throws DAOException {
         try {
@@ -159,6 +159,7 @@ public class ContractIssueInfoController {
      * 根据申报状态查询和签约日期查询最新的贷款放款信息
      *
      * @param sendStatusCode
+     * @param contractNo
      * @param startDate
      * @param endDate
      * @param pageBean
@@ -167,8 +168,8 @@ public class ContractIssueInfoController {
      */
     @RequestMapping(params = "method=findLastContractBySendStatus")
     @ResponseBody
-    public Map<String, Object> findLastContractBySendStatus(String sendStatusCode, String startDate, String endDate, PageBean pageBean) throws DAOException {
-        pageBean = contractIssueInfoService.findLastContractBySendStatus(sendStatusCode, startDate, endDate, pageBean);
+    public Map<String, Object> findLastContractBySendStatus(String sendStatusCode, String contractNo, String startDate, String endDate, PageBean pageBean) throws DAOException {
+        pageBean = contractIssueInfoService.findLastContractBySendStatus(sendStatusCode, contractNo, startDate, endDate, pageBean);
         return pageBean2Map(pageBean);
     }
 

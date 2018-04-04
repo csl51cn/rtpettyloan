@@ -25,9 +25,9 @@ public interface ContractInfoService {
 
     void declaredUpdate(ContractInfoCycleNode contractInfoCycleNode) throws DAOException;
 
-    ResultModel deleteRecord(String ids)  throws DAOException;
+    ResultModel deleteRecord(String ids) throws DAOException;
 
-    PageBean findLastContractBySendStatus(String sendStatusCode, String signStartDate, String signEndDate, PageBean pageBean)  throws DAOException;
+    PageBean findLastContractBySendStatus(String sendStatusCode, String contractNo, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException;
 
     ResultModel setNotSend(String ids) throws DAOException;
 }

@@ -124,13 +124,13 @@ public class RepayInfoController {
                 model.addAttribute("errors", erorrMap);
                 throw new DAOException("保存或更新记录时，数据校验未通过");
             }
-            if(StringUtils.isEmpty(repayInfo.getPriPltyRate())){
+            if (StringUtils.isEmpty(repayInfo.getPriPltyRate())) {
                 repayInfo.setPriPltyRate("0");
             }
-            if(StringUtils.isEmpty(repayInfo.getDelayInterest())){
+            if (StringUtils.isEmpty(repayInfo.getDelayInterest())) {
                 repayInfo.setDelayInterest("0");
             }
-            if(StringUtils.isEmpty(repayInfo.getDelayFee())){
+            if (StringUtils.isEmpty(repayInfo.getDelayFee())) {
                 repayInfo.setDelayFee("0");
             }
             if (StringUtils.isEmpty(repayInfo.getDelayAmt())) {
@@ -202,6 +202,7 @@ public class RepayInfoController {
      * 根据还款日期和发送状态查询最新版本的还款信息
      *
      * @param sendStatusCode
+     * @param contractNo
      * @param startDate
      * @param endDate
      * @param pageBean
@@ -210,8 +211,8 @@ public class RepayInfoController {
      */
     @RequestMapping(params = "method=findLastRepayInfoSendStatus")
     @ResponseBody
-    public Map<String, Object> findLastRepayInfoSendStatus(String sendStatusCode, String startDate, String endDate, PageBean pageBean) throws DAOException {
-        pageBean = repayInfoService.findLastRepayInfoSendStatus(sendStatusCode, startDate, endDate, pageBean);
+    public Map<String, Object> findLastRepayInfoSendStatus(String sendStatusCode, String contractNo, String startDate, String endDate, PageBean pageBean) throws DAOException {
+        pageBean = repayInfoService.findLastRepayInfoSendStatus(sendStatusCode, contractNo, startDate, endDate, pageBean);
         return pageBean2Map(pageBean);
     }
 

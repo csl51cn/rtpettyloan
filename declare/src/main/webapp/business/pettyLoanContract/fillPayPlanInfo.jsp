@@ -23,6 +23,7 @@
             //双击某条数据后，返回详细信息，根据返回的值，设置不可编辑状态，点"手动录入"按钮后解除锁定
             if ("${disabled}") {
                 $("#fo input[type=text]").prop("disabled", "disabled");
+                $("#isRealQuotaLoan").combogrid('disable');
             }
 
             //如果编辑已申报的记录,保存按钮失效,编辑未申报的记录,已申报修改,已申报删除按钮失效
@@ -36,7 +37,7 @@
             $("#contract_no2").change(function () {
                 var value = $("#contract_no2").val();
                 if (value != "") {
-                    $("#sendStatusCode").combogrid('disabled');
+                    $("#sendStatusCode").combogrid('disable');
                     $("#signStartDate").prop("disabled", true);
                     $("#signEndDate").prop("disabled", true);
                 } else {
@@ -75,6 +76,7 @@
         //点击“手工填写"按钮触发，解除锁定
         function manualFill() {
             $("#fo input[type=text]").removeProp("disabled");
+            $("#isRealQuotaLoan").combogrid('enable');
         }
         //保存记录
         function doSave() {
@@ -89,7 +91,7 @@
                 pagination: true,
                 checkOnSelect: true,
                 pageSize: 15,
-                pageList: [5, 10, 15, 20, 30,100,500],
+                pageList: [5, 10, 15, 20, 30,50,100,300],
                 columns: [[{
                     field: "id",
                     title: "主键",
@@ -134,6 +136,21 @@
                     title: "网签编号",
                     width: 220
 
+                },{
+                    field: "isRealQuotaLoan",
+                    title: "是否额度项下贷款",
+                    width: 120,
+                    formatter: function (value, row) {
+                        if ('740001' == value) {
+                            return "是";
+                        } else {
+                            return "否";
+                        }
+                    }
+                }, {
+                    field: "realQuotaNo",
+                    title: "授信额度协议编号",
+                    width: 230
                 }]],
                 onLoadSuccess: function (data) {
                     if (data.total == 0) {
@@ -204,7 +221,7 @@
                 checkOnSelect: true,
                 pagination: true,
                 pageSize: 15,
-                pageList: [5, 10, 15, 20, 30 ,100 ,500],
+                pageList: [5, 10, 15, 20, 30 ,50],
                 columns: [[{
                     field: "id",
                     title: "主键",
@@ -216,11 +233,7 @@
                 }, {
                     field: "contractNo",
                     title: "合同编号",
-                    width: 82
-                }, {
-                    field: "dueBillNo",
-                    title: "发放编号",
-                    width: 82
+                    width: 90
                 }, {
                     field: "counter",
                     title: "还款期数",
@@ -293,6 +306,21 @@
                             return '删除记录';
                         }
                     }
+                }, {
+                    field: "isRealQuotaLoan",
+                    title: "是否额度项下贷款",
+                    width: 120,
+                    formatter: function (value, row) {
+                        if ('740001' == value) {
+                            return "是";
+                        } else {
+                            return "否";
+                        }
+                    }
+                }, {
+                    field: "realQuotaNo",
+                    title: "授信额度协议编号",
+                    width: 230
                 }
                 ]],
                 onDblClickRow: function (rowIndex, rowData) {
@@ -319,7 +347,7 @@
             if (value != "") {
                 $("#declareQueryResultTb").datagrid({
                     queryParams: {"contractNo": value},
-                    url: "${basePath}/contractIssueInfo.do?method=findContractBriefInfoByContractNo"
+                    url: "${basePath}/payPlanInfo.do?method=findPayPlanBriefInfoByContractNo"
                 });
 
             } else if ($("#declareQueryForm").form('validate') == true) {
@@ -601,6 +629,33 @@
                         <span class="warning">${errors['endDate']}</span>
                     </td>
                 </tr>
+                <tr>
+                    <th width="15%">是否额度项下贷款</th>
+                    <td width="32%">
+                        <input class="easyui-combogrid" id="isRealQuotaLoan" name="isRealQuotaLoan"
+                               value="${model.isRealQuotaLoan}"
+                               style="width:251px;"
+                               data-options="
+									panelWidth: 255,
+									idField: 'dictCode',
+									textField: 'dictName',
+									url: '${basePath }/param/paramCommonController.do?method=getDatadict&code=IS_OR_NOT',
+									columns: [[
+										{field:'dictCode',title:'代码',width:60},
+										{field:'dictName',title:'名称',width:195}
+									]],
+									fitColumns: true,
+									nowrap:false
+                                   "/>
+                        <span class="warning">${errors['isRealQuotaLoan']}</span>
+                    </td>
+                    <th width="15%">授信额度协议编号</th>
+                    <td>
+                        <input type="text" id="realQuotaNo" name="realQuotaNo"
+                               value="${model.realQuotaNo}" class="inputText"/>
+
+                    </td>
+                </tr>
             </table>
         </div>
     </div>
@@ -609,8 +664,8 @@
 
 <%--业务查询模态框--%>
 <div id="businessQueryWindow" class="easyui-window" title="业务查询"
-     data-options="modal:true,closed:true,iconCls:'icon-save'"
-     style="width:950px;height:600px;padding:10px;">
+     data-options="modal:true,closed:true,iconCls:'icon-save',left:'100px',top:'100px'"
+     style="width:1100px;height:600px;padding:10px;">
 
     <form action="" method="post" id="businessQueryForm">
         <table>
@@ -659,8 +714,8 @@
 
 <%--申报查询模态框--%>
 <div id="declareQueryWindow" class="easyui-window" title="申报查询"
-     data-options="modal:true,closed:true,iconCls:'icon-save'"
-     style="width:1000px;height:600px;padding:10px;">
+     data-options="modal:true,closed:true,iconCls:'icon-save',left:'100px',top:'100px'"
+     style="width:1200px;height:600px;padding:10px;">
 
     <form action="" method="post" id="declareQueryForm">
         <table>

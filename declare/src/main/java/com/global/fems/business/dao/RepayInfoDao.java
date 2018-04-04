@@ -34,7 +34,7 @@ public interface RepayInfoDao {
 
     int findTotalCounter(Integer dateId) throws DAOException;
 
-    PageBean findLastRepayInfoSendStatus(String sendStatusCode, String repayStartDate, String repayEndDate, PageBean pageBean) throws DAOException;
+    PageBean findLastRepayInfoSendStatus(String sendStatusCode, String contractNo, String repayStartDate, String repayEndDate, PageBean pageBean) throws DAOException;
 
     Float findPenaltyPrincipalInterest(Integer dateId, String counter, String repayDate) throws DAOException;
 

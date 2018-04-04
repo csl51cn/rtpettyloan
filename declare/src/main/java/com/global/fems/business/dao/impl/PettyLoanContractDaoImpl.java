@@ -48,8 +48,13 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
         StringBuilder sql = new StringBuilder("SELECT  " +
                 "  w.date_id AS dateid,  " +
                 "  w.业务编号 AS businessNum,  " +
-                "  (case w.是否为循环授信贷款 when 870 then   w.循环授信合同编号 else  w.合同编号 END ) AS contractno,  " +
-                "  w.授信金额 AS contractamount,  " +
+                "  w.合同编号 AS contractno,  " +
+                " (case  w.是否为循环授信贷款  " +
+                " WHEN  870 THEN " +
+                "   w.循环授信额度   " +
+                " ELSE  " +
+                "    w.授信金额 " +
+                " END)  AS contractamount, " +
                 "  d.content AS contractsigndate,  " +
                 "  ISNULL(  " +
                 "    CASE w.授信主体类型  " +
@@ -59,7 +64,14 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
                 "      c.中文客户名称  " +
                 "    END,  " +
                 "    ''  " +
-                "  ) AS customername  " +
+                "  ) AS customername , " +
+                " (CASE  w.是否为循环授信贷款 " +
+                " WHEN  870 THEN " +
+                "   '740001' " +
+                " ELSE  " +
+                "   '740002' " +
+                " END ) AS is_real_quota_loan, " +
+                " ISNULL(w.循环授信合同编号, '') as real_quota_no " +
                 " FROM  " +
                 "  Data_WorkInfo w  " +
                 " LEFT JOIN Data_CompanyInfo c ON w.授信主体编号 = c.Id  " +
@@ -109,27 +121,35 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
 
     /**
      * 根据申报状态从表DC_PETTY_LOAN_CONTRACT查询小额贷款合同记录
-     *
-     * @param sendStatus 0表示未申报，1表示已申报
+     *  @param sendStatus 0表示未申报，1表示已申报
+     * @param contractNo 合同编号
      * @param startDate  签约时间起始时间
      * @param endDate    签约时间终止时间
      * @param pageBean
      */
     @Override
-    public PageBean findPettyLoanContractBySendStatus(Integer sendStatus, String startDate, String endDate, PageBean pageBean) throws BaseException {
-        StringBuilder sql = new StringBuilder("SELECT id ,dateid ,contractno,customername,contractamount,contractsigndate,sendstatus,netsignno,islast FROM DC_PETTY_LOAN_CONTRACT WHERE 1=1  ");
+    public PageBean findPettyLoanContractBySendStatus(Integer sendStatus, String contractNo, String startDate, String endDate, PageBean pageBean) throws BaseException {
+        StringBuilder sql = new StringBuilder("SELECT id ,dateid ,contractno,customername,contractamount,contractsigndate,sendstatus,netsignno,islast,is_real_quota_loan,real_quota_no FROM DC_PETTY_LOAN_CONTRACT WHERE 1=1  ");
         List<Object> list = new ArrayList<Object>();
-        if (sendStatus != null && StringUtils.isNotBlank(sendStatus.toString())) {
-
+        if (StringUtils.isNotEmpty(sendStatus.toString())) {
             sql.append(" AND sendStatus = ? ");
             list.add(sendStatus);
         }
 
-        if (StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
-            sql.append(" AND contractsigndate >= ? AND contractsigndate <= ?");
+        if (StringUtils.isNotEmpty(startDate) ) {
+            sql.append(" AND contractsigndate >= ? ");
             list.add(startDate);
-            endDate = endDate + " 23:59:59";;
+
+        }
+        if (StringUtils.isNotEmpty(endDate)){
+            sql.append(" AND contractsigndate <= ?");
+            endDate = endDate + " 23:59:59";
             list.add(endDate);
+        }
+
+        if (StringUtils.isNotEmpty(contractNo)){
+            sql.append(" AND  contractno = ? ");
+            list.add(contractNo.trim());
         }
         pageBean.setSort("id");
         PageBean forPage = super.findForPage(sql.toString(), list.toArray(), pageBean, PettyLoanContract.class);
@@ -148,8 +168,13 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
         StringBuilder sql = new StringBuilder(
                 "SELECT  " +
                         "  w.date_id AS dateid ," +
-                        " (case w.是否为循环授信贷款 when 870 then   w.循环授信合同编号 else  w.合同编号 END ) AS contractno, " +
-                        "  w.授信金额 AS contractamount,  " +
+                        " w.合同编号 AS contractno, " +
+                        " (case  w.是否为循环授信贷款  " +
+                        " WHEN  870 THEN " +
+                        "   w.循环授信额度   " +
+                        " ELSE  " +
+                        "    w.授信金额 " +
+                        " END)  AS contractamount, " +
                         "  d.content AS contractsigndate,  " +
                         " ISNULL( " +
                         "  CASE dic.Word " +
@@ -195,7 +220,14 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
                         "      150002  " +
                         "    END,  " +
                         "    ''  " +
-                        "  ) AS certificatetype  " +
+                        "  ) AS certificatetype,  " +
+                        " (CASE  w.是否为循环授信贷款 " +
+                        " WHEN  870 THEN " +
+                        "   '740001' " +
+                        " ELSE  " +
+                        "   '740002' " +
+                        " END ) AS is_real_quota_loan, " +
+                        " ISNULL(w.循环授信合同编号, '') as real_quota_no " +
                         " FROM  " +
                         "  Data_WorkInfo w  " +
                         " LEFT JOIN Data_CompanyInfo c ON w.授信主体编号 = c.Id  " +
@@ -274,36 +306,50 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
      */
     @Override
     public PageBean findPettyLoanContractByContractNoFromBizSys(String contractNo, PageBean pageBean) throws BaseException {
-        StringBuilder sql = new StringBuilder("SELECT  " +
-                "  w.date_id AS dateid,  " +
-                "  w.业务编号 AS businessNum,  " +
-                "  w.合同编号 AS contractno,  " +
-                "  w.授信金额 AS contractamount,  " +
-                "  d.content AS contractsigndate,  " +
-                "  ISNULL(  " +
-                "    CASE w.授信主体类型  " +
-                "    WHEN 1 THEN  " +
-                "      m.客户名称  " +
-                "    WHEN 2 THEN  " +
-                "      c.中文客户名称  " +
-                "    END,  " +
-                "    ''  " +
-                "  ) AS customername  " +
-                " FROM  " +
-                "  Data_WorkInfo w  " +
-                " LEFT JOIN Data_CompanyInfo c ON w.授信主体编号 = c.Id  " +
-                " LEFT JOIN Data_MemberInfo m ON w.授信主体编号 = m.ID  " +
-                " LEFT JOIN WorkData_Date d ON d.date_id = w.Date_Id  " +
-                " WHERE  " +
-                "  d.Flow_NO IN(  " +
-                "    SELECT  " +
-                "      Flow_No  " +
-                "    FROM  " +
-                "      WorkFlowConstruction  " +
-                "    WHERE  " +
-                "      Flow_Title = '现场签约'  " +
-                "  ) AND d.form_arrno = 24 AND d.GoBackId = 0 AND " +
-                " w.合同编号 = ?");
+        StringBuilder sql = new StringBuilder("SELECT " +
+                " w.date_id AS dateid, " +
+                " w.业务编号 AS businessNum, " +
+                " w.合同编号 AS contractno, " +
+                " (case  w.是否为循环授信贷款  " +
+                " WHEN  870 THEN " +
+                "   w.循环授信额度   " +
+                " ELSE  " +
+                "    w.授信金额 " +
+                " END )  AS contractamount, " +
+                " d.content AS contractsigndate, " +
+                " ISNULL( " +
+                "  CASE w.授信主体类型 " +
+                "  WHEN 1 THEN " +
+                "   m.客户名称 " +
+                "  WHEN 2 THEN " +
+                "   c.中文客户名称 " +
+                "  END, " +
+                "  '' " +
+                " ) AS customername, " +
+                " (CASE  w.是否为循环授信贷款 " +
+                " WHEN  870 THEN " +
+                "   '740001' " +
+                " ELSE  " +
+                "   '740002' " +
+                " END ) AS is_real_quota_loan, " +
+                " ISNULL(w.循环授信合同编号, '') as real_quota_no " +
+                "FROM " +
+                " Data_WorkInfo w " +
+                "LEFT JOIN Data_CompanyInfo c ON w.授信主体编号 = c.Id " +
+                "LEFT JOIN Data_MemberInfo m ON w.授信主体编号 = m.ID " +
+                "LEFT JOIN WorkData_Date d ON d.date_id = w.Date_Id " +
+                "WHERE " +
+                " d.Flow_NO IN ( " +
+                "  SELECT " +
+                "   Flow_No " +
+                "  FROM " +
+                "   WorkFlowConstruction " +
+                "  WHERE " +
+                "   Flow_Title = '现场签约' " +
+                " ) " +
+                "AND d.form_arrno = 24 " +
+                "AND d.GoBackId = 0 " +
+                "AND w.合同编号 = ?");
         pageBean.setSort("w.date_id");
         PageBean forPage = super.findForPage(sql.toString(), new Object[]{contractNo}, pageBean, PettyLoanContract.class);
         return forPage;
@@ -333,7 +379,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
      */
     @Override
     public PageBean findContractByContractNoFromRealTimeContract(String contractNo, String sendStatus, PageBean pageBean) throws DAOException {
-        StringBuilder sql = new StringBuilder("SELECT id , dateid , contractno , customername , contractamount , contractsigndate , netsignno , islast FROM DC_PETTY_LOAN_CONTRACT WHERE islast = 'Y' AND contractno = ?  ");
+        StringBuilder sql = new StringBuilder("SELECT id , dateid , contractno , customername , contractamount , contractsigndate , netsignno , islast ,is_real_quota_loan,real_quota_no FROM DC_PETTY_LOAN_CONTRACT WHERE islast = 'Y' AND contractno = ?  ");
         ArrayList list = new ArrayList();
         list.add(contractNo);
         if (sendStatus != null && StringUtils.isNotBlank(sendStatus.toString())) {
@@ -371,7 +417,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
      */
     @Override
     public PageBean findLastPettyLoanContractBySendStatus(Integer sendStatus, String startDate, String endDate, PageBean pageBean) throws DAOException {
-        StringBuilder sql = new StringBuilder("SELECT id ,dateid ,contractno,customername,contractamount,contractsigndate,sendstatus,netsignno,islast FROM DC_PETTY_LOAN_CONTRACT WHERE 1=1  AND islast = 'Y' ");
+        StringBuilder sql = new StringBuilder("SELECT id ,dateid ,contractno,customername,contractamount,contractsigndate,sendstatus,netsignno,islast,is_real_quota_loan,real_quota_no FROM DC_PETTY_LOAN_CONTRACT WHERE 1=1  AND islast = 'Y' ");
         List<Object> list = new ArrayList<Object>();
         if (sendStatus != null && StringUtils.isNotBlank(sendStatus.toString())) {
 

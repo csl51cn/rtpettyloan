@@ -105,14 +105,15 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
      * 根据申报状态查询所有小额贷款合同记录
      *
      * @param sendStatus 申报状态0:未申报，1：已申报
+     * @param contractNo 合同编号
      * @param startDate
      * @param endDate
      * @param pageBean
      * @return
      */
     @Override
-    public PageBean findPettyLoanContractBySendStatus(Integer sendStatus, String startDate, String endDate, PageBean pageBean) throws BaseException {
-        return pettyLoanContractDao.findPettyLoanContractBySendStatus(sendStatus, startDate, endDate, pageBean);
+    public PageBean findPettyLoanContractBySendStatus(Integer sendStatus, String contractNo, String startDate, String endDate, PageBean pageBean) throws BaseException {
+        return pettyLoanContractDao.findPettyLoanContractBySendStatus(sendStatus, contractNo, startDate, endDate, pageBean);
     }
 
     /**
@@ -138,7 +139,7 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
 
     //设置利率
     private void setIntRate(PettyLoanContract pettyLoanContract) {
-        Integer dateId =pettyLoanContract.getDateId() ;
+        Integer dateId = pettyLoanContract.getDateId();
         String productType = pettyLoanContractDao.findProductType(dateId);
         //将以百分之一为单位的利率转换为以千分之一为单位的利率，接口文档要求千分之一为单位的利率
         Double intRate = pettyLoanContract.getIntRate();
@@ -146,7 +147,7 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
         String termUnit = pettyLoanContractDao.findTermUnit(dateId);
         if ("付易贷".equals(productType) && "周".equals(termUnit)) {
             intRate /= 7;
-        }else if ("付易贷".equals(productType) && "月".equals(termUnit)){
+        } else if ("付易贷".equals(productType) && "月".equals(termUnit)) {
             intRate /= 30;
         }
         pettyLoanContract.setIntRate(intRate);

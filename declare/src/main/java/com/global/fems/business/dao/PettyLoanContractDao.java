@@ -19,7 +19,7 @@ public interface PettyLoanContractDao {
 
     void saveOrUpdate(PettyLoanContract contract) throws BaseException;
 
-    PageBean findPettyLoanContractBySendStatus(Integer sendStatus, String startDate, String endDate, PageBean pageBean) throws BaseException;
+    PageBean findPettyLoanContractBySendStatus(Integer sendStatus, String contractNo, String startDate, String endDate, PageBean pageBean) throws BaseException;
 
     PettyLoanContract findPettyLoanContractByWorkInfoId(Integer dateId) throws BaseException;
 

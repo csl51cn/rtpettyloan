@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>贷款回收信息上报信息操作</title>
+    <title>授信额度信息上报合同信息操作</title>
     <jsp:include page="../../common/include.jsp"></jsp:include>
     <script type="text/javascript">
 
@@ -23,9 +23,14 @@
             //双击某条数据后，返回详细信息，根据返回的值，设置不可编辑状态，点"手动录入"按钮后解除锁定
             if ("${disabled}") {
                 $("#fo input[type=text]").prop("disabled", true);
-               $("#isRealQuotaLoan").combogrid('disable');
-//                $("#certificateType").combogrid('disable');
+                $("#loanCate").combogrid('disable');
+                $("#customerType").combogrid('disable');
+                $("#certificateType").combogrid('disable');
+                $("#conCustomerType").combogrid('disable');
+                $("#concertificatetype").combogrid('disable');
             }
+
+
 
             //如果编辑已申报的记录,保存按钮失效,编辑未申报的记录,已申报修改,已申报删除按钮失效
             if ($("#isSend").val() == '1') {
@@ -35,29 +40,6 @@
                 $("#declarebusinessDeleteBtn").linkbutton("disable");
             }
 
-            $("#contract_no2").change(function () {
-                var value = $("#contract_no2").val();
-                if (value != "") {
-                    $("#sendStatusCode").combogrid('disable');
-                    $("#signStartDate").prop("disabled", true);
-                    $("#signEndDate").prop("disabled", true);
-                } else {
-                    $("#sendStatusCode").combogrid('enable');
-                    $("#signStartDate").removeProp("disabled");
-                    $("#signEndDate").removeProp("disabled");
-                }
-            })
-
-            $("#contract_no1").change(function () {
-                var value = $("#contract_no1").val();
-                if (value != "") {
-                    $("#repayStartDate").prop("disabled", "disabled");
-                    $("#repayEndDate").prop("disabled", "disabled");
-                } else {
-                    $("#repayStartDate").removeProp("disabled");
-                    $("#repayEndDate").removeProp("disabled");
-                }
-            })
             $("#declaredBatchDelete").hide();
             $("#setNotSendBtn").hide();
             $("#sendStatusCode").combobox({
@@ -69,17 +51,21 @@
                         $("#declaredBatchDelete").show();
                         $("#setNotSendBtn").show();
                     }
+                    ;
                 }
             });
-
         })
 
         //点击“手工填写"按钮触发，解除锁定
         function manualFill() {
             $("#fo input[type=text]").removeProp("disabled");
-           $("#isRealQuotaLoan").combogrid('enable');
-//            $("#certificateType").combogrid('disable');
+            $("#loanCate").combogrid('enable');
+            $("#customerType").combogrid('enable');
+            $("#certificateType").combogrid('enable');
+            $("#conCustomerType").combogrid('enable');
+            $("#concertificatetype").combogrid('enable');
         }
+
 
         //保存记录
         function doSave() {
@@ -95,7 +81,7 @@
                 pagination: true,
                 checkOnSelect: true,
                 pageSize: 15,
-                pageList: [5, 10, 15, 20, 30, 50 ,100,300],
+                pageList: [5, 10, 15, 20, 30,50],
                 columns: [[{
                     field: "id",
                     title: "主键",
@@ -106,66 +92,49 @@
                     hidden: true
                 }, {
                     field: "contractNo",
-                    title: "合同编号",
-                    width: 90
+                    title: "额度协议编号",
+                    width: 95
                 }, {
                     field: "customerName",
                     title: "借款人名称",
-                    width: 80
+                    width: 95
 
                 }, {
-                    field: "counter",
-                    title: "还款期数",
-                    width: 80,
+                    field: "contractAmount",
+                    title: "额度协议金额",
+                    width: 90
+                },  {
+                    field: "usedAmount",
+                    title: "已用额度",
+                    width: 90
                 }, {
-                    field: "repayDate",
-                    title: "还款日期",
-                    width: 90,
-                    formatter: function (value, row) {
-                        return formatDatebox(value);
-                    }
-                }, {
-                    field: "repayPriAmt",
-                    title: "实还本金",
-                    width: 80
-                }, {
-                    field: "repayIntAmt",
-                    title: "实还利息",
-                    width: 80
-
-                }, {
-                    field: "startDate",
-                    title: "起息日期",
-                    width: 80,
-                    formatter: function (value, row) {
-                        return formatDatebox(value);
-                    }
-                }, {
-                    field: "endDate",
-                    title: "止息日期",
-                    width: 80,
-                    formatter: function (value, row) {
-                        return formatDatebox(value);
-                    }
-
-                }, {
-                    field: "receiptType",
-                    title: "回收类型",
-                    width: 80,
-                    formatter: function (value, row) {
-                        if (value == 550001) {
-                            return '正常还款';
-                        } else if (value == 550002) {
-                            return '逾期还款';
-                        }
-                    }
-                }, {
-                    field: "delayDays",
-                    title: "逾期天数",
-                    width: 80
+                    field: "remainAmount",
+                    title: "剩余额度",
+                    width: 90
                 },{
-                    field: "isRealQuotaLoan",
-                    title: "是否额度项下贷款",
+                    field: "contractSignDate",
+                    title: "协议签订日期",
+                    width: 100,
+                    formatter: function (value, row) {
+                        return formatDatebox(value);
+                    }
+                }, {
+                    field: "contractBeginDate",
+                    title: "额度协议起期",
+                    width: 100,
+                    formatter: function (value, row) {
+                        return formatDatebox(value);
+                    }
+                }, {
+                    field: "contractEndDate",
+                    title: "额度协议止期",
+                    width: 100,
+                    formatter: function (value, row) {
+                        return formatDatebox(value);
+                    }
+                }, {
+                    field: "isCircle",
+                    title: "是否循环额度",
                     width: 120,
                     formatter: function (value, row) {
                         if ('740001' == value) {
@@ -174,13 +143,9 @@
                             return "否";
                         }
                     }
-                }, {
-                    field: "realQuotaNo",
-                    title: "授信额度协议编号",
-                    width: 230
                 }]],
                 onDblClickRow: function (rowIndex, rowData) {
-                    queryRepayInfoById(rowData.id);
+                    queryContractByDateId(rowData.dateId);
                 },
                 onLoadSuccess: function (data) {
                     if (data.total == 0) {
@@ -197,43 +162,45 @@
             $('#businessQueryWindow').window('open');
         }
 
-        function queryRepayInfoById(id) {
+        function queryContractByDateId(dateId) {
             if (dateId != undefined) {
-                window.location.href = "${basePath}/repayInfo.do?method=findRepayInfoByIdFromBizSys&id=" + id;
+                window.location.href = "${basePath}/contractInfo.do?method=findContractByDateId&dateId=" + dateId;
                 $('#businessQueryWindow').window('close');
             }
-        }
 
+        }
         //批量保存
         function doBatchSave() {
             var ids = [];
             var rows = $("#businessQueryResultTb").datagrid("getSelections");
             for (var i = 0; i < rows.length; i++) {
-                ids.push(rows[i].id);
+                ids.push(rows[i].dateId);
             }
-
+            if (ids.length == 0) {
+                $.messager.alert("提示消息", "请选择至少一条记录进行操作", "info");
+                return;
+            }
             $.ajax({
                 type: "POST",
-                url: "${basePath}/repayInfo.do?method=batchSaveRepayInfo",
+                url: "${basePath}/contractInfo.do?method=batchSaveContract",
                 data: {"ids": ids.toString()},
                 dataType: "json",
                 success: function (data) {
                     if (data == "1") {
                         $.messager.alert("提示消息", "操作成功", "info");
                     } else {
-                        $.messager.alert("提示消息", "操作失败," + data, "warning");
+                        $.messager.alert("提示消息", "操作失败", "warning");
                     }
                 }
             });
         }
-
-        //根据签订时间段从贷款合同信息的表中查询
+        //根据签订时间段从业务系统中查询
         function doBusinessQuery() {
             var value = $("#contract_no1").val();
             if (value != "") {
                 $("#businessQueryResultTb").datagrid({
-                    queryParams: {"contractNo": value},
-                    url: "${basePath}/repayInfo.do?method=findRepayInfoByContractNoFromBizSys"
+                    queryParams: {"contractNo": value, "sendStatus": ""},
+                    url: "${basePath}/quotaInfo.do?method=findQuotaInfoByContractNoFromBizSys"
                 });
             } else if ($("#businessQueryForm").form('validate') == true) {
                 $("#businessCheckMsg").html("");
@@ -243,12 +210,11 @@
                 } else {
                     $("#businessQueryResultTb").datagrid({
                         queryParams: form2Json("businessQueryForm"),
-                        url: "${basePath}/repayInfo.do?method=findRepayInfoByRepayDateFromBizSys"
+                        url: "${basePath}/quotaInfo.do?method=findQuotaInfoByDateFromBizSys"
                     });
                 }
             }
         }
-
         function openDeclareQueryWindow() {
 
             //初始化申报查询的datagrid
@@ -257,7 +223,7 @@
                 checkOnSelect: true,
                 pagination: true,
                 pageSize: 15,
-                pageList: [5, 10, 15, 20, 30, 50 ,100 ,300],
+                pageList: [5, 10, 15, 20, 30,50],
                 columns: [[{
                     field: "id",
                     title: "主键",
@@ -269,51 +235,27 @@
                 }, {
                     field: "contractNo",
                     title: "合同编号",
-                    width: 90
+                    width: 100
                 }, {
                     field: "customerName",
                     title: "借款人名称",
-                    width: 80
+                    width: 100
 
                 }, {
-                    field: "counter",
-                    title: "还款期数",
-                    width: 80,
+                    field: "contractAmount",
+                    title: "合同金额",
+                    width: 100,
                 }, {
-                    field: "repayDate",
-                    title: "还款日期",
-                    width: 90,
+                    field: "contractSignDate",
+                    title: "合同签订日期",
+                    width: 100,
                     formatter: function (value, row) {
                         return formatDatebox(value);
                     }
                 }, {
-                    field: "repayPriAmt",
-                    title: "实还本金",
-                    width: 80
-                }, {
-                    field: "repayIntAmt",
-                    title: "实还利息",
-                    width: 80
-
-                }, {
-                    field: "receiptType",
-                    title: "回收类型",
-                    width: 80,
-                    formatter: function (value, row) {
-                        if (value == 550001) {
-                            return '正常还款';
-                        } else if (value == 550002) {
-                            return '逾期还款';
-                        }
-                    }
-                }, {
-                    field: "delayDays",
-                    title: "逾期天数",
-                    width: 80
-                }, {
                     field: "isSend",
-                    title: "是否申报",
-                    width: 70,
+                    title: "是否已申报",
+                    width: 80,
                     formatter: function (value, row) {
                         if (1 == value) {
                             return "是";
@@ -323,8 +265,8 @@
                     }
                 }, {
                     field: "isLast",
-                    title: "是否最新",
-                    width: 70,
+                    title: "是否是最新",
+                    width: 80,
                     formatter: function (value, row) {
                         if (value == 'Y') {
                             return '是';
@@ -335,7 +277,7 @@
                 }, {
                     field: "reportType",
                     title: "上报类型",
-                    width: 65,
+                    width: 80,
                     formatter: function (value, row) {
                         if ('100001' == value) {
                             return '新增记录';
@@ -345,6 +287,7 @@
                             return '删除记录';
                         }
                     }
+
                 }, {
                     field: "isRealQuotaLoan",
                     title: "是否额度项下贷款",
@@ -363,7 +306,7 @@
                 }
                 ]],
                 onDblClickRow: function (rowIndex, rowData) {
-                    queryRepayInfoDetailById(rowData.id);
+                    queryContractByContractId(rowData.id);
                 },
                 onLoadSuccess: function (data) {
                     if (data.total == 0) {
@@ -372,7 +315,7 @@
                             index: 0,
                             field: 'contractNo',
                             colspan: 8
-                        })
+                        });
                     }
                     $(this).datagrid('clearChecked');
                 }
@@ -380,14 +323,13 @@
 
             $('#declareQueryWindow').window('open');
         }
-
         //根据申报状态查询合同简略信息
         function doDeclareQuery() {
             var value = $("#contract_no2").val();
             if (value != "") {
                 $("#declareQueryResultTb").datagrid({
                     queryParams: {"contractNo": value},
-                    url: "${basePath}/repayInfo.do?method=findBriefInfoByContractNo"
+                    url: "${basePath}/contractInfo.do?method=findContractBriefInfoByContractNo"
                 });
 
             } else if ($("#declareQueryForm").form('validate') == true) {
@@ -401,16 +343,16 @@
                 if (flag) {
                     $("#declareQueryResultTb").datagrid({
                         queryParams: form2Json("declareQueryForm"),
-                        url: "${basePath}/repayInfo.do?method=findRepayInfoBySendStatus"
+                        url: "${basePath}/contractInfo.do?method=findContractBySendStatus"
                     });
                 }
             }
         }
 
         //根据记录id查询合同信息
-        function queryRepayInfoDetailById(id) {
+        function queryContractByContractId(id) {
             if (id != undefined) {
-                window.location.href = "${basePath}/repayInfo.do?method=findRepayInfoById&id=" + id;
+                window.location.href = "${basePath}/contractInfo.do?method=findContractById&id=" + id;
                 $('#declareQueryWindow').window('close');
             }
         }
@@ -426,7 +368,7 @@
             manualFill();
             $.ajax({
                     type: "POST",
-                    url: "${basePath}/repayInfo.do?method=deleteRecord",
+                    url: "${basePath}/contractInfo.do?method=deleteRecord",
                     data: form2Json("fo"),
                     dataType: "json",
                     success: function (data) {
@@ -437,23 +379,23 @@
                             $.messager.alert("提示消息", "操作失败," + data.msg, "warning");
                         }
                     }
-
-
                 }
             )
         }
-
         //已申报批量删除
         function doDeclaredBatchDelete() {
             var ids = [];
             var rows = $("#declareQueryResultTb").datagrid("getSelections");
             for (var i = 0; i < rows.length; i++) {
-                ids.push(rows[i].id);
+                ids.push(rows[i].dateId);
             }
-
+            if (ids.length == 0) {
+                $.messager.alert("提示消息", "请选择至少一条记录进行操作", "info");
+                return;
+            }
             $.ajax({
                 type: "POST",
-                url: "${basePath}/repayInfo.do?method=deleteRecordBatch",
+                url: "${basePath}/contractInfo.do?method=deleteRecordBatch",
                 data: {"ids": ids.toString()},
                 dataType: "json",
                 success: function (data) {
@@ -465,7 +407,6 @@
                 }
             });
         }
-
         //设置为未申报
         function doSetNotSend() {
             var ids = [];
@@ -479,7 +420,7 @@
             }
             $.ajax({
                 type: "POST",
-                url: "${basePath}/repayInfo.do?method=setNotSend",
+                url: "${basePath}/contractInfo.do?method=setNotSend",
                 data: {"ids": ids.toString()},
                 dataType: "json",
                 success: function (data) {
@@ -491,7 +432,6 @@
                 }
             });
         }
-
         //刷新当前页
         function doReset() {
             window.location.href = "${basePath}/contractInfo.do?method=showContractInfo";
@@ -508,7 +448,6 @@
             }
             return true;
         }
-
         //将表单数据转为json
         function form2Json(id) {
 
@@ -525,7 +464,6 @@
             var json = JSON.parse(jsonStr)
             return json
         }
-
         //格式化时间
         Date.prototype.format = function (format) {
             var o = {
@@ -546,7 +484,6 @@
                     format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
             return format;
         }
-
         function formatDatebox(value) {
             if (value == null || value == '') {
                 return '';
@@ -563,7 +500,7 @@
     </script>
 </head>
 <body>
-<form id="fo" action="${basePath}/repayInfo.do?method=saveRepayInfo" method="post">
+<form id="fo" action="" method="post">
     <div region="north" style="overflow: hidden;" border="false"
          data-options=" collapsed:false">
         <div style="padding: 1px; background: #EFEFEF;" id="toolbarid">
@@ -598,45 +535,33 @@
             <table width="99%">
                 <tr>
                     <td colspan="4" class="subtitle">合同信息</td>
-                    <input type="hidden" name="id" id="id" value="${model.id}"/>
                     <input type="hidden" name="isSend" id="isSend" value="${model.isSend }"/>
                     <input type="hidden" name="dateId" id="dateId" value="${model.dateId }"/>
                     <input type="hidden" name="isLast" id="isLast" value="${model.isLast }"/>
-                    <input type="hidden" name="orgCode" id="orgCode" value="${model.orgCode}"/>
-                    <input type="hidden" name="totalCounter" id="totalCounter" value="${model.totalCounter}">
                 </tr>
+                <tbody>
                 <tr>
-                    <th width="15%"><span class="warning">*</span>合同编号</th>
+                    <th width="15%"><span class="warning">*</span>额度协议编号</th>
                     <td width="32%">
-
+                        <input type="text" id="id" name="id"
+                               value="${model.id}" class="inputText" hidden/>
                         <input type="text" id="contractNo" name="contractNo"
                                value="${model.contractNo}" class="inputText"/>
-                        <span class="warning">${errors['contractNo']}</span>
+                                         <span class="warning">${errors['contractNo']}</span>
                     </td>
-                    <th width="15%"><span class="warning">*</span>发放编号</th>
+                    <th width="15">额度协议名称</th>
                     <td width="32%">
-                        <input type="text" id="dueBillNo" name="dueBillNo"
-                               value="${model.dueBillNo}" class="inputText">
-                        <span class="warning">${errors['dueBillNo']}</span>
+                        <input type="text" id="contractName" name="contractName"
+                               value="${model.contractName}" class="inputText">
+                    </td>
+
                     </td>
                 </tr>
-                <tr>
-                    <th width="15%"><span class="warning">*</span>还款日期</th>
-                    <td width="32%">
-                        <input type="text" id="repayDate" name="repayDate"
-                               value="${model.repayDate }" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
-                               class="inputText"/>
-                        <span class="warning">${errors['repayDate']}</span>
-                    </td>
-                    <th width="15%"><span class="warning">*</span>还款期数</th>
-                    <td width="32%">
-                        <input type="text" id="counter" name="counter" value="${model.counter }" class="inputText"/>
-                        <span class="warning">${errors['counter']}</span>
-                    </td>
-                </tr>
+
                 <tr>
                     <th width="15"><span class="warning">*</span>借款人类别</th>
                     <td width="32%">
+
                         <input class="easyui-combogrid" id="customerType" name="customerType" style="width:251px;"
                                value="${model.customerType}"
                                data-options="
@@ -645,11 +570,11 @@
 									textField: 'dictName',
 									url: '${basePath }/param/paramCommonController.do?method=getDatadict&code=CUSTOMER_TYPE',
 									columns: [[
-										{field:'dictCode',title:'扣款方式代码',width:100},
-										{field:'dictName',title:'扣款方式',width:195}
+										{field:'dictCode',title:'借款人类别代码',width:60},
+										{field:'dictName',title:'借款人类别',width:195}
 									]],
 									fitColumns: true,
-									nowrap:false">
+									nowrap:false"/>
                         <span class="warning">${errors['customerType']}</span>
                     </td>
 
@@ -686,121 +611,99 @@
                     </td>
                 </tr>
                 <tr>
-                    <th width="15"><span class="warning">*</span>扣款方式</th>
+
+                    <th width="15%"><span class="warning">*</span>合同签订日期</th>
+                    <td>
+                        <input type="text" id="contractSignDate" name="contractSignDate"
+                               value="${model.contractSignDate }" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+                               class="inputText"/>
+                        <span class="warning">${errors['contractSignDate']}</span>
+                    </td>
+                    <th width="15"><span class="warning">*</span>合同有效起始日期</th>
                     <td width="32%">
-                        <input class="easyui-combogrid" id="gatherMode" name="gatherMode" style="width:251px;"
-                               value="${model.gatherMode}"
+                        <input type="text" id="contractBeginDate" name="contractBeginDate"
+                               value="${model.contractBeginDate } "
+                               onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+                               class="inputText"/>
+                        <span class="warning">${errors['contractBeginDate']}</span>
+                    </td>
+                </tr>
+                <tr>
+
+                    <th width="15%"><span class="warning">*</span>合同有效结束日期</th>
+                    <td>
+                        <input type="text" id="contractEndDate" name="contractEndDate"
+                               value="${model.contractEndDate }" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+                               class="inputText"/>
+                        <span class="warning">${errors['contractEndDate']}</span>
+                    </td>
+                    <th width="15%"><span class="warning">*</span>额度协议金额(元)</th>
+                    <td width="32%">
+                        <input type="text" id="contractAmount" name="contractAmount" precision="2" style="border:1px solid #95B8E7;
+                        *color:#007fca;width:245px;padding:4px 2px;" value="${model.contractAmount}"
+                               class="easyui-numberbox"/>
+                        <span class="warning">${errors['contractAmount']}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th width="15%"><span class="warning">*</span>币种</th>
+                    <td width="32%">
+                        <input class="easyui-combogrid" id="ccy" name="ccy" style="width:251px;"
+                               value="${model.ccy}"
                                data-options="
 									panelWidth: 255,
 									idField: 'dictCode',
 									textField: 'dictName',
-									url: '${basePath }/param/paramCommonController.do?method=getDatadict&code=REPAY_MODE',
+									value:'730001',
+									url: '${basePath }/param/paramCommonController.do?method=getDatadict&code=CCY',
 									columns: [[
-										{field:'dictCode',title:'扣款方式代码',width:100},
-										{field:'dictName',title:'扣款方式',width:195}
+										{field:'dictCode',title:'币种代码',width:60},
+										{field:'dictName',title:'币种',width:195}
 									]],
 									fitColumns: true,
-									nowrap:false">
-                        <span class="warning">${errors['gatherMode']}</span>
-                    </td>
-                    <th width="15%"><span class="warning">*</span>收回本金(元)</th>
+									nowrap:false,
+                                   "/>
+                        <span class="warning">${errors['ccy']}</span>
+                    <th width="15%"><span class="warning">*</span>已用额度(元)</th>
                     <td width="32%">
-                        <input type="text" id="repayPriAmt" name="repayPriAmt" precision="2" style="border:1px solid #95B8E7;
-                        *color:#007fca;width:245px;padding:4px 2px;" value="${model.repayPriAmt}"
+                        <input type="text" id="usedAmount" name="usedAmount" precision="2" style="border:1px solid #95B8E7;
+                        *color:#007fca;width:245px;padding:4px 2px;" value="${model.usedAmount}"
                                class="easyui-numberbox"/>
-                        <span class="warning">${errors['repayPriAmt']}</span>
+                        <span class="warning">${errors['usedAmount']}</span>
                     </td>
                 </tr>
                 <tr>
-                    <th width="15%"><span class="warning">*</span>收回利息(元)</th>
+                    <th width="15%"><span class="warning">*</span>剩余额度(元)</th>
                     <td width="32%">
-                        <input type="text" id="repayIntAmt" name="repayIntAmt" precision="2" style="border:1px solid #95B8E7;
-                        *color:#007fca;width:245px;padding:4px 2px;" value="${model.repayIntAmt}"
+                        <input type="text" id="remainAmount" name="remainAmount" precision="2" style="border:1px solid #95B8E7;
+                        *color:#007fca;width:245px;padding:4px 2px;" value="${model.remainAmount}"
                                class="easyui-numberbox"/>
-                        <span class="warning">${errors['repayIntAmt']}</span>
+                        <span class="warning">${errors['remainAmount']}</span>
                     </td>
-                    <th width="15%"><span class="warning">*</span>逾期天数</th>
-                    <td width="32%">
-                        <input type="text" id="delayDays" name="delayDays" value="${model.delayDays}"
-                               class="inputText"/>
-                        <span class="warning">${errors['delayDays']}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <th width="15%"><span class="warning">*</span>起息日期</th>
-                    <td width="32%">
-                        <input type="text" id="startDate" name="startDate"
-                               value="${model.startDate }" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"
-                               class="inputText"/>
-                        <span class="warning">${errors['startDate']}</span>
-                    </td>
-                    <th width="15%"><span class="warning">*</span>止息日期</th>
-                    <td width="32%">
-                        <input type="text" id="endDate" name="endDate"
-                               value="${model.endDate }" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"
-                               class="inputText"/>
-                        <span class="warning">${errors['endDate']}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <th width="15%"><span class="warning">*</span>回收类型</th>
+                    <th width="15%"><span class="warning">*</span>担保方式</th>
                     <td>
-                        <input class="easyui-combogrid" id="receiptType" name="receiptType" style="width:251px;"
-                               value="${model.receiptType}"
+                        <input class="easyui-combogrid" id="guarType" name="guarType" style="width:251px;"
+                               value="${model.guarType}"
                                data-options="
 									panelWidth: 255,
 									idField: 'dictCode',
 									textField: 'dictName',
-									url: '${basePath }/param/paramCommonController.do?method=getDatadict&code=RECEIPT_TYPE',
+									url: '${basePath }/param/paramCommonController.do?method=getDatadict&code=GUAR_TYPE',
 									columns: [[
-										{field:'dictCode',title:'利率性质代码',width:60},
-										{field:'dictName',title:'利率性质',width:195}
+										{field:'dictCode',title:'担保方式代码',width:60},
+										{field:'dictName',title:'担保方式',width:195}
 									]],
 									fitColumns: true,
-									nowrap:false"/>
-                        <span class="warning">${errors['receiptType']}</span>
-                    </td>
-                    <th width="15%">逾期月利率(‰)</th>
-                    <td>
-                        <input type="text" id="priPltyRate" name="priPltyRate" style="border:1px solid #95B8E7;
-                        *color:#007fca;width:245px;padding:4px 2px;" value="${model.priPltyRate}"
-                               class="easyui-numberbox"
-                               precision="2"/>
-
-                    </td>
-                </tr>
-
-                <tr>
-                    <th width="15%">逾期本金(元)</th>
-                    <td>
-                        <input type="text" id="delayAmt" name="delayAmt" precision="2" style="border:1px solid #95B8E7;
-                        *color:#007fca;width:245px;padding:4px 2px;" value="${model.delayAmt}"
-                               class="easyui-numberbox"/>
-                    </td>
-                    <th width="15%">逾期利息(元)</th>
-                    <td>
-                        <input type="text" id="delayInterest" name="delayInterest" precision="2" style="border:1px solid #95B8E7;
-                        *color:#007fca;width:245px;padding:4px 2px;" value="${model.delayInterest}"
-                               class="easyui-numberbox"/>
+									nowrap:false
+                                   "/>
+                        <span class="warning">${errors['guarType']}</span>
                     </td>
                 </tr>
                 <tr>
-                    <th width="15%">逾期滞纳金(元)</th>
-                    <td>
-                        <input type="text" id="delayFee" name="delayFee" precision="2" style="border:1px solid #95B8E7;
-                        *color:#007fca;width:245px;padding:4px 2px;" value="${model.delayFee}"
-                               class="easyui-numberbox"/>
-                    </td>
-                    <th width="15%">备注</th>
+                    <th width="15%"><span class='warning'>*</span>是否循环额度</th>
                     <td width="32%">
-                        <input type="text" id="remark" name="remark" value="${model.remark }" class="inputText"/>
-                    </td>
-                </tr>
-                <tr>
-                    <th width="15%">是否额度项下贷款</th>
-                    <td width="32%">
-                        <input class="easyui-combogrid" id="isRealQuotaLoan" name="isRealQuotaLoan"
-                               value="${model.isRealQuotaLoan}"
+                        <input class="easyui-combogrid" id="isCircle" name="isCircle"
+                               value="${model.isCircle}"
                                style="width:251px;"
                                data-options="
 									panelWidth: 255,
@@ -814,43 +717,74 @@
 									fitColumns: true,
 									nowrap:false
                                    "/>
-                        <span class="warning">${errors['isRealQuotaLoan']}</span>
+                        <span class="warning">${errors['isCircle']}</span>
                     </td>
-                    <th width="15%">授信额度协议编号</th>
-                    <td>
-                        <input type="text" id="realQuotaNo" name="realQuotaNo"
-                               value="${model.realQuotaNo}" class="inputText"/>
+                    <th width="15%"><span class="warning">*</span>协议状态</th>
+                    <td width="32%">
+                        <input class="easyui-combogrid" id="contractStatus" name="contractStatus"
+                               style="width:251px;"
+                               value="${model.contractStatus}"
+                               data-options="
+									panelWidth: 255,
+									idField: 'dictCode',
+									textField: 'dictName',
+									value:'490001',
+									url: '${basePath }/param/paramCommonController.do?method=getDatadict&code=CONTRACT_STATUS',
+									columns: [[
+										{field:'dictCode',title:'协议状态代码',width:60},
+										{field:'dictName',title:'协议状态',width:195}
+									]],
+									fitColumns: true,
+									nowrap:false"/>
+                        <span class="warning">${errors['contractStatus']}</span>
+                    </td>
 
+                </tr>
+                <tr>
+                    <th width="15%"><span class='warning'>*</span>客户经理</th>
+                    <td>
+                        <input type="text" id="relationManager" name="relationManager"
+                               value='<c:choose><c:when test="${model.relationManager !=null }">${model.relationManager}</c:when><c:otherwise>渠道来源</c:otherwise></c:choose>'
+                               class="inputText"/>
+                        <span class="warning">${errors['relationManager']}</span>
+                    </td>
+                    <th width="15%">备注</th>
+                    <td width="32%">
+                        <input type="text" id="remark" name="remark"
+                               value="${model.remark}" class="inputText">
                     </td>
                 </tr>
             </table>
         </div>
     </div>
+
 </form>
 
 <%--业务查询模态框--%>
 <div id="businessQueryWindow" class="easyui-window" title="业务查询"
      data-options="modal:true,closed:true,iconCls:'icon-save',left:'100px',top:'100px'"
-     style="width:1200px;height:600px;padding:10px;">
+     style="width:1100px;height:600px;padding:10px;">
 
     <form action="" method="post" id="businessQueryForm">
         <table>
             <tr>
-                <th width="15%">还款日期：</th>
+                <th width="15%">签约日期：</th>
                 <td>
-                    <input type="text" id="repayStartDate" name="repayStartDate" data-options="required:true"
+                    <input type="text" id="startDate" name="signStartDate" data-options="required:true"
                            class="easyui-validatebox"
                            style="border:1px solid #95B8E7;*color:#007fca;width:245px;padding:4px 2px;"
                            onclick="WdatePicker()"/>至
                 </td>
+
                 <td>
-                    <input type="text" id="repayEndDate" name="repayEndDate" data-options="required:true" style="border:1px solid #95B8E7;
+
+                    <input type="text" id="endDate" name="signEndDate" data-options="required:true" style="border:1px solid #95B8E7;
                         *color:#007fca;width:245px;padding:4px 2px;" onclick="WdatePicker()"
                            class="easyui-validatebox"/>
                 </td>
             </tr>
             <tr>
-                <th width="5%">合同编号:</th>
+                <th width="5%">额度协议编号:</th>
                 <td>
                     <input type="text" id="contract_no1" name="contract_no" style="border:1px solid #95B8E7;
                         *color:#007fca;width:180px;padding:4px 2px;">
@@ -877,7 +811,7 @@
 <%--申报查询模态框--%>
 <div id="declareQueryWindow" class="easyui-window" title="申报查询"
      data-options="modal:true,closed:true,iconCls:'icon-save',left:'100px',top:'100px'"
-     style="width:1200px;height:600px;padding:10px;">
+     style="width:1100px;height:600px;padding:10px;">
 
     <form action="" method="post" id="declareQueryForm">
         <table>
@@ -892,23 +826,23 @@
             </tr>
             <br/>
             <tr>
-                <th width="15%">还款日期：</th>
+                <th width="15%">签约日期：</th>
                 <td>
-                    <input type="text" id="startDate_1" name="repayStartDate" data-options="required:true"
+                    <input type="text" id="signStartDate" name="signStartDate" data-options="required:true"
                            class="easyui-validatebox" style="border:1px solid #95B8E7;
                         *color:#007fca;width:180px;padding:4px 2px;"
                            onclick="WdatePicker()" class="inputText"/> 至
                 </td>
 
                 <td>
-                    <input type="text" id="endDate_1" name="repayEndDate" data-options="required:true"
+                    <input type="text" id="signEndDate" name="signEndDate" data-options="required:true"
                            class="easyui-validatebox" style="border:1px solid #95B8E7;
                         *color:#007fca;width:180px;padding:4px 2px;"
                            onclick="WdatePicker()" class="inputText"/>
                 </td>
             </tr>
             <tr>
-                <th width="5%">合同编号:</th>
+                <th width="5%">额度协议编号:</th>
                 <td>
                     <input type="text" id="contract_no2" name="contract_no" style="border:1px solid #95B8E7;
                         *color:#007fca;width:180px;padding:4px 2px;">
@@ -933,5 +867,8 @@
     <table id="declareQueryResultTb">
     </table>
 </div>
+<script type="application/javascript">
+
+</script>
 </body>
 </html>

@@ -28,7 +28,7 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
      */
     @Override
     public PageBean findContractByContractNoFromContractInfo(String contractNo, String sendStatus, PageBean pageBean) throws DAOException {
-        StringBuilder sql = new StringBuilder("SELECT id,date_id,contract_no,customer_name,contract_amount,contract_sign_date,net_sign_no,is_last FROM DC_CONTRACT_INFO WHERE is_last = 'Y' AND contract_no = ? ");
+        StringBuilder sql = new StringBuilder("SELECT id,date_id,contract_no,customer_name,contract_amount,contract_sign_date,net_sign_no,is_last,is_real_quota_loan,real_quota_no,is_real_quota_loan,real_quota_no FROM DC_CONTRACT_INFO WHERE is_last = 'Y' AND contract_no = ? ");
         List<Object> list = new ArrayList<Object>();
         list.add(contractNo);
         if (sendStatus != null && StringUtils.isNotBlank(sendStatus)) {
@@ -52,7 +52,7 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
         String sql = "SELECT a.contract_no,a.contract_no AS dueBillNo, a.date_id,a.net_sign_no,a.customer_type,a.customer_name,a.certificate_type,a.certificate_no,a.contract_amount AS dd_amt, " +
                 "a.loan_cate,a.int_rate,a.pri_plty_rate,a.contract_sign_date AS sign_date,a.contract_begin_date AS dd_date,a.contract_end_date AS mature_date," +
                 "a.guar_type,a.loan_object,a.loan_object_size,b.认定区域编号 AS [zone],ISNULL(CASE a.loan_object_size WHEN '280002' THEN '260001' WHEN '280003' THEN '260002' ELSE NULL END,'') AS purpose, " +
-                "b.还款方式 AS rate_calc_mode,ISNULL (CASE b.授信主体类型 WHEN 1 THEN d.[行业类别] WHEN 2 THEN c.[行业分类] END,'')AS industry FROM " +
+                "b.还款方式 AS rate_calc_mode,ISNULL (CASE b.授信主体类型 WHEN 1 THEN d.[行业类别] WHEN 2 THEN c.[行业分类] END,'')AS industry,a.is_real_quota_loan,a.real_quota_no FROM " +
                 "DC_CONTRACT_INFO a LEFT JOIN Data_WorkInfo b ON a.date_id = b.Date_Id  LEFT JOIN Data_CompanyInfo c ON b.授信主体编号 = c.ID " +
                 "LEFT JOIN Data_MemberInfo d ON b.授信主体编号 = d.ID WHERE a.is_last ='Y' AND a.date_id = ? ";
         return super.findForObjectBySql(sql, new Object[]{dateId}, ContractIssueInfo.class);
@@ -107,7 +107,7 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
      */
     @Override
     public PageBean findContractIssueInfoBySendStatus(String sendStatus, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException {
-        StringBuilder sql = new StringBuilder("SELECT id,date_id,due_bill_no,contract_no,customer_name,dd_amt,sign_date,loan_cate,is_send,is_last,report_type,net_sign_no FROM DC_CONTRACT_ISSUE_INFO WHERE 1 = 1 ");
+        StringBuilder sql = new StringBuilder("SELECT id,date_id,due_bill_no,contract_no,customer_name,dd_amt,sign_date,loan_cate,is_send,is_last,report_type,net_sign_no,is_real_quota_loan,real_quota_no FROM DC_CONTRACT_ISSUE_INFO WHERE 1 = 1 ");
         List<Object> list = new ArrayList<Object>();
         if (sendStatus != null && StringUtils.isNotBlank(sendStatus)) {
             sql.append(" AND is_send = ? ");
@@ -126,6 +126,7 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
 
     /**
      * 根据id查询贷款合同信息
+     *
      * @param id
      * @return
      * @throws DAOException
@@ -138,6 +139,7 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
 
     /**
      * 根据id查询贷款合同信息集合
+     *
      * @param dateId
      * @return
      * @throws DAOException
@@ -145,11 +147,12 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
     @Override
     public List<ContractIssueInfo> findContractIssueInfoListByDateId(String dateId) throws DAOException {
         String sql = "SELECT * FROM DC_CONTRACT_ISSUE_INFO WHERE date_id = ?";
-        return (List<ContractIssueInfo>) super.findForListBySql(sql,new Object[]{dateId},ContractIssueInfo.class);
+        return (List<ContractIssueInfo>) super.findForListBySql(sql, new Object[]{dateId}, ContractIssueInfo.class);
     }
 
     /**
      * 批量更新记录
+     *
      * @param list
      * @param isUpdateValueNullField
      */
@@ -160,6 +163,7 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
 
     /**
      * 根据合同号从DC_CONTRACT_ISSUE_INFO查询贷款放款信息
+     *
      * @param contractNo
      * @param pageBean
      * @return
@@ -167,13 +171,14 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
      */
     @Override
     public PageBean findContractBriefInfoByContractNo(String contractNo, PageBean pageBean) throws DAOException {
-        String  sql = "SELECT id,date_id,due_bill_no,contract_no,customer_name,dd_amt,sign_date,is_send,is_last,report_type,net_sign_no FROM DC_CONTRACT_ISSUE_INFO WHERE contract_no = ?";
+        String sql = "SELECT id,date_id,due_bill_no,contract_no,customer_name,dd_amt,sign_date,is_send,is_last,report_type,net_sign_no,is_real_quota_loan,real_quota_no FROM DC_CONTRACT_ISSUE_INFO WHERE contract_no = ?";
         pageBean.setSort("id");
-        return super.findForPage(sql,new Object[]{contractNo},pageBean,ContractIssueInfo.class);
+        return super.findForPage(sql, new Object[]{contractNo}, pageBean, ContractIssueInfo.class);
     }
 
     /**
      * 根据申报状态查询和签约日期查询贷款放款信息,申报时使用.
+     *
      * @param sendStatusCode
      * @param signStartDate
      * @param signEndDate
@@ -183,7 +188,7 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
      */
     @Override
     public PageBean findContractBySendStatus(String sendStatusCode, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException {
-        StringBuilder sql = new StringBuilder("SELECT id,date_id,batch_no,due_bill_no,contract_no,customer_name,dd_amt AS contract_amount,sign_date AS contract_sign_date,loan_cate,is_send,is_last,report_type,net_sign_no FROM DC_CONTRACT_ISSUE_INFO WHERE  1 = 1 ");
+        StringBuilder sql = new StringBuilder("SELECT id,date_id,batch_no,due_bill_no,contract_no,customer_name,dd_amt AS contract_amount,sign_date AS contract_sign_date,loan_cate,is_send,is_last,report_type,net_sign_no,is_real_quota_loan,real_quota_no FROM DC_CONTRACT_ISSUE_INFO WHERE  1 = 1 ");
         List<Object> list = new ArrayList<Object>();
         if (sendStatusCode != null && StringUtils.isNotBlank(sendStatusCode)) {
             sql.append(" AND is_send = ? ");
@@ -201,7 +206,9 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
 
     /**
      * 根据申报状态查询和签约日期查询最新的贷款放款信息,还款计划使用
+     *
      * @param sendStatusCode
+     * @param contractNo
      * @param signStartDate
      * @param signEndDate
      * @param pageBean
@@ -209,18 +216,26 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
      * @throws DAOException
      */
     @Override
-    public PageBean findLastContractBySendStatus(String sendStatusCode, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException {
-        StringBuilder sql = new StringBuilder("SELECT id,date_id,due_bill_no,contract_no,customer_name,dd_amt AS contract_amount,sign_date AS contract_sign_date,loan_cate,is_send,is_last,report_type,net_sign_no FROM DC_CONTRACT_ISSUE_INFO WHERE  1 = 1 AND is_last = 'Y' ");
+    public PageBean findLastContractBySendStatus(String sendStatusCode, String contractNo, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException {
+        StringBuilder sql = new StringBuilder("SELECT id,date_id,due_bill_no,contract_no,customer_name,dd_amt AS contract_amount,sign_date AS contract_sign_date,loan_cate,is_send,is_last,report_type,net_sign_no,is_real_quota_loan,real_quota_no FROM DC_CONTRACT_ISSUE_INFO WHERE  1 = 1 AND is_last = 'Y' ");
         List<Object> list = new ArrayList<Object>();
         if (sendStatusCode != null && StringUtils.isNotBlank(sendStatusCode)) {
             sql.append(" AND is_send = ? ");
             list.add(sendStatusCode);
         }
 
-        if (StringUtils.isNotEmpty(signStartDate) && StringUtils.isNotEmpty(signEndDate)) {
-            sql.append(" AND sign_date >= ? AND sign_date <= ?");
+        if (StringUtils.isNotEmpty(signStartDate)) {
+            sql.append(" AND sign_date >= ? ");
             list.add(signStartDate);
+        }
+        if (StringUtils.isNotEmpty(signEndDate)) {
+            sql.append(" AND sign_date <= ? ");
             list.add(signEndDate);
+        }
+
+        if (StringUtils.isNotEmpty(contractNo)) {
+            sql.append(" AND contract_no= ? ");
+            list.add(contractNo.trim());
         }
         pageBean.setSort("id");
         return super.findForPage(sql.toString(), list.toArray(), pageBean, ContractInfoCycleNode.class);

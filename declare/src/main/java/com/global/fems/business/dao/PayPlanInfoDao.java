@@ -29,5 +29,7 @@ public interface PayPlanInfoDao {
 
     List<PayPlanInfo> findPayPlanInfoListByDateIdAndCounter(Integer dateId, String counter) throws DAOException;
 
-    PageBean findLastPayPlanInfoBySendStatus(String sendStatusCode, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException;
+    PageBean findLastPayPlanInfoBySendStatus(String sendStatusCode, String contractNo, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException;
+
+    PageBean findPayPlanBriefInfoByContractNo(String contractNo, PageBean pageBean);
 }

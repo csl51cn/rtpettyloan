@@ -45,7 +45,8 @@ public class ContractInfoController {
     }
 
     /**
-     *  保存自营贷款
+     * 保存自营贷款
+     *
      * @param contractInfoCycleNode
      * @param result
      * @param model
@@ -187,10 +188,12 @@ public class ContractInfoController {
         pageBean = contractInfoService.findContractBySendStatus(sendStatusCode, signStartDate, signEndDate, pageBean);
         return pageBean2Map(pageBean);
     }
+
     /**
      * 根据申报状态和签约时间段查询最新版本合同简略信息
      *
      * @param sendStatusCode
+     * @param contractNo
      * @param startDate
      * @param endDate
      * @param pageBean
@@ -199,8 +202,8 @@ public class ContractInfoController {
      */
     @RequestMapping(params = "method=findLastContractBySendStatus")
     @ResponseBody
-    public Map<String, Object> findLastContractBySendStatus(String sendStatusCode, String startDate, String endDate, PageBean pageBean) throws DAOException {
-        pageBean = contractInfoService.findLastContractBySendStatus(sendStatusCode, startDate, endDate, pageBean);
+    public Map<String, Object> findLastContractBySendStatus(String sendStatusCode, String contractNo, String startDate, String endDate, PageBean pageBean) throws DAOException {
+        pageBean = contractInfoService.findLastContractBySendStatus(sendStatusCode, contractNo, startDate, endDate, pageBean);
         return pageBean2Map(pageBean);
     }
 
@@ -224,6 +227,7 @@ public class ContractInfoController {
 
     /**
      * 已申报删除合同信息---单条记录
+     *
      * @param contractInfoCycleNode
      * @return
      * @throws BaseException
@@ -231,12 +235,13 @@ public class ContractInfoController {
     @RequestMapping(params = "method=deleteRecord", produces = "application/json; charset=utf-8")
     @ResponseBody
     public ResultModel deleteRecord(ContractInfoCycleNode contractInfoCycleNode) throws BaseException {
-        ResultModel resultModel = contractInfoService.deleteRecord(contractInfoCycleNode.getDateId()+"");
+        ResultModel resultModel = contractInfoService.deleteRecord(contractInfoCycleNode.getDateId() + "");
         return resultModel;
     }
 
     /**
      * 已申报删除合同信息---多条记录
+     *
      * @param ids
      * @return
      * @throws BaseException
@@ -248,8 +253,9 @@ public class ContractInfoController {
         return resultModel;
     }
 
-   /**
+    /**
      * 设置为未申报
+     *
      * @param ids
      * @return
      * @throws BaseException
@@ -260,7 +266,6 @@ public class ContractInfoController {
         ResultModel resultModel = contractInfoService.setNotSend(ids);
         return resultModel;
     }
-
 
 
     /**

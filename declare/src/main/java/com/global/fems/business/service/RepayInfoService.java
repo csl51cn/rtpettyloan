@@ -29,7 +29,7 @@ public interface RepayInfoService {
 
     ResultModel deleteRecord(String ids) throws DAOException;
 
-    PageBean findLastRepayInfoSendStatus(String sendStatusCode, String repayStartDate, String repayEndDate, PageBean pageBean) throws DAOException;
+    PageBean findLastRepayInfoSendStatus(String sendStatusCode, String contractNo, String repayStartDate, String repayEndDate, PageBean pageBean) throws DAOException;
 
     ResultModel setNotSend(String ids) throws DAOException;
 }
