@@ -25,7 +25,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/pettyLoanContract.do")
-public class PettyLoanContractController {
+public class PettyLoanContractController extends BaseController {
 
     @Autowired
     private PettyLoanContractService contractService;
@@ -140,10 +140,7 @@ public class PettyLoanContractController {
 
 
         pageBean = contractService.findPettyLoanContractByDate(startDate, endDate, pageBean);
-
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("total", pageBean.getTotalRows());
-        map.put("rows", pageBean.getDataList());
+        Map<String, Object> map = pageBean2Map(pageBean);
         return map;
     }
 
@@ -190,10 +187,7 @@ public class PettyLoanContractController {
     @ResponseBody
     public Map<String, Object> findPettyLoanContractBySendStatus(Integer sendStatusCode, String contractNo, String signStartDate, String signEndDate, PageBean pageBean) throws BaseException {
         pageBean = contractService.findPettyLoanContractBySendStatus(sendStatusCode, contractNo, signStartDate, signEndDate, pageBean);
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("total", pageBean.getTotalRows());
-        map.put("rows", pageBean.getDataList());
-        return map;
+        return pageBean2Map(pageBean);
     }
 
     /**
@@ -209,10 +203,7 @@ public class PettyLoanContractController {
     @ResponseBody
     public Map<String, Object> findLastPettyLoanContractBySendStatus(Integer sendStatusCode, String signStartDate, String signEndDate, PageBean pageBean) throws BaseException {
         pageBean = contractService.findLastPettyLoanContractBySendStatus(sendStatusCode, signStartDate, signEndDate, pageBean);
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("total", pageBean.getTotalRows());
-        map.put("rows", pageBean.getDataList());
-        return map;
+        return pageBean2Map(pageBean);
     }
 
 
@@ -228,10 +219,7 @@ public class PettyLoanContractController {
     @ResponseBody
     public Map<String, Object> findPettyLoanContractByContractNo(String contractNo, PageBean pageBean) throws BaseException {
         pageBean = contractService.findPettyLoanContractByContractNo(contractNo.trim(), pageBean);
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("total", pageBean.getTotalRows());
-        map.put("rows", pageBean.getDataList());
-        return map;
+        return pageBean2Map(pageBean);
     }
 
 
@@ -247,11 +235,7 @@ public class PettyLoanContractController {
     @ResponseBody
     public Map<String, Object> findPettyLoanContractByContractNoFromBizSys(String contractNo, PageBean pageBean) throws BaseException {
         pageBean = contractService.findPettyLoanContractByContractNoFromBizSys(contractNo.trim(), pageBean);
-
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("total", pageBean.getTotalRows());
-        map.put("rows", pageBean.getDataList());
-        return map;
+        return pageBean2Map(pageBean);
 
     }
 

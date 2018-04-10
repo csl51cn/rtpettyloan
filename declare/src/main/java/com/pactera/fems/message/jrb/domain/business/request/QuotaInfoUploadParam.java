@@ -1,11 +1,15 @@
 package com.pactera.fems.message.jrb.domain.business.request;
 
+import com.global.framework.util.SysUtils;
 import org.global.framework.xmlbeans.bean.SerialBean;
 
 /**
  * 授信额度信息循环节点实体类
+ *
+ * @author senlin.deng
+ * @date 2018/4/8 14:38
  */
-public class QuotaInfoParam extends SerialBean {
+public class QuotaInfoUploadParam extends SerialBean {
 
     private String reportType;//上报类型
     private String orgCode;//公司的资质机构代码
@@ -19,7 +23,7 @@ public class QuotaInfoParam extends SerialBean {
     private String contractBeginDate;//额度合同起始日期,YYYYMMDD
     private String contractEndDate;//额度合同终止日期,YYYYMMDD
     private String contractAmount;//额度合同金额,以元为单位,两位小数
-    private String ccy = "730001";//币种  730001 	  CNY 人民币
+    private String ccy ;//币种  730001 	  CNY 人民币
     private String usedAmount;//已用额度,以元为单位,两位小数
     private String remainAmount;//剩余额度,以元为单位,两位小数
     private String guarType;//担保方式
@@ -93,11 +97,13 @@ public class QuotaInfoParam extends SerialBean {
     }
 
     public String getContractSignDate() {
+
         return contractSignDate;
     }
 
     public void setContractSignDate(String contractSignDate) {
-        this.contractSignDate = contractSignDate;
+        String date = SysUtils.formatDateStrToString(contractSignDate, "yyyyMMdd");
+        this.contractSignDate = date;
     }
 
     public String getContractBeginDate() {
@@ -105,7 +111,8 @@ public class QuotaInfoParam extends SerialBean {
     }
 
     public void setContractBeginDate(String contractBeginDate) {
-        this.contractBeginDate = contractBeginDate;
+        String date = SysUtils.formatDateStrToString(contractBeginDate, "yyyyMMdd");
+        this.contractBeginDate = date;
     }
 
     public String getContractEndDate() {
@@ -113,7 +120,8 @@ public class QuotaInfoParam extends SerialBean {
     }
 
     public void setContractEndDate(String contractEndDate) {
-        this.contractEndDate = contractEndDate;
+        String date = SysUtils.formatDateStrToString(contractEndDate, "yyyyMMdd");
+        this.contractEndDate = date;
     }
 
     public String getContractAmount() {

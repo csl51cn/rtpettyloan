@@ -77,7 +77,7 @@ public class ContractInfoDaoImpl extends BaseDaoSupport implements ContractInfoD
                 "  END"+
                 "  END, " +
                 "  '' " +
-                " ) AS guarType, " +
+                " ) AS guar_type, " +
                 " ISNULL( " +
                 "  CASE c.授信主体类型 " +
                 "  WHEN 1 THEN " +
@@ -256,7 +256,7 @@ public class ContractInfoDaoImpl extends BaseDaoSupport implements ContractInfoD
     public PageBean findLastContractBySendStatus(String sendStatus, String contractNo, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException {
         StringBuilder sql = new StringBuilder("select id,date_id,contract_no,customer_name,contract_amount,contract_sign_date,loan_cate,is_send,is_last,report_type,net_sign_no,is_real_quota_loan,real_quota_no FROM DC_CONTRACT_INFO WHERE 1 = 1  AND is_last = 'Y' ");
         List<Object> list = new ArrayList<Object>();
-        if (StringUtils.isNotBlank(sendStatus.toString())) {
+        if (StringUtils.isNotBlank(sendStatus)) {
 
             sql.append(" AND is_send = ? ");
             list.add(sendStatus);

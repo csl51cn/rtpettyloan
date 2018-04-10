@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--授信额度信息批量文件上传-->
-<transaction className="com.pactera.fems.message.jrb.domain.business.request.QuotaInfo" fieldName="gettx" nodeName="gettx" type="Single" extends="JRBReqBatchFileUploadMsg" extendsfield="transaction.body" isHide="N">
+<transaction className="com.pactera.fems.message.jrb.domain.business.request.QuotaInfoUpload" fieldName="gettx" nodeName="gettx" type="Single" extends="JRBReqBatchFileUploadMsg" extendsfield="transaction.body" isHide="N">
     <field fieldName="batchNo" nodeName="batch_no" text="批次号" type = "String" required = "Y" length="[1,50]"/>
     <field fieldName="dataType" nodeName="data_type" text="数据类型" type = "String" required = "Y" length="[1,10]"/>
     <field fieldName="recordCount" nodeName="record_count" text="总记录数" type = "String" required = "Y" length="[16]"/>
     <field fieldName="quotaInfo" nodeName="quota_info" text="" className="java.util.ArrayList" type = "Group" subNodeName="quota_info" isHide="H" >
-        <field className="com.pactera.fems.message.jrb.domain.business.request.QuotaInfoParam" type="Single" fieldName="quotaInfo" nodeName="quota_info" isHide="N">
+        <field className="com.pactera.fems.message.jrb.domain.business.request.QuotaInfoUploadParam" type="Single" fieldName="quotaInfo" nodeName="quota_info" isHide="N">
             <field fieldName="reportType" nodeName="report_type" text="上报类型" type = "String" required = "Y" length="[6]"/>
             <field fieldName="orgCode" nodeName="org_code" text="组织机构代码" type = "String" required = "Y" length="[1,20]"/>
             <field fieldName="contractNo" nodeName="contract_no" text="额度协议编号" type = "String" required = "Y" length="[1,40]" />

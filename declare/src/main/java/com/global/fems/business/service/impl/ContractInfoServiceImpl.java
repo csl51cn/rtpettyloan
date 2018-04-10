@@ -128,8 +128,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             //设置共同借款人相关信息
             setCoCustomer(contractInfoCycleNode);
 
-            //设置担保方式,需要手动填写,默认设置为信用 240001
-            contractInfoCycleNode.setGuarType("240001");
             //设置币种,人民币:730001
             contractInfoCycleNode.setCcy("730001");
             //设置合同状态,有效 :490001
@@ -307,7 +305,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                     } else {
                         contractInfoCycleNode = contractInfoNode;
                         contractInfoNode.setIsLast("N");
-                        // contractInfoDao.saveOrUpdate(contractInfoNode);
                     }
                 }
                 contractInfoDao.batchUpdateContract(list, true);

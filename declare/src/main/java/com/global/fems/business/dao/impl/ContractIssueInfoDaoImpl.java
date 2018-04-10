@@ -219,7 +219,7 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
     public PageBean findLastContractBySendStatus(String sendStatusCode, String contractNo, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException {
         StringBuilder sql = new StringBuilder("SELECT id,date_id,due_bill_no,contract_no,customer_name,dd_amt AS contract_amount,sign_date AS contract_sign_date,loan_cate,is_send,is_last,report_type,net_sign_no,is_real_quota_loan,real_quota_no FROM DC_CONTRACT_ISSUE_INFO WHERE  1 = 1 AND is_last = 'Y' ");
         List<Object> list = new ArrayList<Object>();
-        if (sendStatusCode != null && StringUtils.isNotBlank(sendStatusCode)) {
+        if (StringUtils.isNotBlank(sendStatusCode)) {
             sql.append(" AND is_send = ? ");
             list.add(sendStatusCode);
         }

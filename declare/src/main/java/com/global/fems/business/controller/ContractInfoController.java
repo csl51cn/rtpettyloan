@@ -26,7 +26,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/contractInfo.do")
-public class ContractInfoController {
+public class ContractInfoController extends BaseController {
 
     @Autowired
     private ContractInfoService contractInfoService;
@@ -268,19 +268,6 @@ public class ContractInfoController {
     }
 
 
-    /**
-     * 将PageBean中的总记录数和数据放到map中
-     *
-     * @param pageBean
-     * @return
-     */
-    private Map<String, Object> pageBean2Map(PageBean pageBean) {
-
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("total", pageBean.getTotalRows());
-        map.put("rows", pageBean.getDataList());
-        return map;
-    }
 
 
 }

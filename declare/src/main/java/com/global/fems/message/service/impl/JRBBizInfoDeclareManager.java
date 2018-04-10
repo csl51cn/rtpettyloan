@@ -1,6 +1,7 @@
 package com.global.fems.message.service.impl;
 
 import com.global.fems.business.domain.*;
+import com.global.fems.business.domain.QuotaInfo;
 import com.global.fems.business.enums.DataTypeEnum;
 import com.global.fems.message.util.OrgCode;
 import com.global.framework.system.service.SysCommonService;
@@ -243,4 +244,17 @@ public class JRBBizInfoDeclareManager {
     }
 
 
+    /**
+     * 组装批量文件gettx信息,调用jrbBizInfoDeclareService的方法发送打SFTP服务器上.贷款回收信息
+     *
+     * @param list
+     * @return
+     * @throws Exception
+     */
+    public Map sendQuotaInfoBatchFile(ArrayList<QuotaInfo> list) throws Exception {
+        QuotaInfoUpload quotaInfo= new QuotaInfoUpload();
+        quotaInfo.setBatchNo(sysCommonService.getSeqNo("wfl_taskinfo"));
+        Map map = jrbBizInfoDeclareService.doSendQuotaInfoBatchFile(list, quotaInfo);
+        return map;
+    }
 }

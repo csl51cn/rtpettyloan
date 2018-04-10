@@ -23,7 +23,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/payPlanInfo.do")
-public class PayPlanInfoController {
+public class PayPlanInfoController extends BaseController{
     @Autowired
     private PayPlanInfoService payPlanInfoService;
 
@@ -92,7 +92,7 @@ public class PayPlanInfoController {
      * 从DC_PAYPLAN_INFO表中根据签约时间和发送状态查询最新还款计划信息,申报时使用
      *
      * @param sendStatusCode
-     * @param contactNo
+     * @param contractNo
      * @param startDate
      * @param endDate
      * @param pageBean
@@ -101,8 +101,8 @@ public class PayPlanInfoController {
      */
     @RequestMapping(params = "method=findLastPayPlanInfoBySendStatus")
     @ResponseBody
-    public Map<String, Object> findLastPayPlanInfoBySendStatus(String sendStatusCode, String contactNo, String startDate, String endDate, PageBean pageBean) throws DAOException {
-        pageBean = payPlanInfoService.findLastPayPlanInfoBySendStatus(sendStatusCode, contactNo, startDate, endDate, pageBean);
+    public Map<String, Object> findLastPayPlanInfoBySendStatus(String sendStatusCode, String contractNo, String startDate, String endDate, PageBean pageBean) throws DAOException {
+        pageBean = payPlanInfoService.findLastPayPlanInfoBySendStatus(sendStatusCode, contractNo, startDate, endDate, pageBean);
         return pageBean2Map(pageBean);
     }
 
@@ -216,18 +216,5 @@ public class PayPlanInfoController {
         return resultModel;
     }
 
-    /**
-     * 将PageBean中的总记录数和数据放到map中
-     *
-     * @param pageBean
-     * @return
-     */
-    private Map<String, Object> pageBean2Map(PageBean pageBean) {
-
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("total", pageBean.getTotalRows());
-        map.put("rows", pageBean.getDataList());
-        return map;
-    }
 
 }

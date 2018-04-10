@@ -273,7 +273,7 @@ public class PayPlanInfoServiceImpl implements PayPlanInfoService {
      * 从DC_PAYPLAN_INFO表中根据签约时间和发送状态查询最新还款计划信息,申报时使用
      *
      * @param sendStatusCode
-     * @param contactNo
+     * @param contractNo
      * @param signStartDate
      * @param signEndDate
      * @param pageBean
@@ -281,8 +281,8 @@ public class PayPlanInfoServiceImpl implements PayPlanInfoService {
      * @throws DAOException
      */
     @Override
-    public PageBean findLastPayPlanInfoBySendStatus(String sendStatusCode, String contactNo, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException {
-        return payPlanInfoDao.findLastPayPlanInfoBySendStatus(sendStatusCode, contactNo, signStartDate, signEndDate, pageBean);
+    public PageBean findLastPayPlanInfoBySendStatus(String sendStatusCode, String contractNo, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException {
+        return payPlanInfoDao.findLastPayPlanInfoBySendStatus(sendStatusCode, contractNo, signStartDate, signEndDate, pageBean);
     }
 
     /**

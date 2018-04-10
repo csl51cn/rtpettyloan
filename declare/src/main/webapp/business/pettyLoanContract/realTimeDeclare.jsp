@@ -215,7 +215,7 @@
                     <td>
                         <input type="text" id="contractNo" name="contractNo" style="border:1px solid #95B8E7;
                         *color:#007fca;width:180px;padding:4px 2px;">
-                        <input type="hidden" name="sendStatusCode" id="sendStatus" value="1"/>
+                        <input type="hidden" name="sendStatusCode" id="sendStatus" value="0"/>
                         <input id="declareQueryBtn" type="button" class="inputButton" onclick="doDeclareQuery();"
                                value="查询"/>
                         <input id="declareBtn" type="button" class="inputButton" onclick="doDeclare();"

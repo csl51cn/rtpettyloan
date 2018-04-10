@@ -25,7 +25,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/repayInfo.do")
-public class RepayInfoController {
+public class RepayInfoController extends BaseController  {
     @Autowired
     private RepayInfoService repayInfoService;
 
@@ -259,18 +259,6 @@ public class RepayInfoController {
         return resultModel;
     }
 
-    /**
-     * 将PageBean中的总记录数和数据放到map中
-     *
-     * @param pageBean
-     * @return
-     */
-    private Map<String, Object> pageBean2Map(PageBean pageBean) {
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("total", pageBean.getTotalRows());
-        map.put("rows", pageBean.getDataList());
-        return map;
-    }
 
 }
 

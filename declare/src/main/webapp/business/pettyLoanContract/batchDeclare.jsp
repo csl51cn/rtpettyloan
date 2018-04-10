@@ -11,7 +11,7 @@
 
     <script type="text/javascript">
             var  urlMap  = new Map();
-            urlMap.set("0101","${basePath}/");//0101交易类型 授信额度信息上报
+            urlMap.set("0101","${basePath}/quotaInfo.do?method=findLastQuotaInfoBySendStatus");//0101交易类型 授信额度信息上报
             urlMap.set("0102","${basePath}/contractInfo.do?method=findLastContractBySendStatus");//0102交易类型 贷款合同信息上报
             urlMap.set("0103","${basePath}/contractIssueInfo.do?method=findLastContractBySendStatus");//0103交易类型 贷款放款信息上报
             urlMap.set("0104","${basePath}/repayInfo.do?method=findLastRepayInfoSendStatus");//0104交易类型 贷款回收信息上报
@@ -26,7 +26,10 @@
                         init_b();
                     }else if(n == '0104'){
                         init_c();
+                    }else if (n == '0101'){
+                        init_d();
                     }
+
                 }
             })
         })
@@ -389,7 +392,108 @@
 
         }
 
+        function init_d(){
+                //初始化申报查询的datagrid 0101上报类型使用
+                $("#declareQueryResultTb").datagrid({
+                    url: '',
+                    checkOnSelect: true,
+                    pagination: true,
+                    pageSize: 15,
+                    pageList: [5, 10, 15, 20, 30 , 100 , 500],
+                    columns: [[{
+                        field: "id",
+                        title: "主键",
+                        checkbox: true
+                    }, {
+                        field: "dateId",
+                        title: "Date_Id",
+                        hidden: true
+                    },{
+                        field: "contractNoQuery",
+                        title: "合同编号",
+                        width: 94
+                    }, {
+                        field: "contractNo",
+                        title: "额度协议编号",
+                        width: 220
+                    }, {
+                        field: "customerName",
+                        title: "借款人名称",
+                        width: 95
 
+                    }, {
+                        field: "contractAmount",
+                        title: "额度协议金额",
+                        width: 90
+                    },  {
+                        field: "usedAmount",
+                        title: "已用额度",
+                        width: 90
+                    }, {
+                        field: "remainAmount",
+                        title: "剩余额度",
+                        width: 90
+                    },{
+                        field: "contractSignDate",
+                        title: "协议签订日期",
+                        width: 100,
+                        formatter: function (value, row) {
+                            return formatDatebox(value);
+                        }
+                    }, {
+                        field: "contractBeginDate",
+                        title: "额度协议起期",
+                        width: 100,
+                        formatter: function (value, row) {
+                            return formatDatebox(value);
+                        }
+                    }, {
+                        field: "contractEndDate",
+                        title: "额度协议止期",
+                        width: 100,
+                        formatter: function (value, row) {
+                            return formatDatebox(value);
+                        }
+                    },  {
+                        field: "isSend",
+                        title: "是否已申报",
+                        width: 80,
+                        formatter: function (value, row) {
+                            if (1 == value) {
+                                return "是";
+                            } else {
+                                return "否";
+                            }
+                        }
+                    }, {
+                        field: "isLast",
+                        title: "是否是最新",
+                        width: 80,
+                        formatter: function (value, row) {
+                            if (value == 'Y') {
+                                return '是';
+                            } else if (value == 'N') {
+                                return '否';
+                            }
+                        }
+                    }, {
+                        field: "reportType",
+                        title: "上报类型",
+                        width: 80,
+                        formatter: function (value, row) {
+                            if ('100001' == value) {
+                                return '新增记录';
+                            } else if ('100002' == value) {
+                                return '修改记录';
+                            } else if ('100003' == value) {
+                                return '删除记录';
+                            }
+                        }
+
+                    }]]
+                })
+
+            }
         function doDeclare() {
             var ids = [];
             var rows = $("#declareQueryResultTb").datagrid("getSelections");

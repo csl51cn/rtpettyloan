@@ -166,7 +166,7 @@ public class PayPlanInfoDaoImpl extends BaseDaoSupport implements PayPlanInfoDao
     public PageBean findLastPayPlanInfoBySendStatus(String sendStatusCode, String contractNo, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException {
         StringBuilder sql = new StringBuilder("SELECT id,date_id,batch_no,due_bill_no,contract_no,counter,total_counter,repay_date,repay_pri_amt,repay_int_amt,start_date,end_date,is_send,is_last,report_type,is_real_quota_loan,real_quota_no FROM DC_PAYPLAN_INFO WHERE is_last = 'Y' ");
         List<Object> list = new ArrayList<Object>();
-        if (sendStatusCode != null && StringUtils.isNotBlank(sendStatusCode)) {
+        if (StringUtils.isNotBlank(sendStatusCode)) {
             sql.append(" AND is_send = ? ");
             list.add(sendStatusCode);
         }

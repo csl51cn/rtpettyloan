@@ -620,7 +620,6 @@
 									panelWidth: 255,
 									idField: 'dictCode',
 									textField: 'dictName',
-									value:'740002',
 									url: '${basePath }/param/paramCommonController.do?method=getDatadict&code=IS_OR_NOT',
 									columns: [[
 										{field:'dictCode',title:'代码',width:60},
@@ -761,7 +760,7 @@
 <%--申报查询模态框--%>
 <div id="declareQueryWindow" class="easyui-window" title="申报查询"
      data-options="modal:true,closed:true,iconCls:'icon-save',left:'100px',top:'100px'"
-     style="width:1150px;height:600px;padding:10px;">
+     style="width:1115px;height:600px;padding:10px;">
 
     <form action="" method="post" id="declareQueryForm">
         <table>

@@ -353,6 +353,52 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
         return result;
     }
 
+    /**
+     * 授信额度信息文件批量上传到SFTP服务器
+     * @param quotaInfoList
+     * @param quotaInfoUpload
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public Map doSendQuotaInfoBatchFile(ArrayList<QuotaInfo> quotaInfoList, QuotaInfoUpload quotaInfoUpload) throws Exception {
+        Map result = new HashMap();
+        ArrayList<QuotaInfoUploadParam> quotaInfoUploadParamList = new ArrayList<>();
+        for (QuotaInfo node : quotaInfoList) {
+            //校验数据,如果校验失败,将不符合要求的数据信息返回到页面
+            if (validateContract(node, result, new Class[]{})) {
+                StringBuilder validateError = new StringBuilder("当前记录申报失败,此条记录之前的记录已申报(如果有).合同信息--合同编号:");
+                validateError.append(node.getContractNoQuery());
+                validateError.append(" ");
+                validateError.append(result.get("validateError"));
+                result.put("validateError", validateError.toString());
+                return result;
+            }
+            QuotaInfoUploadParam quotaInfoUploadParam = new QuotaInfoUploadParam();
+            Map fieldAndValue = new HashMap();
+            PropertyUtils.copyBean2Map(node, fieldAndValue);
+            //将还款计划信息循环节点转换为与xml对应的实体类
+            JRBGetTxValidator.setFeild(quotaInfoUploadParam, fieldAndValue);
+
+            //设置时间格式
+            quotaInfoUploadParam.setContractSignDate(quotaInfoUploadParam.getContractSignDate());
+            quotaInfoUploadParam.setContractBeginDate(quotaInfoUploadParam.getContractBeginDate());
+            quotaInfoUploadParam.setContractEndDate(quotaInfoUploadParam.getContractEndDate());
+            quotaInfoUploadParamList.add(quotaInfoUploadParam);
+            fieldAndValue.clear();
+        }
+        quotaInfoUpload.setRecordCount(quotaInfoUploadParamList.size() + "");
+        quotaInfoUpload.setQuotaInfo(quotaInfoUploadParamList);
+        Map map = JRBMsgHandler.sendBatchFile(quotaInfoUpload, quotaInfoUpload.getDataType(), quotaInfoUpload.getBatchNo());
+        if (map.get("error") != null) {
+            result.put("error", map.get("error"));
+        } else {
+            result.put("fileName", map.get("fileName"));
+        }
+
+        return result;
+    }
+
 
     /**
      * 设置共借人信息

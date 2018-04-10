@@ -442,7 +442,7 @@
 
         //刷新当前页
         function doReset() {
-            window.location.href = "${basePath}/contractInfo.do?method=showContractInfo";
+            window.location.href = "${basePath}/contractIssueInfo.do?method=showContractIssueInfo";
         }
 
         //检查结束时间是否大于等于开始时间

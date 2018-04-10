@@ -325,13 +325,13 @@ public class ContractIssueInfoServiceImpl implements ContractIssueInfoService {
                 contractIssueInfo.setIsLast("Y");
                 //校验属性值是否为空
                 validate(contractIssueInfo.getContractNo(), contractIssueInfo);
-                //设置上报类型为修改记录
+                //设置上报类型为删除记录
                 contractIssueInfo.setReportType("100003");
                 contractIssueInfoDao.saveOrUpdate(contractIssueInfo);
 
 
             } catch (DAOException e) {
-                logger.debug("ContractInfoServiceImpl:deleteRecord()", e.getLocalizedMessage());
+                logger.debug("ContractIssueInfoServiceImpl:deleteRecord()", e.getLocalizedMessage());
                 return ResultModel.fail(e.getLocalizedMessage());
             }
         }

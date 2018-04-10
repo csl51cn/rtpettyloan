@@ -26,6 +26,8 @@ public interface JRBBizInfoDeclareService {
 
     Map doSendRepayInfoBatchFile(ArrayList<RepayInfo> list, RepayInfoUpload repayInfoUpload) throws Exception;
 
+    Map doSendQuotaInfoBatchFile(ArrayList<QuotaInfo> list, QuotaInfoUpload quotaInfoUpload) throws Exception;
+
     Map doQueryDeclared(QueryDeclared queryDeclared, JRBReqHeaderMsg headerMsg) throws Exception;
 
 }

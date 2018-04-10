@@ -1,6 +1,7 @@
 package com.pactera.fems.message.jrb.support;
 
 
+import com.global.fems.client.SFTPClient;
 import com.global.fems.client.SocketClient;
 import com.pactera.fems.message.jrb.domain.JRBGetTx;
 import com.pactera.fems.message.jrb.domain.JRBReqBatchFileMsg;
@@ -34,7 +35,7 @@ public class JRBMsgHandler {
         log.debug("发送的请求报文:\r\n" + reqMsg);
         String retMsg = null;
         // TODO: 2018/4/2 生产环境需要将下面的注释打开 
-//        retMsg = sendMessageBySocket(reqMsg, retMsg);
+        retMsg = sendMessageBySocket(reqMsg, retMsg);
         //将返回的报文转换成javaBean
         Map map = JRBIntfCodeCfgUtil.getCfgCache(getTx.getClass().getName());
         String serviceMethod = (String) map.get("serviceMethod");
@@ -61,13 +62,13 @@ public class JRBMsgHandler {
         FileInputStream fileInputStream = new FileInputStream(pathAndFileName);
         String destinationFileName = pathAndFileName.substring(pathAndFileName.lastIndexOf("/")+1);
         // TODO: 2018/4/2 生产环境需要将下面的注释打开 
-//        try {
-//            SFTPClient.put(fileInputStream,  destinationFileName);
-//        } catch (Exception e) {
-//            log.error("上传文件失败",e);
-//            map.put("error","文件上传失败") ;
-//           return map;
-//        }
+        try {
+            SFTPClient.put(fileInputStream,  destinationFileName);
+        } catch (Exception e) {
+            log.error("上传文件失败",e);
+            map.put("error","文件上传失败") ;
+           return map;
+        }
         map.put("fileName", destinationFileName);
         return map;
     }
@@ -93,7 +94,7 @@ public class JRBMsgHandler {
         log.debug("发送的请求报文:\r\n" + reqMsg);
         String retMsg = null;
         // TODO: 2018/4/2 生产环境需要将下面的注释打开
-//        retMsg = sendMessageBySocket(reqMsg, retMsg);
+        retMsg = sendMessageBySocket(reqMsg, retMsg);
         //将返回的报文转换成javaBean
         Map map = JRBIntfCodeCfgUtil.getCfgCache(headerMsg.getClass().getName());
         String serviceMethod = (String) map.get("serviceMethod");

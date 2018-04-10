@@ -40,4 +40,9 @@
            rspEntity="com.pactera.fems.message.jrb.domain.business.response.QueryDeclaredRtrTx"
            reqXmlMapping="JRBReqQueryDeclared" rspXmlMapping="JRBRspQueryDeclared"
            serviceMethod="JRBBizInfoDeclareService.doQueryDeclared"/>
+    <field serviceName="授信额度信息上报"
+           reqEntity="com.pactera.fems.message.jrb.domain.business.request.QuotaInfoUpload"
+           rspEntity="com.pactera.fems.message.jrb.domain.JRBRespBatchFileMsg"
+           reqXmlMapping="JRBReqQuotaInfo" rspXmlMapping="JRBRspBatchFileMsg"
+           serviceMethod="JRBBizInfoDeclareService.doSendQuotaInfoBatchFile"/>
 </config>

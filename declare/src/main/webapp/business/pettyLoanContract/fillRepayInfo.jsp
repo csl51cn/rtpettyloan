@@ -494,7 +494,7 @@
 
         //刷新当前页
         function doReset() {
-            window.location.href = "${basePath}/contractInfo.do?method=showContractInfo";
+            window.location.href = "${basePath}/repayInfo.do?method=showRepayInfo";
         }
 
         //检查结束时间是否大于等于开始时间
@@ -831,7 +831,7 @@
 <%--业务查询模态框--%>
 <div id="businessQueryWindow" class="easyui-window" title="业务查询"
      data-options="modal:true,closed:true,iconCls:'icon-save',left:'100px',top:'100px'"
-     style="width:1200px;height:600px;padding:10px;">
+     style="width:1115px;height:600px;padding:10px;">
 
     <form action="" method="post" id="businessQueryForm">
         <table>
@@ -877,7 +877,7 @@
 <%--申报查询模态框--%>
 <div id="declareQueryWindow" class="easyui-window" title="申报查询"
      data-options="modal:true,closed:true,iconCls:'icon-save',left:'100px',top:'100px'"
-     style="width:1200px;height:600px;padding:10px;">
+     style="width:1115px;height:600px;padding:10px;">
 
     <form action="" method="post" id="declareQueryForm">
         <table>

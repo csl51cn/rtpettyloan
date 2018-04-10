@@ -24,7 +24,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/contractIssueInfo.do")
-public class ContractIssueInfoController {
+public class ContractIssueInfoController extends BaseController {
 
     @Autowired
     private ContractIssueInfoService contractIssueInfoService;
@@ -128,11 +128,13 @@ public class ContractIssueInfoController {
             } else {
                 contractIssueInfoService.saveOrUpdate(contractIssueInfo);
             }
-            model.addAttribute("msg", "1");//返回操作成功标志
+            //返回操作成功标志
+            model.addAttribute("msg", "1");
 
         } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("msg", e.getLocalizedMessage());//返回操作失败标志
+            //返回操作失败标志
+            model.addAttribute("msg", e.getLocalizedMessage());
         }
         model.addAttribute("model", contractIssueInfo);
         return "business/pettyLoanContract/fillContractIssueInfo";
@@ -266,19 +268,6 @@ public class ContractIssueInfoController {
     }
 
 
-    /**
-     * 将PageBean中的总记录数和数据放到map中
-     *
-     * @param pageBean
-     * @return
-     */
-    private Map<String, Object> pageBean2Map(PageBean pageBean) {
-
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("total", pageBean.getTotalRows());
-        map.put("rows", pageBean.getDataList());
-        return map;
-    }
 
 
 }

@@ -90,14 +90,18 @@
                     field: "dateId",
                     title: "Date_Id",
                     hidden: true
+                },{
+                    field: "contractNoQuery",
+                    title: "合同编号",
+                    width: 94
                 }, {
                     field: "contractNo",
                     title: "额度协议编号",
-                    width: 95
+                    width: 230
                 }, {
                     field: "customerName",
                     title: "借款人名称",
-                    width: 95
+                    width: 85
 
                 }, {
                     field: "contractAmount",
@@ -164,7 +168,7 @@
 
         function queryContractByDateId(dateId) {
             if (dateId != undefined) {
-                window.location.href = "${basePath}/contractInfo.do?method=findContractByDateId&dateId=" + dateId;
+                window.location.href = "${basePath}/quotaInfo.do?method=findQuotaInfoByDateId&dateId=" + dateId;
                 $('#businessQueryWindow').window('close');
             }
 
@@ -182,7 +186,7 @@
             }
             $.ajax({
                 type: "POST",
-                url: "${basePath}/contractInfo.do?method=batchSaveContract",
+                url: "${basePath}/quotaInfo.do?method=batchSaveQuotaInfo",
                 data: {"ids": ids.toString()},
                 dataType: "json",
                 success: function (data) {
@@ -199,7 +203,7 @@
             var value = $("#contract_no1").val();
             if (value != "") {
                 $("#businessQueryResultTb").datagrid({
-                    queryParams: {"contractNo": value, "sendStatus": ""},
+                    queryParams: {"contractNoQuery": value, "sendStatus": ""},
                     url: "${basePath}/quotaInfo.do?method=findQuotaInfoByContractNoFromBizSys"
                 });
             } else if ($("#businessQueryForm").form('validate') == true) {
@@ -232,27 +236,53 @@
                     field: "dateId",
                     title: "Date_Id",
                     hidden: true
+                },{
+                    field: "contractNoQuery",
+                    title: "合同编号",
+                    width: 94
                 }, {
                     field: "contractNo",
-                    title: "合同编号",
-                    width: 100
+                    title: "额度协议编号",
+                    width: 230
                 }, {
                     field: "customerName",
                     title: "借款人名称",
-                    width: 100
+                    width: 85
 
                 }, {
                     field: "contractAmount",
-                    title: "合同金额",
-                    width: 100,
+                    title: "额度协议金额",
+                    width: 90
+                },  {
+                    field: "usedAmount",
+                    title: "已用额度",
+                    width: 90
                 }, {
+                    field: "remainAmount",
+                    title: "剩余额度",
+                    width: 90
+                },{
                     field: "contractSignDate",
-                    title: "合同签订日期",
+                    title: "协议签订日期",
                     width: 100,
                     formatter: function (value, row) {
                         return formatDatebox(value);
                     }
                 }, {
+                    field: "contractBeginDate",
+                    title: "额度协议起期",
+                    width: 100,
+                    formatter: function (value, row) {
+                        return formatDatebox(value);
+                    }
+                }, {
+                    field: "contractEndDate",
+                    title: "额度协议止期",
+                    width: 100,
+                    formatter: function (value, row) {
+                        return formatDatebox(value);
+                    }
+                },  {
                     field: "isSend",
                     title: "是否已申报",
                     width: 80,
@@ -288,23 +318,7 @@
                         }
                     }
 
-                }, {
-                    field: "isRealQuotaLoan",
-                    title: "是否额度项下贷款",
-                    width: 120,
-                    formatter: function (value, row) {
-                        if ('740001' == value) {
-                            return "是";
-                        } else {
-                            return "否";
-                        }
-                    }
-                }, {
-                    field: "realQuotaNo",
-                    title: "授信额度协议编号",
-                    width: 230
-                }
-                ]],
+                }]],
                 onDblClickRow: function (rowIndex, rowData) {
                     queryContractByContractId(rowData.id);
                 },
@@ -328,8 +342,8 @@
             var value = $("#contract_no2").val();
             if (value != "") {
                 $("#declareQueryResultTb").datagrid({
-                    queryParams: {"contractNo": value},
-                    url: "${basePath}/contractInfo.do?method=findContractBriefInfoByContractNo"
+                    queryParams: {"contractNoQuery": value},
+                    url: "${basePath}/quotaInfo.do?method=findQuotaBriefInfoByContractNo"
                 });
 
             } else if ($("#declareQueryForm").form('validate') == true) {
@@ -343,7 +357,7 @@
                 if (flag) {
                     $("#declareQueryResultTb").datagrid({
                         queryParams: form2Json("declareQueryForm"),
-                        url: "${basePath}/contractInfo.do?method=findContractBySendStatus"
+                        url: "${basePath}/quotaInfo.do?method=findQuotaInfoBySendStatus"
                     });
                 }
             }
@@ -352,7 +366,7 @@
         //根据记录id查询合同信息
         function queryContractByContractId(id) {
             if (id != undefined) {
-                window.location.href = "${basePath}/contractInfo.do?method=findContractById&id=" + id;
+                window.location.href = "${basePath}/quotaInfo.do?method=findQuotaInfoById&id=" + id;
                 $('#declareQueryWindow').window('close');
             }
         }
@@ -368,7 +382,7 @@
             manualFill();
             $.ajax({
                     type: "POST",
-                    url: "${basePath}/contractInfo.do?method=deleteRecord",
+                    url: "${basePath}/quotaInfo.do?method=deleteRecord",
                     data: form2Json("fo"),
                     dataType: "json",
                     success: function (data) {
@@ -395,7 +409,7 @@
             }
             $.ajax({
                 type: "POST",
-                url: "${basePath}/contractInfo.do?method=deleteRecordBatch",
+                url: "${basePath}/quotaInfo.do?method=deleteRecordBatch",
                 data: {"ids": ids.toString()},
                 dataType: "json",
                 success: function (data) {
@@ -420,7 +434,7 @@
             }
             $.ajax({
                 type: "POST",
-                url: "${basePath}/contractInfo.do?method=setNotSend",
+                url: "${basePath}/quotaInfo.do?method=setNotSend",
                 data: {"ids": ids.toString()},
                 dataType: "json",
                 success: function (data) {
@@ -434,7 +448,7 @@
         }
         //刷新当前页
         function doReset() {
-            window.location.href = "${basePath}/contractInfo.do?method=showContractInfo";
+            window.location.href = "${basePath}/quotaInfo.do?method=showQuotaInfo";
         }
 
         //检查结束时间是否大于等于开始时间
@@ -500,7 +514,7 @@
     </script>
 </head>
 <body>
-<form id="fo" action="" method="post">
+<form id="fo" action="${basePath}/quotaInfo.do?method=saveQuotaInfo" method="post">
     <div region="north" style="overflow: hidden;" border="false"
          data-options=" collapsed:false">
         <div style="padding: 1px; background: #EFEFEF;" id="toolbarid">
@@ -612,14 +626,14 @@
                 </tr>
                 <tr>
 
-                    <th width="15%"><span class="warning">*</span>合同签订日期</th>
+                    <th width="15%"><span class="warning">*</span>协议签订日期</th>
                     <td>
                         <input type="text" id="contractSignDate" name="contractSignDate"
                                value="${model.contractSignDate }" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
                                class="inputText"/>
                         <span class="warning">${errors['contractSignDate']}</span>
                     </td>
-                    <th width="15"><span class="warning">*</span>合同有效起始日期</th>
+                    <th width="15"><span class="warning">*</span>协议有效起始日期</th>
                     <td width="32%">
                         <input type="text" id="contractBeginDate" name="contractBeginDate"
                                value="${model.contractBeginDate } "
@@ -630,7 +644,7 @@
                 </tr>
                 <tr>
 
-                    <th width="15%"><span class="warning">*</span>合同有效结束日期</th>
+                    <th width="15%"><span class="warning">*</span>协议有效结束日期</th>
                     <td>
                         <input type="text" id="contractEndDate" name="contractEndDate"
                                value="${model.contractEndDate }" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
@@ -754,6 +768,13 @@
                                value="${model.remark}" class="inputText">
                     </td>
                 </tr>
+                <tr><th width="15%"><span class='warning'>*</span>JK开头合同编号</th>
+                    <td width="32%">
+                        <input type="text" id="contractNoQuery" name="contractNoQuery"
+                               value="${model.contractNoQuery}" class="inputText">
+                        <span class="warning">${errors['contractNoQuery']}</span>
+                    </td>
+                </tr>
             </table>
         </div>
     </div>
@@ -784,7 +805,7 @@
                 </td>
             </tr>
             <tr>
-                <th width="5%">额度协议编号:</th>
+                <th width="5%">合同编号(JK):</th>
                 <td>
                     <input type="text" id="contract_no1" name="contract_no" style="border:1px solid #95B8E7;
                         *color:#007fca;width:180px;padding:4px 2px;">
@@ -811,7 +832,7 @@
 <%--申报查询模态框--%>
 <div id="declareQueryWindow" class="easyui-window" title="申报查询"
      data-options="modal:true,closed:true,iconCls:'icon-save',left:'100px',top:'100px'"
-     style="width:1100px;height:600px;padding:10px;">
+     style="width:1115px;height:600px;padding:10px;">
 
     <form action="" method="post" id="declareQueryForm">
         <table>
@@ -842,7 +863,7 @@
                 </td>
             </tr>
             <tr>
-                <th width="5%">额度协议编号:</th>
+                <th width="5%">合同编号(JK):</th>
                 <td>
                     <input type="text" id="contract_no2" name="contract_no" style="border:1px solid #95B8E7;
                         *color:#007fca;width:180px;padding:4px 2px;">

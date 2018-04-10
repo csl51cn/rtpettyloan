@@ -3,6 +3,7 @@ package com.global.fems.business.domain;
 
 import com.global.framework.dbutils.annotation.ColumnMapping;
 import com.global.framework.dbutils.annotation.TableMapping;
+import com.global.framework.dbutils.support.Entity;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -14,7 +15,7 @@ import java.util.Date;
  * 授信额度信息实体类
  */
 @TableMapping(primaryKey = "id", primaryKeyType = "Single", tableName = "DC_QUOTA_INFO")
-public class QuotaInfo {
+public class QuotaInfo   extends Entity {
 
     /**
      * 主键
@@ -57,6 +58,13 @@ public class QuotaInfo {
     @NotBlank(message = "{QuotaInfo.contractNo.null}")
     @ColumnMapping(columnName = "contract_no", columnType = "String")
     private String contractNo;
+
+    /**
+     * 供查询的合同编号
+     */
+    @NotBlank(message = "{QuotaInfo.contractNoQuery.null}")
+    @ColumnMapping(columnName = "contract_no_query", columnType = "String")
+    private String contractNoQuery;
 
     /**
      * 额度协议名称
@@ -420,5 +428,13 @@ public class QuotaInfo {
 
     public void setIsLast(String isLast) {
         this.isLast = isLast;
+    }
+
+    public String getContractNoQuery() {
+        return contractNoQuery;
+    }
+
+    public void setContractNoQuery(String contractNoQuery) {
+        this.contractNoQuery = contractNoQuery;
     }
 }
