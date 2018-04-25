@@ -28,7 +28,7 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
      */
     @Override
     public PageBean findContractByContractNoFromContractInfo(String contractNo, String sendStatus, PageBean pageBean) throws DAOException {
-        StringBuilder sql = new StringBuilder("SELECT id,date_id,contract_no,customer_name,contract_amount,contract_sign_date,net_sign_no,is_last,is_real_quota_loan,real_quota_no,is_real_quota_loan,real_quota_no FROM DC_CONTRACT_INFO WHERE is_last = 'Y' AND contract_no = ? ");
+        StringBuilder sql = new StringBuilder("SELECT id,date_id,contract_no,customer_name,contract_amount,contract_sign_date,net_sign_no,is_last,is_real_quota_loan,real_quota_no FROM DC_CONTRACT_INFO WHERE is_last = 'Y' AND contract_no = ? ");
         List<Object> list = new ArrayList<Object>();
         list.add(contractNo);
         if (sendStatus != null && StringUtils.isNotBlank(sendStatus)) {
@@ -49,12 +49,12 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
      */
     @Override
     public ContractIssueInfo findContractByDateId(String dateId) throws DAOException {
-        String sql = "SELECT a.contract_no,a.contract_no AS dueBillNo, a.date_id,a.net_sign_no,a.customer_type,a.customer_name,a.certificate_type,a.certificate_no,a.contract_amount AS dd_amt, " +
-                "a.loan_cate,a.int_rate,a.pri_plty_rate,a.contract_sign_date AS sign_date,a.contract_begin_date AS dd_date,a.contract_end_date AS mature_date," +
+        String sql = "SELECT a.contract_no,a.contract_no AS dueBillNo, a.date_id,a.net_sign_no,a.customer_type,a.customer_name,a.certificate_type,a.certificate_no,b.授信金额 AS dd_amt, " +
+                "a.loan_cate,a.int_rate,a.pri_plty_rate,a.contract_sign_date AS sign_date,  convert(nvarchar ,b.放款日期,121)+' 00:00:00.000' AS dd_date,  e.到期日期 AS mature_date," +
                 "a.guar_type,a.loan_object,a.loan_object_size,b.认定区域编号 AS [zone],ISNULL(CASE a.loan_object_size WHEN '280002' THEN '260001' WHEN '280003' THEN '260002' ELSE NULL END,'') AS purpose, " +
                 "b.还款方式 AS rate_calc_mode,ISNULL (CASE b.授信主体类型 WHEN 1 THEN d.[行业类别] WHEN 2 THEN c.[行业分类] END,'')AS industry,a.is_real_quota_loan,a.real_quota_no FROM " +
                 "DC_CONTRACT_INFO a LEFT JOIN Data_WorkInfo b ON a.date_id = b.Date_Id  LEFT JOIN Data_CompanyInfo c ON b.授信主体编号 = c.ID " +
-                "LEFT JOIN Data_MemberInfo d ON b.授信主体编号 = d.ID WHERE a.is_last ='Y' AND a.date_id = ? ";
+                "LEFT JOIN Data_MemberInfo d ON b.授信主体编号 = d.ID left join ( Select Date_Id, Max(计划还款日) As 到期日期 From Date_还款计划表 Group By Date_Id) e on a.date_id = e.date_id WHERE a.is_last ='Y' AND a.date_id = ? ";
         return super.findForObjectBySql(sql, new Object[]{dateId}, ContractIssueInfo.class);
 
     }

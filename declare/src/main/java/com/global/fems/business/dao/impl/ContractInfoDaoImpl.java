@@ -103,8 +103,8 @@ public class ContractInfoDaoImpl extends BaseDaoSupport implements ContractInfoD
                 "  '' " +
                 " ) AS loan_object_size, " +
                 " a.contractsigndate AS contract_sign_date, " +
-                " c.放款日期 AS contract_begin_date, " +
-                " b.到期日期 AS contract_end_date, " +
+                " (case c.是否为循环授信贷款  when 870 then a.contractsigndate else   c.放款日期 end)AS contract_begin_date, " +
+                " (case c.是否为循环授信贷款  when 870 then DATEADD(m, c.循环授信期限, a.contractsigndate) else b.到期日期 end) AS contract_end_date, " +
                 " a.contractamount AS contract_amount, " +
                 " b.余额 AS outstanding, " +
                 " a.intrate AS int_rate, " +

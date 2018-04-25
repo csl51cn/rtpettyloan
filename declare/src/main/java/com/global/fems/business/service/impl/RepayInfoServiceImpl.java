@@ -93,15 +93,15 @@ public class RepayInfoServiceImpl implements RepayInfoService {
                         continue;
                     }
                 }
-                //设置实还本金,实还利息.findRepayInfoByIdFromBizSys()查询的结果不能合并同期同日多条记录
+                //设置实还本金,实还利息.findRepayInfoByIdFromBizSys()查询的结果不能合并同期同日多条记录;设置回收利息:提前结清时有违约金,违约金加到回收利息中
                 setRepayPrincipalInterest(repayInfo);
                 int totalCounter = repayInfoDao.findTotalCounter(repayInfo.getDateId());
                 repayInfo.setTotalCounter(Integer.toString(totalCounter));//设置总期数
                 //设置回收利息:提前结清时有违约金,违约金加到回收利息中
-                Float penalty1 = repayInfoDao.findPenaltyPrincipalInterest(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());
-                Float penalty2 = repayInfoDao.findPenaltyServiceFee(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());
-                Double repayIntAmt = Double.parseDouble(repayInfo.getRepayIntAmt()) + Double.parseDouble(String.valueOf(penalty1)) + Double.parseDouble(String.valueOf(penalty2));
-                repayInfo.setRepayIntAmt(String.valueOf(repayIntAmt));
+//                Float penalty1 = repayInfoDao.findPenaltyPrincipalInterest(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());
+//                Float penalty2 = repayInfoDao.findPenaltyServiceFee(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());
+//                Double repayIntAmt = Double.parseDouble(repayInfo.getRepayIntAmt()) + Double.parseDouble(String.valueOf(penalty1)) + Double.parseDouble(String.valueOf(penalty2));
+//                repayInfo.setRepayIntAmt(String.valueOf(repayIntAmt));
                 //将证件号字母转换为大写
                 repayInfo.setCertificateNo(repayInfo.getCertificateNo().toUpperCase());
                 //设置上报类型,初始保存时,默认为新增:100001
@@ -132,7 +132,8 @@ public class RepayInfoServiceImpl implements RepayInfoService {
     private void setRepayPrincipalInterest(RepayInfo repayInfo) {
         String counter = repayInfo.getCounter();
         String repayMode = repayInfoDao.findRepayModeByDateId(repayInfo.getDateId());
-        if ("1835".equals(repayMode) || "818".equals(repayMode)) { //查询时,这两种还款方式数据库中还款期数是从0开始计算,根据Date_Id查询时加了1,此时需要减1才能与数据库数据匹配
+        //查询时,这两种还款方式数据库中还款期数是从0开始计算,根据Date_Id查询时加了1,此时需要减1才能与数据库数据匹配
+        if ("1835".equals(repayMode) || "818".equals(repayMode)) {
             counter = (Integer.parseInt(counter) - 1) + "";
         }
         Map map = repayInfoDao.findRepayPrincipalInterest(repayInfo.getDateId(), counter, repayInfo.getRepayDate());
@@ -151,6 +152,12 @@ public class RepayInfoServiceImpl implements RepayInfoService {
             repayInfo.setRepayPriAmt(repay_pri_amt);
             repayInfo.setRepayIntAmt(repay_int_amt);
         }
+
+        //设置回收利息:提前结清时有违约金,违约金加到回收利息中
+        Float penalty1 = repayInfoDao.findPenaltyPrincipalInterest(repayInfo.getDateId(),counter, repayInfo.getRepayDate());
+        Float penalty2 = repayInfoDao.findPenaltyServiceFee(repayInfo.getDateId(), counter, repayInfo.getRepayDate());
+        Double repayIntAmt = Double.parseDouble(repayInfo.getRepayIntAmt()) + Double.parseDouble(String.valueOf(penalty1)) + Double.parseDouble(String.valueOf(penalty2));
+        repayInfo.setRepayIntAmt(String.valueOf(repayIntAmt));
     }
 
     /**
@@ -169,10 +176,10 @@ public class RepayInfoServiceImpl implements RepayInfoService {
         int totalCounter = repayInfoDao.findTotalCounter(repayInfo.getDateId());
         repayInfo.setTotalCounter(Integer.toString(totalCounter));//设置总期数
         //设置回收利息:提前结清时有违约金,违约金加到回收利息中
-        Float penalty1 = repayInfoDao.findPenaltyPrincipalInterest(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());
-        Float penalty2 = repayInfoDao.findPenaltyServiceFee(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());
-        Double repayIntAmt = Double.parseDouble(repayInfo.getRepayIntAmt()) + Double.parseDouble(String.valueOf(penalty1)) + Double.parseDouble(String.valueOf(penalty2));
-        repayInfo.setRepayIntAmt(String.valueOf(repayIntAmt));
+//        Float penalty1 = repayInfoDao.findPenaltyPrincipalInterest(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());
+//        Float penalty2 = repayInfoDao.findPenaltyServiceFee(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());
+//        Double repayIntAmt = Double.parseDouble(repayInfo.getRepayIntAmt()) + Double.parseDouble(String.valueOf(penalty1)) + Double.parseDouble(String.valueOf(penalty2));
+//        repayInfo.setRepayIntAmt(String.valueOf(repayIntAmt));
         //将证件号字母转换为大写
         repayInfo.setCertificateNo(repayInfo.getCertificateNo().toUpperCase());
         return repayInfo;
