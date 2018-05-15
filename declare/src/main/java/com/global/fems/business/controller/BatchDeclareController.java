@@ -37,8 +37,9 @@ public class BatchDeclareController {
           return   batchDeclareService.sendBatchFile(ids,transactionType);
         } catch (Exception e) {
             e.printStackTrace();
+            return ResultModel.fail();
         }
-        return null;
+
     }
 
 

@@ -505,6 +505,7 @@
             }
             $.ajax({
                 type: "POST",
+                timeout: 120000,
                 url: "${basePath}/batchDeclare.do?method=sendBatchFile",
                 data: {"ids": ids.toString(),"transactionType":$("#transactionType").combobox("getValue")},
                 dataType: "json",

@@ -24,9 +24,11 @@ public class SysCommonServiceImpl implements SysCommonService {
 	private SysCommonDao sysCommonDao;
 	
 	public String getSeqNo(String objName) throws BaseException {
-		// 流水号
-		String seqNo = this.sysCommonDao.getSeqNo(objName);
-		return seqNo;
+		synchronized (this){
+			// 流水号
+			String seqNo = this.sysCommonDao.getSeqNo(objName);
+			return seqNo;
+		}
 	}
 	public String getNo(String objName) throws BaseException {
 		// 不带时间的流水号
