@@ -112,8 +112,7 @@ public class JRBXmlMsgBuilder {
         fileName.append("-");
         fileName.append(dataType);
         fileName.append("-");
-        fileName.append(batchNo.substring(14, batchNo.length()));
-
+        fileName.append(batchNo.substring(8, batchNo.length()).replaceAll("^(0+)",""));
         FileOutputStream fileOutputStream = null;
         OutputStreamWriter outputStreamWriter = null;
         String path = null;
