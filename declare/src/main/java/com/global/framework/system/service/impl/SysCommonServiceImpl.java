@@ -13,87 +13,86 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 
  * @author chen.feng
  * @date 2012-6-15 下午6:35:46
  */
 @Service("sysCommonService")
 public class SysCommonServiceImpl implements SysCommonService {
 
-	@Autowired
-	private SysCommonDao sysCommonDao;
-	
-	public String getSeqNo(String objName) throws BaseException {
-		synchronized (this){
-			// 流水号
-			String seqNo = this.sysCommonDao.getSeqNo(objName);
-			return seqNo;
-		}
-	}
-	public String getNo(String objName) throws BaseException {
-		// 不带时间的流水号
-		String seqNo = this.sysCommonDao.getNo(objName);
-		return seqNo;
-	}
+    @Autowired
+    private SysCommonDao sysCommonDao;
 
-	public String getSeqNoByOperNo(String objName, String operNo) throws BaseException {
-		// 流水号
-		String seqNo = this.sysCommonDao.getSeqNo(objName);
-		//通过柜员号找金融机构代码
-		Property p = this.sysCommonDao.getProperty("SRC");
-		try {
-			seqNo = p.getValue() + seqNo;
-		} catch (Exception e) {
-			throw new BaseException("获取流水号失败", e);
-		}
-		return seqNo;
-	}
+    public String getSeqNo(String objName) throws BaseException {
+        // 流水号
+        String seqNo = this.sysCommonDao.getSeqNo(objName);
+        return seqNo;
 
-	public String getBizNo(String objName) throws BaseException {
-		return this.sysCommonDao.getBizNo(objName);
-	}
-	
-	public PageBean queryCommonOrgUserForPage(CommonOrgUser user, PageBean page)
-			throws BaseException {
-		return this.sysCommonDao.queryCommonOrgUserForPage(user, page);
-	}
-	
-	public CommonOrgUser getCommonOrgUser(String operNo)
-			throws BaseException {
-		return this.sysCommonDao.getCommonOrgUser(operNo);
-	}
-	
-	public CommonOrgUser insertCommonOrgUser(CommonOrgUser user)
-			throws BaseException {
-		return this.sysCommonDao.insertCommonOrgUser(user);
-	}
-	
-	public void updateCommonOrgUser(CommonOrgUser user) throws BaseException {
-		this.sysCommonDao.updateCommonOrgUser(user);
-	}
+    }
 
-	public void delCommonOrgUser(String operNo)
-			throws BaseException {
-		this.sysCommonDao.delCommonOrgUser(operNo);
-	}
-	
-	public CommonOrgUser saveOrUpdateCommonUser(CommonOrgUser user)
-			throws BaseException {
-		user.setPASSWORD(MD5Utils.md5Encode(user.getPASSWORD()));
-		CommonOrgUser u = this.sysCommonDao.getCommonOrgUser(user.getOPERNO());
-		if (u != null) {
-			this.sysCommonDao.updateCommonOrgUser(user);
-			return user;
-		} else {
-			return this.sysCommonDao.insertCommonOrgUser(user);
-		}
-	}
-	
-	public List<Property> getPropertyList(String[] args) throws BaseException {
-		return this.sysCommonDao.getPropertyList(args);
-	}
-	
-	public List<CommonOrgUser> getCommonOrgUserList() throws BaseException {
-		return this.sysCommonDao.getCommonOrgUserList();
-	}
+    public String getNo(String objName) throws BaseException {
+        // 不带时间的流水号
+        String seqNo = this.sysCommonDao.getNo(objName);
+        return seqNo;
+    }
+
+    public String getSeqNoByOperNo(String objName, String operNo) throws BaseException {
+        // 流水号
+        String seqNo = this.sysCommonDao.getSeqNo(objName);
+        //通过柜员号找金融机构代码
+        Property p = this.sysCommonDao.getProperty("SRC");
+        try {
+            seqNo = p.getValue() + seqNo;
+        } catch (Exception e) {
+            throw new BaseException("获取流水号失败", e);
+        }
+        return seqNo;
+    }
+
+    public String getBizNo(String objName) throws BaseException {
+        return this.sysCommonDao.getBizNo(objName);
+    }
+
+    public PageBean queryCommonOrgUserForPage(CommonOrgUser user, PageBean page)
+            throws BaseException {
+        return this.sysCommonDao.queryCommonOrgUserForPage(user, page);
+    }
+
+    public CommonOrgUser getCommonOrgUser(String operNo)
+            throws BaseException {
+        return this.sysCommonDao.getCommonOrgUser(operNo);
+    }
+
+    public CommonOrgUser insertCommonOrgUser(CommonOrgUser user)
+            throws BaseException {
+        return this.sysCommonDao.insertCommonOrgUser(user);
+    }
+
+    public void updateCommonOrgUser(CommonOrgUser user) throws BaseException {
+        this.sysCommonDao.updateCommonOrgUser(user);
+    }
+
+    public void delCommonOrgUser(String operNo)
+            throws BaseException {
+        this.sysCommonDao.delCommonOrgUser(operNo);
+    }
+
+    public CommonOrgUser saveOrUpdateCommonUser(CommonOrgUser user)
+            throws BaseException {
+        user.setPASSWORD(MD5Utils.md5Encode(user.getPASSWORD()));
+        CommonOrgUser u = this.sysCommonDao.getCommonOrgUser(user.getOPERNO());
+        if (u != null) {
+            this.sysCommonDao.updateCommonOrgUser(user);
+            return user;
+        } else {
+            return this.sysCommonDao.insertCommonOrgUser(user);
+        }
+    }
+
+    public List<Property> getPropertyList(String[] args) throws BaseException {
+        return this.sysCommonDao.getPropertyList(args);
+    }
+
+    public List<CommonOrgUser> getCommonOrgUserList() throws BaseException {
+        return this.sysCommonDao.getCommonOrgUserList();
+    }
 }

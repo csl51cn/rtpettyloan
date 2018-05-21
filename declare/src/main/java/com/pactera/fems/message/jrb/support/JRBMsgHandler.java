@@ -3,9 +3,7 @@ package com.pactera.fems.message.jrb.support;
 
 import com.global.fems.client.SFTPClient;
 import com.global.fems.client.SocketClient;
-import com.pactera.fems.message.jrb.domain.JRBGetTx;
-import com.pactera.fems.message.jrb.domain.JRBReqBatchFileMsg;
-import com.pactera.fems.message.jrb.domain.JRBReqHeaderMsg;
+import com.pactera.fems.message.jrb.domain.*;
 import com.pactera.fems.message.jrb.domain.business.request.BatchFileInfo;
 import com.pactera.fems.message.util.JRBIntfCodeCfgUtil;
 import org.apache.log4j.Logger;
@@ -97,8 +95,23 @@ public class JRBMsgHandler {
         // TODO: 2018/4/2 生产环境需要将下面的注释打开
         retMsg = sendMessageBySocket(reqMsg, retMsg);
         //将返回的报文转换成javaBean
-        Map map = JRBIntfCodeCfgUtil.getCfgCache(headerMsg.getClass().getName());
-        String serviceMethod = (String) map.get("serviceMethod");
+        JRBRespBatchFileMsg  jrbRespBatchFileMsg = null;
+        if (retMsg.contains("1708")){
+            JRBRET jrbret = new JRBRET();
+            jrbret.setRetCode("1708");
+            jrbret.setRetMsg("远程连接失败");
+            JRBRespHeaderMsg  jrbRespHeaderMsg =  new  JRBRespHeaderMsg();
+            jrbRespHeaderMsg.setRet(jrbret);
+            JRBRespHeader jrbRespHeader = new JRBRespHeader();
+            jrbRespHeader.setMsg(jrbRespHeaderMsg);
+            jrbRespBatchFileMsg = new JRBRespBatchFileMsg();
+            jrbRespBatchFileMsg.setHeader(jrbRespHeader);
+        }else{
+            Map map = JRBIntfCodeCfgUtil.getCfgCache(headerMsg.getClass().getName());
+            String serviceMethod = (String) map.get("serviceMethod");
+            jrbRespBatchFileMsg = (JRBRespBatchFileMsg) JRBXmlMsgParser.parseXml(serviceMethod, retMsg.substring(retMsg.indexOf("<")).trim());
+        }
+
         return JRBXmlMsgParser.parseXml(serviceMethod, retMsg.substring(retMsg.indexOf("<")).trim());
 
     }
