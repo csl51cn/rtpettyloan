@@ -112,7 +112,7 @@ public class JRBMsgHandler {
             jrbRespBatchFileMsg = (JRBRespBatchFileMsg) JRBXmlMsgParser.parseXml(serviceMethod, retMsg.substring(retMsg.indexOf("<")).trim());
         }
 
-        return JRBXmlMsgParser.parseXml(serviceMethod, retMsg.substring(retMsg.indexOf("<")).trim());
+        return jrbRespBatchFileMsg;
 
     }
 
