@@ -22,41 +22,19 @@ import java.util.Map;
 public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
     private Logger logger = LoggerFactory.getLogger(RepayInfoDaoImpl.class);
 
-    /**
-     * 根据合同编号查询还款信息
-     *
-     * @param contractNo
-     * @param pageBean
-     * @return
-     * @throws DAOException
-     */
-    @Override
-    public PageBean findRepayInfoByContractNoFromBizSys(String contractNo, PageBean pageBean) throws DAOException {
-        String sql = "SELECT  b.Id AS id ,a.合同编号 AS contract_no, a.Date_Id AS date_id, ISNULL(CASE a.授信主体类型 WHEN 1 THEN d.客户名称 WHEN 2 THEN c.中文客户名称 END,'') AS customer_name," +
-                "(CASE a.还款方式 WHEN 1835 THEN b.还款期数+1 WHEN 818 THEN b.还款期数+1 ELSE b.还款期数 END) AS counter,b.入账日期 AS repay_date,(CASE b.是否逾期 WHEN 0 THEN b.实还本金 WHEN 1 THEN 0 END) AS repay_pri_amt," +
-                "(CASE b.是否逾期 WHEN 0 THEN b.实还利息+b.实还费用Two WHEN 1 THEN 0 END) AS repay_int_amt,(CASE a.还款方式 WHEN 1835 THEN e.计划还款日 WHEN 818 THEN e.计划还款日  WHEN 820 THEN(CASE dic.Word WHEN '付易贷' THEN " +
-                "(CASE f.Word WHEN '日' THEN DATEADD(d, - 1, e.计划还款日) WHEN '周' THEN DATEADD(ww, - 1, e.计划还款日) WHEN '月' THEN DATEADD(m, - 1, e.计划还款日) END )ELSE DATEADD(m, - 1, e.计划还款日)END ) ELSE DATEADD(m, - 1, e.计划还款日) END ) AS start_date," +
-                "(CASE a.还款方式 WHEN 1835 THEN DATEADD(d ,-1,DATEADD(m, 1, e.计划还款日)) WHEN 818 THEN DATEADD(d,-1, DATEADD(m, 1, e.计划还款日)) ELSE DATEADD(d, - 1, e.计划还款日) END) AS end_date," +
-                "(CASE b.是否逾期 WHEN 0 THEN 550001 WHEN 1 THEN 550002 ELSE 550001 END) AS receipt_type, b.逾期天数 AS delayDays,g.is_real_quota_loan,g.real_quota_no FROM Data_WorkInfo a LEFT JOIN Date_还款登记表 b ON a.Date_Id = b.Date_Id " +
-                "LEFT JOIN Data_CompanyInfo c ON a.授信主体编号 = c.Id LEFT JOIN Data_MemberInfo d ON a.授信主体编号 = d.ID LEFT JOIN Date_还款计划表 e ON a.date_id = e.Date_Id  LEFT JOIN Dictionary f ON a.授信期限单位 = f.Id  Left Join Dictionary As dic On a.产品类别 = dic.Id " +
-                " LEFT JOIN DC_CONTRACT_ISSUE_INFO g on a.Date_Id = g.Date_Id and g.is_last = 'Y' WHERE  b.还款计划类别 = 1212 " +
-                "AND e.还款计划类别 = 1212 AND b.还款期数 = e.计划期数   AND a.合同编号 = ?  ";
-        pageBean.setSort("c.id,b.id");
-        return super.findForPage(sql, new Object[]{contractNo}, pageBean, RepayInfo.class);
-    }
 
     /**
-     * 根据还款日期查询还款信息
+     * 根据还款日期/合同号从业务系统查询还款信息
      *
      * @param repayStartDate
      * @param repayEndDate
+     * @param contractNo
      * @param pageBean
      * @return
-     * @throws DAOException
      */
     @Override
-    public PageBean findRepayInfoByRepayDateFromBizSys(String repayStartDate, String repayEndDate, PageBean pageBean) throws DAOException {
-        String sql = "SELECT  b.Id AS id , a.合同编号 AS contract_no , a.Date_Id AS date_id, ISNULL(CASE a.授信主体类型 WHEN 1 THEN d.客户名称 WHEN 2 THEN c.中文客户名称 END,'') AS customer_name," +
+    public PageBean findRepayInfoByRepayDateAndContractNoFromBizSys(String repayStartDate, String repayEndDate, String contractNo, PageBean pageBean) throws DAOException {
+        String sql  = "SELECT  b.Id AS id , a.合同编号 AS contract_no , a.Date_Id AS date_id, ISNULL(CASE a.授信主体类型 WHEN 1 THEN d.客户名称 WHEN 2 THEN c.中文客户名称 END,'') AS customer_name," +
                 " (CASE a.还款方式 WHEN 1835 THEN b.还款期数+1 WHEN 818 THEN b.还款期数+1 ELSE b.还款期数 END) AS counter,b.入账日期 AS repay_date,(CASE b.是否逾期 WHEN 0 THEN b.实还利息 WHEN 1 THEN 0 END) AS repay_int_amt, " +
                 " (CASE b.是否逾期 WHEN 0 THEN b.实还本金 WHEN 1 THEN 0 END) AS repay_pri_amt,(CASE a.还款方式 WHEN 1835 THEN e.计划还款日 WHEN 818 THEN e.计划还款日 WHEN 820 THEN(CASE dic.Word WHEN '付易贷' THEN " +
                 " (CASE f.Word WHEN '日' THEN DATEADD(d, - 1, e.计划还款日) WHEN '周' THEN DATEADD(ww, - 1, e.计划还款日) WHEN '月' THEN DATEADD(m, - 1, e.计划还款日) END )ELSE DATEADD(m, - 1, e.计划还款日)END ) ELSE DATEADD(m, - 1, e.计划还款日) END ) AS start_date," +
@@ -64,10 +42,28 @@ public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
                 " (CASE b.是否逾期 WHEN 0 THEN 550001 WHEN 1 THEN 550002 ELSE 550001 END) AS receipt_type, b.逾期天数 AS delayDays , g.is_real_quota_loan,g.real_quota_no FROM Data_WorkInfo a LEFT JOIN Date_还款登记表 b ON a.Date_Id = b.Date_Id " +
                 " LEFT JOIN Data_CompanyInfo c ON a.授信主体编号 = c.Id LEFT JOIN Data_MemberInfo d ON a.授信主体编号 = d.ID LEFT JOIN Date_还款计划表 e ON a.date_id = e.Date_Id  LEFT JOIN Dictionary f ON a.授信期限单位 = f.Id Left Join Dictionary As dic On a.产品类别 = dic.Id " +
                 " LEFT JOIN DC_CONTRACT_ISSUE_INFO g on a.Date_Id = g.Date_Id and g.is_last = 'Y' WHERE  b.还款计划类别 = 1212 " +
-                " AND e.还款计划类别 = 1212 AND b.还款期数 = e.计划期数  AND b.入账日期 >= ? AND b.入账日期 <= ?";
+                " AND e.还款计划类别 = 1212 AND b.还款期数 = e.计划期数  ";
+
+        List<Object> list = new ArrayList<>();
+        if (StringUtils.isNotEmpty(repayStartDate)){
+            sql = sql + "  AND b.入账日期 >= ?  ";
+            list.add(repayStartDate);
+        }
+        if(StringUtils.isNotEmpty(repayEndDate)){
+            sql = sql + "   AND b.入账日期 <= ? ";
+            list.add(repayEndDate);
+        }
+
+        if(StringUtils.isNotEmpty(contractNo)){
+            sql = sql + "    AND a.合同编号 = ?  ";
+            list.add(contractNo.trim());
+        }
         pageBean.setSort("c.id,b.id");
-        return super.findForPage(sql, new Object[]{repayStartDate, repayEndDate}, pageBean, RepayInfo.class);
+        return super.findForPage(sql, list.toArray(), pageBean, RepayInfo.class);
     }
+
+
+
 
     /**
      * 根据Date_还款登记表的id查询还款信息

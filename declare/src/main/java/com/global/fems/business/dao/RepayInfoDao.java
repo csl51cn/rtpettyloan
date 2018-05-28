@@ -12,9 +12,17 @@ import java.util.Map;
  * 贷款回收信息管理dao
  */
 public interface RepayInfoDao {
-    PageBean findRepayInfoByContractNoFromBizSys(String contractNo, PageBean pageBean) throws DAOException;
 
-    PageBean findRepayInfoByRepayDateFromBizSys(String repayStartDate, String repayEndDate, PageBean pageBean) throws DAOException;
+
+    /**
+     * 根据还款日期/合同号从业务系统查询还款信息
+     * @param repayStartDate
+     * @param repayEndDate
+     * @param contractNo
+     * @param pageBean
+     * @return
+     */
+    PageBean findRepayInfoByRepayDateAndContractNoFromBizSys(String repayStartDate, String repayEndDate, String contractNo, PageBean pageBean)  throws DAOException;
 
     RepayInfo findRepayInfoByIdFromBizSys(String id) throws DAOException;
 
@@ -43,4 +51,5 @@ public interface RepayInfoDao {
     Map findRepayPrincipalInterest(Integer dateId, String counter, String repayDate) throws DAOException;
 
     String findRepayModeByDateId(Integer dateId) throws DAOException;
+
 }

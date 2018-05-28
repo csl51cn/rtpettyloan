@@ -28,34 +28,22 @@ public class RepayInfoServiceImpl implements RepayInfoService {
     @Autowired
     private PettyLoanContractDao pettyLoanContractDao;
 
-    /**
-     * 根据合同编号查询还款信息
-     *
-     * @param contractNo
-     * @param pageBean
-     * @return
-     * @throws DAOException
-     */
-    @Override
-    public PageBean findRepayInfoByContractNoFromBizSys(String contractNo, PageBean pageBean) throws DAOException {
-        pageBean = repayInfoDao.findRepayInfoByContractNoFromBizSys(contractNo, pageBean);
-        return pageBean;
-    }
 
     /**
-     * 根据还款日期查询还款信息
+     * 根据还款日期/合同号从业务系统查询还款信息
      *
      * @param repayStartDate
      * @param repayEndDate
+     * @param contractNo
      * @param pageBean
      * @return
-     * @throws DAOException
      */
     @Override
-    public PageBean findRepayInfoByRepayDateFromBizSys(String repayStartDate, String repayEndDate, PageBean pageBean) throws DAOException {
-        pageBean = repayInfoDao.findRepayInfoByRepayDateFromBizSys(repayStartDate, repayEndDate, pageBean);
+    public PageBean findRepayInfoByRepayDateAndContractNoFromBizSys(String repayStartDate, String repayEndDate, String contractNo, PageBean pageBean) throws DAOException {
+        pageBean = repayInfoDao.findRepayInfoByRepayDateAndContractNoFromBizSys(repayStartDate, repayEndDate, contractNo, pageBean);
         return pageBean;
     }
+
 
     /**
      * 批量保存还款信息
@@ -154,7 +142,7 @@ public class RepayInfoServiceImpl implements RepayInfoService {
         }
 
         //设置回收利息:提前结清时有违约金,违约金加到回收利息中
-        Float penalty1 = repayInfoDao.findPenaltyPrincipalInterest(repayInfo.getDateId(),counter, repayInfo.getRepayDate());
+        Float penalty1 = repayInfoDao.findPenaltyPrincipalInterest(repayInfo.getDateId(), counter, repayInfo.getRepayDate());
         Float penalty2 = repayInfoDao.findPenaltyServiceFee(repayInfo.getDateId(), counter, repayInfo.getRepayDate());
         Double repayIntAmt = Double.parseDouble(repayInfo.getRepayIntAmt()) + Double.parseDouble(String.valueOf(penalty1)) + Double.parseDouble(String.valueOf(penalty2));
         repayInfo.setRepayIntAmt(String.valueOf(repayIntAmt));
@@ -408,6 +396,7 @@ public class RepayInfoServiceImpl implements RepayInfoService {
         }
         return ResultModel.ok();
     }
+
 
 
     private void validate(String contractNo, RepayInfo repayInfo) {

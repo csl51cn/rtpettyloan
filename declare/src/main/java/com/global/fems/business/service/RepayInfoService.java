@@ -9,9 +9,17 @@ import com.global.param.domain.ResultModel;
  * 贷款回收信息管理Service
  */
 public interface RepayInfoService {
-    PageBean findRepayInfoByContractNoFromBizSys(String contractNo, PageBean pageBean) throws DAOException;
 
-    PageBean findRepayInfoByRepayDateFromBizSys(String repayStartDate, String repayEndDate, PageBean pageBean) throws DAOException;
+    /**
+     * 根据还款日期/合同号从业务系统查询还款信息
+     *
+     * @param repayStartDate
+     * @param repayEndDate
+     * @param contractNo
+     * @param pageBean
+     * @return
+     */
+    PageBean findRepayInfoByRepayDateAndContractNoFromBizSys(String repayStartDate, String repayEndDate, String contractNo, PageBean pageBean)  throws DAOException;
 
     void batchSaveRepayInfo(String ids) throws DAOException;
 
@@ -32,4 +40,6 @@ public interface RepayInfoService {
     PageBean findLastRepayInfoSendStatus(String sendStatusCode, String contractNo, String repayStartDate, String repayEndDate, PageBean pageBean) throws DAOException;
 
     ResultModel setNotSend(String ids) throws DAOException;
+
+
 }

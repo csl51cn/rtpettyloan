@@ -39,23 +39,10 @@ public class RepayInfoController extends BaseController  {
         return "business/pettyLoanContract/fillRepayInfo";
     }
 
-    /**
-     * 根据合同号查询从业务系统还款信息
-     *
-     * @param contractNo
-     * @param pageBean
-     * @return
-     * @throws DAOException
-     */
-    @RequestMapping(params = "method=findRepayInfoByContractNoFromBizSys")
-    @ResponseBody
-    public Map<String, Object> findRepayInfoByContractNoFromBizSys(String contractNo, PageBean pageBean) throws DAOException {
-        pageBean = repayInfoService.findRepayInfoByContractNoFromBizSys(contractNo.trim(), pageBean);
-        return pageBean2Map(pageBean);
-    }
+
 
     /**
-     * 根据还款日期查询还款信息
+     * 根据还款日期/合同号从业务系统查询还款信息
      *
      * @param repayStartDate
      * @param repayStartDate
@@ -63,10 +50,10 @@ public class RepayInfoController extends BaseController  {
      * @return
      * @throws DAOException
      */
-    @RequestMapping(params = "method=findRepayInfoByRepayDateFromBizSys")
+    @RequestMapping(params = "method=findRepayInfoByRepayDateAndContractNoFromBizSys")
     @ResponseBody
-    public Map<String, Object> findRepayInfoByRepayDateFromBizSys(String repayStartDate, String repayEndDate, PageBean pageBean) throws DAOException {
-        pageBean = repayInfoService.findRepayInfoByRepayDateFromBizSys(repayStartDate, repayEndDate, pageBean);
+    public Map<String, Object> findRepayInfoByRepayDateAndContractNoFromBizSys(String repayStartDate, String repayEndDate,String contractNo, PageBean pageBean) throws DAOException {
+        pageBean = repayInfoService.findRepayInfoByRepayDateAndContractNoFromBizSys(repayStartDate, repayEndDate,contractNo, pageBean);
         return pageBean2Map(pageBean);
     }
 
