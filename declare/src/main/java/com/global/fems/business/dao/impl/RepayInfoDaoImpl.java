@@ -42,7 +42,7 @@ public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
                 " (CASE b.是否逾期 WHEN 0 THEN 550001 WHEN 1 THEN 550002 ELSE 550001 END) AS receipt_type, b.逾期天数 AS delayDays , g.is_real_quota_loan,g.real_quota_no FROM Data_WorkInfo a LEFT JOIN Date_还款登记表 b ON a.Date_Id = b.Date_Id " +
                 " LEFT JOIN Data_CompanyInfo c ON a.授信主体编号 = c.Id LEFT JOIN Data_MemberInfo d ON a.授信主体编号 = d.ID LEFT JOIN Date_还款计划表 e ON a.date_id = e.Date_Id  LEFT JOIN Dictionary f ON a.授信期限单位 = f.Id Left Join Dictionary As dic On a.产品类别 = dic.Id " +
                 " LEFT JOIN DC_CONTRACT_ISSUE_INFO g on a.Date_Id = g.Date_Id and g.is_last = 'Y' WHERE  b.还款计划类别 = 1212 " +
-                " AND e.还款计划类别 = 1212 AND b.还款期数 = e.计划期数  ";
+                " AND e.还款计划类别 = 1212 AND b.还款期数 = e.计划期数  AND (b.实还本金 >0 or b.实还利息 >0 or b.实还罚息>0 or b.实还费用Two >0) ";
 
         List<Object> list = new ArrayList<>();
         if (StringUtils.isNotEmpty(repayStartDate)){
@@ -86,7 +86,7 @@ public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
                 " CASE dic.Word WHEN '质房贷' THEN a.利率 * 10 * 1.5 WHEN '付易贷' THEN a.利率 * 10 * 1.5 ELSE 20 END, NULL) AS pri_plty_rate,b.逾期天数 AS delay_days,g.is_real_quota_loan,g.real_quota_no  FROM Date_还款登记表 b LEFT JOIN Data_WorkInfo a ON a.Date_Id = b.Date_Id LEFT JOIN " +
                 " Data_CompanyInfo c ON a.授信主体编号 = c.Id LEFT JOIN Data_MemberInfo d ON a.授信主体编号 = d.ID LEFT JOIN Date_还款计划表 e ON a.Date_Id = e.Date_Id  LEFT JOIN Dictionary f ON a.授信期限单位 = f.Id Left Join Dictionary As dic On a.产品类别 = dic.Id " +
                 " LEFT JOIN DC_CONTRACT_ISSUE_INFO g on a.Date_Id = g.Date_Id and g.is_last = 'Y' WHERE b.还款计划类别 = 1212 " +
-                " AND e.还款计划类别 = 1212 AND b.还款期数 = e.计划期数 AND b.Id = ? ";
+                " AND e.还款计划类别 = 1212 AND b.还款期数 = e.计划期数 AND (b.实还本金 >0 or b.实还利息 >0 or b.实还罚息>0 or b.实还费用Two >0) AND b.Id = ? ";
         return super.findForObjectBySql(sql, new Object[]{id}, RepayInfo.class);
     }
 
