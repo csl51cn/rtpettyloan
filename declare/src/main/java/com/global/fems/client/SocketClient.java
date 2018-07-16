@@ -17,9 +17,10 @@ public class SocketClient {
 
 
     public SocketClient() {
+        InputStream resourceAsStream = SocketClient.class.getResourceAsStream("/resource.properties");
         try {
             Properties properties = new Properties();
-            InputStream resourceAsStream = SocketClient.class.getResourceAsStream("/resource.properties");
+
             properties.load(resourceAsStream);
             String ip = (String) properties.get("SOCKET_IP");
             int port = Integer.parseInt((String) properties.get("SOCKET_PORT"));
@@ -28,6 +29,8 @@ public class SocketClient {
 
         } catch (IOException e) {
             logger.error("SocketClient:空参构造,连接失败", e);
+        } finally {
+            IOUtils.closeQuietly(resourceAsStream);
         }
 
     }

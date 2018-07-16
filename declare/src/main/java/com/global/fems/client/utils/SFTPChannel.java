@@ -1,10 +1,12 @@
 package com.global.fems.client.utils;
 
 import com.jcraft.jsch.*;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -25,8 +27,9 @@ public class SFTPChannel {
 
     public SFTPChannel() {
         Properties properties = new Properties();
+        InputStream resourceAsStream = SFTPChannel.class.getResourceAsStream("/resource.properties");
         try {
-            properties.load(SFTPChannel.class.getResourceAsStream("/resource.properties"));
+            properties.load(resourceAsStream);
             host = (String) properties.get("SFTP_HOST");
             port = Integer.parseInt((String)properties.get("SFTP_PORT")) ;
             username = (String) properties.get("SFTP_USERNAME");
@@ -34,6 +37,8 @@ public class SFTPChannel {
             timeout = Integer.parseInt((String ) properties.get("SFTP_TIMEOUT"));
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            IOUtils.closeQuietly(resourceAsStream);
         }
     }
 

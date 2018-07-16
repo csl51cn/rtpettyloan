@@ -10,6 +10,7 @@ import org.global.framework.xmlbeans.bean.DataCheckException;
 import org.global.framework.xmlbeans.handler.Bean2XmlHandler;
 
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
@@ -117,8 +118,9 @@ public class JRBXmlMsgBuilder {
         FileOutputStream fileOutputStream = null;
         OutputStreamWriter outputStreamWriter = null;
         String path = null;
+        InputStream resourceAsStream = this.getClass().getResourceAsStream("/resource.properties");
         try {
-            properties.load(this.getClass().getResourceAsStream("/resource.properties"));
+            properties.load(resourceAsStream);
             path = (String) properties.get("PATH");
             path = path + fileName.toString() + ".xml";
             fileOutputStream = new FileOutputStream(path);
@@ -132,6 +134,7 @@ public class JRBXmlMsgBuilder {
         } finally {
             IOUtils.closeQuietly(fileOutputStream);
             IOUtils.closeQuietly(outputStreamWriter);
+            IOUtils.closeQuietly(resourceAsStream);
         }
         return path;
     }
