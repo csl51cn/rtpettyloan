@@ -120,8 +120,13 @@ public class ContractInfoDaoImpl extends BaseDaoSupport implements ContractInfoD
                 "  NULL " +
                 " ) AS pri_plty_rate, " +
                 " c.共同借款人详细 AS co_customer_name1, " +
-                " a.is_real_quota_loan , " +
-                " a.real_quota_no " +
+                " (CASE  c.是否为循环授信贷款 " +
+                " WHEN  870 THEN " +
+                "   '740001' " +
+                " ELSE  " +
+                "   '740002' " +
+                " END ) AS is_real_quota_loan, " +
+                " ISNULL(c.循环授信合同编号, '') as real_quota_no " +
                 "FROM " +
                 " DC_PETTY_LOAN_CONTRACT a " +
                 "LEFT JOIN 已放款客户表 b ON a.dateid = b.Date_Id " +
