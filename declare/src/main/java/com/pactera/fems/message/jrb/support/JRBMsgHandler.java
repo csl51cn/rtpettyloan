@@ -53,7 +53,7 @@ public class JRBMsgHandler {
      * @throws Exception
      */
     public static Map sendBatchFile(BatchFileInfo batchFileInfo, String dataType, String batchNo) throws Exception {
-        HashMap map = new HashMap();
+        HashMap<String,String> map = new HashMap<>(2);
         JRBXmlMsgBuilder jrbXmlMsgBuilder = new JRBXmlMsgBuilder();
         //生成xml
         String reqMsg = jrbXmlMsgBuilder.buildXml(batchFileInfo);
@@ -67,9 +67,8 @@ public class JRBMsgHandler {
             SFTPClient.put(fileInputStream, destinationFileName);
         } catch (Exception e) {
             log.error("上传文件失败", e);
-            //即使是返回Permission denied,文件也上传了的
-//            map.put("error","文件上传失败") ;
-//           return map;
+            map.put("error", "文件上传失败");
+            return map;
         }
         map.put("fileName", destinationFileName);
         return map;
