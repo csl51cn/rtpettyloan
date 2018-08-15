@@ -1,6 +1,7 @@
 package com.pactera.fems.message.jrb.support;
 
 
+import com.global.fems.business.enums.ReturnMsgCodeEnum;
 import com.global.fems.client.SFTPClient;
 import com.global.fems.client.SocketClient;
 import com.pactera.fems.message.jrb.domain.*;
@@ -22,6 +23,7 @@ public class JRBMsgHandler {
 
     /**
      * 发送实时报文
+     *
      * @param getTx
      * @param headerMsg
      * @return
@@ -43,13 +45,14 @@ public class JRBMsgHandler {
 
     /**
      * 发送批量文件
+     *
      * @param batchFileInfo
      * @param dataType
      * @param batchNo
      * @return
      * @throws Exception
      */
-    public static Map sendBatchFile(BatchFileInfo batchFileInfo, String  dataType, String batchNo) throws Exception {
+    public static Map sendBatchFile(BatchFileInfo batchFileInfo, String dataType, String batchNo) throws Exception {
         HashMap map = new HashMap();
         JRBXmlMsgBuilder jrbXmlMsgBuilder = new JRBXmlMsgBuilder();
         //生成xml
@@ -58,12 +61,12 @@ public class JRBMsgHandler {
         String pathAndFileName = jrbXmlMsgBuilder.saveBatchFile(reqMsg, dataType, batchNo);
         //保存xml到SFTP服务器
         FileInputStream fileInputStream = new FileInputStream(pathAndFileName);
-        String destinationFileName = pathAndFileName.substring(pathAndFileName.lastIndexOf("/")+1);
+        String destinationFileName = pathAndFileName.substring(pathAndFileName.lastIndexOf("/") + 1);
         // TODO: 2018/4/2 生产环境需要将下面的注释打开 
         try {
-            SFTPClient.put(fileInputStream,  destinationFileName);
+            SFTPClient.put(fileInputStream, destinationFileName);
         } catch (Exception e) {
-            log.error("上传文件失败",e);
+            log.error("上传文件失败", e);
             //即使是返回Permission denied,文件也上传了的
 //            map.put("error","文件上传失败") ;
 //           return map;
@@ -77,13 +80,14 @@ public class JRBMsgHandler {
         FileReader fileReader = new FileReader("D:\\sftp\\2017060700000020.xml");
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String temp = "";
-        while((temp = bufferedReader.readLine())!= null){
+        while ((temp = bufferedReader.readLine()) != null) {
             System.out.println(temp);
         }
     }
 
     /**
      * 批量文件的实时报文
+     *
      * @param headerMsg
      * @return
      * @throws DataCheckException
@@ -95,18 +99,28 @@ public class JRBMsgHandler {
         // TODO: 2018/4/2 生产环境需要将下面的注释打开
         retMsg = sendMessageBySocket(reqMsg, retMsg);
         //将返回的报文转换成javaBean
-        JRBRespBatchFileMsg  jrbRespBatchFileMsg = null;
-        if (retMsg.contains("1708")){
+        JRBRespBatchFileMsg jrbRespBatchFileMsg;
+        if (retMsg.contains(ReturnMsgCodeEnum.RETURNCODE_1708.getCode())) {
             JRBRET jrbret = new JRBRET();
-            jrbret.setRetCode("1708");
-            jrbret.setRetMsg("远程连接失败");
-            JRBRespHeaderMsg  jrbRespHeaderMsg =  new  JRBRespHeaderMsg();
+            jrbret.setRetCode(ReturnMsgCodeEnum.RETURNCODE_1708.getCode());
+            jrbret.setRetMsg(ReturnMsgCodeEnum.RETURNCODE_1708.getValue());
+            JRBRespHeaderMsg jrbRespHeaderMsg = new JRBRespHeaderMsg();
             jrbRespHeaderMsg.setRet(jrbret);
             JRBRespHeader jrbRespHeader = new JRBRespHeader();
             jrbRespHeader.setMsg(jrbRespHeaderMsg);
             jrbRespBatchFileMsg = new JRBRespBatchFileMsg();
             jrbRespBatchFileMsg.setHeader(jrbRespHeader);
-        }else{
+        } else if (retMsg.contains(ReturnMsgCodeEnum.RETURNCODE_1709.getCode())) {
+            JRBRET jrbret = new JRBRET();
+            jrbret.setRetCode(ReturnMsgCodeEnum.RETURNCODE_1709.getCode());
+            jrbret.setRetMsg(ReturnMsgCodeEnum.RETURNCODE_1709.getValue());
+            JRBRespHeaderMsg jrbRespHeaderMsg = new JRBRespHeaderMsg();
+            jrbRespHeaderMsg.setRet(jrbret);
+            JRBRespHeader jrbRespHeader = new JRBRespHeader();
+            jrbRespHeader.setMsg(jrbRespHeaderMsg);
+            jrbRespBatchFileMsg = new JRBRespBatchFileMsg();
+            jrbRespBatchFileMsg.setHeader(jrbRespHeader);
+        } else {
             Map map = JRBIntfCodeCfgUtil.getCfgCache(headerMsg.getClass().getName());
             String serviceMethod = (String) map.get("serviceMethod");
             jrbRespBatchFileMsg = (JRBRespBatchFileMsg) JRBXmlMsgParser.parseXml(serviceMethod, retMsg.substring(retMsg.indexOf("<")).trim());
@@ -118,6 +132,7 @@ public class JRBMsgHandler {
 
     /**
      * 发送报文
+     *
      * @param reqMsg
      * @param retMsg
      * @return
