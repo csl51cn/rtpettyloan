@@ -114,6 +114,12 @@ public class ContractInfoDaoImpl extends BaseDaoSupport implements ContractInfoD
                 "   a.intrate * 1.5 " +
                 "  WHEN '付易贷' THEN " +
                 "   a.intrate * 1.5 " +
+                "  WHEN '车盈贷A' THEN " +
+                "   a.intrate * 1.5 " +
+                "  WHEN '车盈贷B' THEN " +
+                "   a.intrate * 1.5 " +
+                "  WHEN '车盈贷C' THEN " +
+                "   a.intrate * 1.5 " +
                 "  ELSE " +
                 "   20 " +
                 "  END, " +
