@@ -134,10 +134,33 @@ public class DateTimeUtil {
         Date strToDate = DateTimeUtil.getStrToDate(date, defaultDatePattern);
         Calendar endTime = Calendar.getInstance();
         endTime.setTime(strToDate);
-        endTime.add(endTime.DATE, days);
+        endTime.add(Calendar.DATE, days);
         date = DateTimeUtil.getDateToStr(endTime.getTime(), defaultDatePattern);
         return date;
     }
+
+
+    /**
+     * 获取某日23:59:59 时间
+     *
+     * @param date
+     * @return
+     */
+    public static String toMidNight(String date) {
+        Date strToDate = DateTimeUtil.getStrToDate(date, defaultDatePattern);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(strToDate);
+        //年
+        int year = calendar.get(Calendar.YEAR);
+        //月
+        int month = calendar.get(Calendar.MONTH);
+        //日
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        calendar.set(year, month, day, 23, 59, 59);
+        return DateTimeUtil.getDateToStr(calendar.getTime(), defaultDatePattern);
+    }
+
+
     public static void main(String[] args) {
         System.out.println(getNowDateTime("yyyy年M月dd日"));
         System.out.println(getWeek(getNowDateTime("yyyy-M-dd")));
