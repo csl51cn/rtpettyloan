@@ -263,6 +263,7 @@ public class ContractIssueInfoServiceImpl implements ContractIssueInfoService {
             for (String id : idsArr) {
                 ContractIssueInfo contractIssueInfo = contractIssueInfoDao.findContractIssueInfoById(id);
                 contractIssueInfo.setIsSend(0);
+                contractIssueInfo.setBatchNo(null);
                 contractIssueInfoArrayList.add(contractIssueInfo);
             }
             contractIssueInfoDao.batchUpdateContract(contractIssueInfoArrayList, true);

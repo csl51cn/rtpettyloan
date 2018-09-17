@@ -202,4 +202,16 @@ public class PayPlanInfoDaoImpl extends BaseDaoSupport implements PayPlanInfoDao
         return super.findForPage(sql, new Object[]{contractNo}, pageBean, PayPlanInfo.class);
     }
 
+    /**
+     * 根据batchNo查询记录
+     *
+     * @param batchNo 批次号
+     * @return
+     */
+    @Override
+    public List<PayPlanInfo> findByBatchNo(String batchNo) {
+        String sql = "SELECT * FROM  DC_PAYPLAN_INFO WHERE batch_no = ?  ";
+        return (List<PayPlanInfo>) super.findForListBySql(sql, new Object[]{batchNo}, PayPlanInfo.class);
+    }
+
 }

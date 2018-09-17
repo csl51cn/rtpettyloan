@@ -130,4 +130,11 @@ public interface QuotaInfoDao {
      * @throws DAOException
      */
     PageBean findLastQuotaInfoBySendStatus(String sendStatusCode, String startDate, String endDate, PageBean pageBean) throws DAOException;
+
+    /**
+     * 根据batchNo查询记录
+     * @param batchNo 批次号
+     * @return
+     */
+    List<QuotaInfo> findByBatchNo(String batchNo);
 }

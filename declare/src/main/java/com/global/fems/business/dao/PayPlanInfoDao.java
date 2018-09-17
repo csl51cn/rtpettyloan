@@ -32,4 +32,11 @@ public interface PayPlanInfoDao {
     PageBean findLastPayPlanInfoBySendStatus(String sendStatusCode, String contractNo, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException;
 
     PageBean findPayPlanBriefInfoByContractNo(String contractNo, PageBean pageBean);
+
+    /**
+     * 根据batchNo查询记录
+     * @param batchNo 批次号
+     * @return
+     */
+    List<PayPlanInfo> findByBatchNo(String batchNo);
 }

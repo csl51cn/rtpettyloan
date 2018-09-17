@@ -14,19 +14,19 @@ public interface JRBBizInfoDeclareService {
 
     Map doRealTimeDeclareEntrustedLoan(PettyLoanContract contract, JRBReqHeaderMsg headerMsg) throws Exception;
 
-    Map doSendContractInfoBatchFile(List<ContractInfoCycleNode> list, ContractInfo contractInfo) throws Exception;
+    Map<String, String> doSendContractInfoBatchFile(List<ContractInfoCycleNode> list, ContractInfo contractInfo) throws Exception;
 
     Map doSendEntrustedContractInfoBatchFile(List<ContractInfoCycleNode> list, ContractInfo contractInfo) throws Exception;
 
     Map doContractInfoDeclare(JRBReqBatchFileMsg headerMsg) throws Exception;
 
-    Map doSendContractInfoIssueBatchFile(ArrayList<ContractIssueInfo> list, ContractIssueInfoUpload contractIssueInfoUpload) throws Exception;
+    Map<String, String> doSendContractInfoIssueBatchFile(ArrayList<ContractIssueInfo> list, ContractIssueInfoUpload contractIssueInfoUpload) throws Exception;
 
-    Map doSendPayPlanInfoBatchFile(ArrayList<PayPlanInfo> list, PayPlanInfoUpload payPlanInfoUpload) throws Exception;
+    Map<String, String> doSendPayPlanInfoBatchFile(ArrayList<PayPlanInfo> list, PayPlanInfoUpload payPlanInfoUpload) throws Exception;
 
-    Map doSendRepayInfoBatchFile(ArrayList<RepayInfo> list, RepayInfoUpload repayInfoUpload) throws Exception;
+    Map<String, String> doSendRepayInfoBatchFile(ArrayList<RepayInfo> list, RepayInfoUpload repayInfoUpload) throws Exception;
 
-    Map doSendQuotaInfoBatchFile(ArrayList<QuotaInfo> list, QuotaInfoUpload quotaInfoUpload) throws Exception;
+    Map<String, String> doSendQuotaInfoBatchFile(ArrayList<QuotaInfo> list, QuotaInfoUpload quotaInfoUpload) throws Exception;
 
     Map doQueryDeclared(QueryDeclared queryDeclared, JRBReqHeaderMsg headerMsg) throws Exception;
 

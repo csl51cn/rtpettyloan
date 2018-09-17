@@ -363,6 +363,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             for (String id : idsArr) {
                 ContractInfoCycleNode contractById = contractInfoDao.findContractById(id);
                 contractById.setIsSend(0);
+                contractById.setBatchNo(null);
                 contractInfoCycleNodeList.add(contractById);
             }
             contractInfoDao.batchUpdateContract(contractInfoCycleNodeList, true);

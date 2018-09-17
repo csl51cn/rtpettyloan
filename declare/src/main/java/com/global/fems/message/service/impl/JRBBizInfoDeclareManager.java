@@ -1,7 +1,6 @@
 package com.global.fems.message.service.impl;
 
 import com.global.fems.business.domain.*;
-import com.global.fems.business.domain.QuotaInfo;
 import com.global.fems.business.enums.DataTypeEnum;
 import com.global.fems.message.util.OrgCode;
 import com.global.framework.system.service.SysCommonService;
@@ -99,15 +98,18 @@ public class JRBBizInfoDeclareManager {
      * @param list
      * @return
      */
-    public Map sendContractInfoBatchFile(List<ContractInfoCycleNode> list) throws Exception {
+    public Map<String, String> sendContractInfoBatchFile(List<ContractInfoCycleNode> list) throws Exception {
         ContractInfo contractInfo = new ContractInfo();
         contractInfo.setBatchNo(sysCommonService.getSeqNo("wfl_taskinfo"));
-        Map map = null;
+        Map<String, String> map = null;
         if ("530002".equals(list.get(0).getLoanCate())) {//委托贷款
             map = jrbBizInfoDeclareService.doSendEntrustedContractInfoBatchFile(list, contractInfo);
         } else {//自营贷款
             map = jrbBizInfoDeclareService.doSendContractInfoBatchFile(list, contractInfo);
         }
+        map.put("batchNo", contractInfo.getBatchNo());
+        map.put("recordCount", contractInfo.getRecordCount());
+        map.put("dataType", contractInfo.getDataType());
         return map;
     }
 
@@ -148,8 +150,7 @@ public class JRBBizInfoDeclareManager {
 
         JRBReqBatchFileMsg jrbReqBatchFileMsg = new JRBReqBatchFileMsg();
         jrbReqBatchFileMsg.setHeader(new JRBReqHeader(headerMsg));
-        Map map = jrbBizInfoDeclareService.doContractInfoDeclare(jrbReqBatchFileMsg);
-        return map;
+        return jrbBizInfoDeclareService.doContractInfoDeclare(jrbReqBatchFileMsg);
     }
 
     /**
@@ -162,6 +163,7 @@ public class JRBBizInfoDeclareManager {
     public Map packageMsgHeader(String batchNo, String dataType) throws Exception {
         JRBReqHeaderMsg headerMsg = new JRBReqHeaderMsg();
         setHeaderMsgFieldValue(headerMsg);
+        headerMsg.setServiceCode("SVR_PTLN");
         //设置交易码
         headerMsg.setTranCode("PTLN199");
         //设置报文代码
@@ -173,9 +175,7 @@ public class JRBBizInfoDeclareManager {
         queryDeclared.setBatchNo(batchNo);
         queryDeclared.setDataType(dataType);
 
-         Map  map = jrbBizInfoDeclareService.doQueryDeclared(queryDeclared,headerMsg);
-
-        return map;
+        return jrbBizInfoDeclareService.doQueryDeclared(queryDeclared, headerMsg);
     }
 
     /**
@@ -208,10 +208,13 @@ public class JRBBizInfoDeclareManager {
      * @param list
      * @return
      */
-    public Map sendContractIssueInfoBatchFile(ArrayList<ContractIssueInfo> list) throws Exception {
+    public Map<String, String> sendContractIssueInfoBatchFile(ArrayList<ContractIssueInfo> list) throws Exception {
         ContractIssueInfoUpload contractIssueInfoUpload = new ContractIssueInfoUpload();
         contractIssueInfoUpload.setBatchNo(sysCommonService.getSeqNo("wfl_taskinfo"));
-        Map map = jrbBizInfoDeclareService.doSendContractInfoIssueBatchFile(list, contractIssueInfoUpload);
+        Map<String, String> map = jrbBizInfoDeclareService.doSendContractInfoIssueBatchFile(list, contractIssueInfoUpload);
+        map.put("batchNo", contractIssueInfoUpload.getBatchNo());
+        map.put("recordCount", contractIssueInfoUpload.getRecordCount());
+        map.put("dataType", contractIssueInfoUpload.getDataType());
         return map;
     }
 
@@ -221,10 +224,13 @@ public class JRBBizInfoDeclareManager {
      * @param list
      * @return
      */
-    public Map sendPayPlanInfoBatchFile(ArrayList<PayPlanInfo> list) throws Exception {
+    public Map<String, String> sendPayPlanInfoBatchFile(ArrayList<PayPlanInfo> list) throws Exception {
         PayPlanInfoUpload payPlanInfoUpload = new PayPlanInfoUpload();
         payPlanInfoUpload.setBatchNo(sysCommonService.getSeqNo("wfl_taskinfo"));
-        Map map = jrbBizInfoDeclareService.doSendPayPlanInfoBatchFile(list, payPlanInfoUpload);
+        Map<String, String> map = jrbBizInfoDeclareService.doSendPayPlanInfoBatchFile(list, payPlanInfoUpload);
+        map.put("batchNo", payPlanInfoUpload.getBatchNo());
+        map.put("recordCount", payPlanInfoUpload.getRecordCount());
+        map.put("dataType", payPlanInfoUpload.getDataType());
         return map;
     }
 
@@ -236,10 +242,13 @@ public class JRBBizInfoDeclareManager {
      * @return
      * @throws Exception
      */
-    public Map sendRepayInfoBatchFile(ArrayList<RepayInfo> list) throws Exception {
+    public Map<String, String> sendRepayInfoBatchFile(ArrayList<RepayInfo> list) throws Exception {
         RepayInfoUpload repayInfoUpload = new RepayInfoUpload();
         repayInfoUpload.setBatchNo(sysCommonService.getSeqNo("wfl_taskinfo"));
-        Map map = jrbBizInfoDeclareService.doSendRepayInfoBatchFile(list, repayInfoUpload);
+        Map<String, String> map = jrbBizInfoDeclareService.doSendRepayInfoBatchFile(list, repayInfoUpload);
+        map.put("batchNo", repayInfoUpload.getBatchNo());
+        map.put("recordCount", repayInfoUpload.getRecordCount());
+        map.put("dataType", repayInfoUpload.getDataType());
         return map;
     }
 
@@ -251,10 +260,13 @@ public class JRBBizInfoDeclareManager {
      * @return
      * @throws Exception
      */
-    public Map sendQuotaInfoBatchFile(ArrayList<QuotaInfo> list) throws Exception {
-        QuotaInfoUpload quotaInfo= new QuotaInfoUpload();
+    public Map<String, String> sendQuotaInfoBatchFile(ArrayList<QuotaInfo> list) throws Exception {
+        QuotaInfoUpload quotaInfo = new QuotaInfoUpload();
         quotaInfo.setBatchNo(sysCommonService.getSeqNo("wfl_taskinfo"));
-        Map map = jrbBizInfoDeclareService.doSendQuotaInfoBatchFile(list, quotaInfo);
+        Map<String, String> map = jrbBizInfoDeclareService.doSendQuotaInfoBatchFile(list, quotaInfo);
+        map.put("batchNo", quotaInfo.getBatchNo());
+        map.put("recordCount", quotaInfo.getRecordCount());
+        map.put("dataType", quotaInfo.getDataType());
         return map;
     }
 }

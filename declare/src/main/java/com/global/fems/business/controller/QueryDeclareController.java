@@ -1,18 +1,23 @@
 package com.global.fems.business.controller;
 
-import com.global.fems.business.enums.DataTypeEnum;
 import com.global.fems.business.service.QueryDeclareService;
+import com.global.framework.dbutils.support.PageBean;
+import com.global.framework.system.web.common.session.SessionManager;
 import com.global.param.domain.ResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
+
 /**
  * 上报结果查询管理Controller
  */
 @Controller
-public class QueryDeclareController {
+@RequestMapping("/queryDeclare.do")
+public class QueryDeclareController extends BaseController {
 
     @Autowired
     private QueryDeclareService queryDeclareService;
@@ -24,19 +29,21 @@ public class QueryDeclareController {
 
     @RequestMapping(params = "method=queryDeclare")
     @ResponseBody
-    public ResultModel queryDeclare(String batchNo, String transactionType) {
+    public ResultModel queryDeclare(String id, HttpServletRequest request) {
         try {
-            //获得上报的数据类型
-            StringBuilder transType = new StringBuilder("PTLN");
-            transType.append(transactionType.substring(1));
-            transType.append("-" + transactionType);
-            String dataType = DataTypeEnum.getTypeByValue(transType.toString());
-            ResultModel resultModel = queryDeclareService.queryDeclared(batchNo, dataType);
+            ResultModel resultModel = queryDeclareService.queryDeclared(id, SessionManager.getSession(request).getUserId());
             return resultModel;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @RequestMapping(params = "method=queryRawDeclareData")
+    @ResponseBody
+    public Map queryRawDeclareData(String batchNo, String transactionType, String startDate, String endDate, PageBean pageBean) {
+        pageBean = queryDeclareService.queryRawDeclareData(batchNo, transactionType, startDate, endDate, pageBean);
+        return pageBean2Map(pageBean);
     }
 
 

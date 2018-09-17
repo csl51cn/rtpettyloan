@@ -33,4 +33,11 @@ public interface ContractInfoDao {
     void batchUpdateContract(List<ContractInfoCycleNode> list, boolean isUpdateValueNullField) throws DAOException;
 
     PageBean findLastContractBySendStatus(String sendStatusCode, String contractNo, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException;
+
+    /**
+     * 根据batchNo查询记录
+     * @param batchNo 批次号
+     * @return
+     */
+    List<ContractInfoCycleNode> findByBatchNo(String batchNo);
 }

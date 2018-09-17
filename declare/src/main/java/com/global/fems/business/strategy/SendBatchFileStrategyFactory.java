@@ -1,4 +1,4 @@
-package com.global.fems.business.Strategy;
+package com.global.fems.business.strategy;
 
 import java.util.HashMap;
 import java.util.Map;

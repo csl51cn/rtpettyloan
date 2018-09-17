@@ -52,4 +52,11 @@ public interface RepayInfoDao {
 
     String findRepayModeByDateId(Integer dateId) throws DAOException;
 
+
+    /**
+     * 根据batchNo查询记录
+     * @param batchNo 批次号
+     * @return
+     */
+    List<RepayInfo> findByBatchNo(String batchNo);
 }

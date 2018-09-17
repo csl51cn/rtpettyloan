@@ -1,5 +1,6 @@
 package com.global.fems.business.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.global.fems.business.dao.PettyLoanContractDao;
 import com.global.fems.business.domain.PettyLoanContract;
 import com.global.fems.business.enums.ReturnMsgCodeEnum;
@@ -71,6 +72,11 @@ public class RealTimeDeclareServiceImpl implements RealTimeDeclareService {
                 } else {
                     return ResultModel.fail(validateError.append(ReturnMsgCodeEnum.getValueByCode(retCode)).toString());
                 }
+            }else{
+                JSONObject respMsgJsonObject = (JSONObject) result.get("respMsgJsonObject");
+                JSONObject getTx = respMsgJsonObject.getJSONObject("transaction").getJSONArray("body").getJSONObject(0).getJSONArray("GetTx").getJSONObject(0);
+                String systemErrorCode = getTx.getJSONArray("SYS_ERRCODE").getString(0);
+                return ResultModel.fail(validateError.append(ReturnMsgCodeEnum.getValueByCode(systemErrorCode)).toString());
             }
         }
 

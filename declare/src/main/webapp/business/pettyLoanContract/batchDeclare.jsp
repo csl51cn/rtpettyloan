@@ -130,6 +130,9 @@
                             return "否";
                         }
                     }
+                },{
+                    field: "batchNo",
+                    title: "批次号"
                 }, {
                     field: "realQuotaNo",
                     title: "授信额度协议编号",
@@ -250,6 +253,9 @@
                                 return "否";
                             }
                         }
+                    },{
+                        field: "batchNo",
+                        title: "批次号"
                     }, {
                         field: "realQuotaNo",
                         title: "授信额度协议编号",
@@ -382,6 +388,9 @@
                             return "否";
                         }
                     }
+                },{
+                    field: "batchNo",
+                    title: "批次号"
                 }, {
                     field: "realQuotaNo",
                     title: "授信额度协议编号",
@@ -465,6 +474,9 @@
                                 return "否";
                             }
                         }
+                    },{
+                        field: "batchNo",
+                        title: "批次号"
                     }, {
                         field: "isLast",
                         title: "是否是最新",
@@ -631,8 +643,6 @@
 									fitColumns: true,
 									nowrap:false,
 								">
-                        <input type="hidden" name="sendStatusCode" id="sendStatus" value="0"/>
-
                     </td>
                     <th >合同编号:</th>
                     <td> <input type="text" id="contractNo" name="contractNo" style="border:1px solid #95B8E7;
@@ -647,6 +657,15 @@
                         <input type="text" id="endDate" name="endDate"  style="border:1px solid #95B8E7;
                         *color:#007fca;width:170px;padding:4px 2px;" onclick="WdatePicker()"/>
                     </td>
+                    <th>是否上报</th>
+                    <td>
+                        <select id="sendStatusCode" name="sendStatusCode" class="easyui-combobox" style="width:75px;">
+                            <option value="0" selected> 否</option>
+                            <option value="1">是</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
                     <th width="15%">操作:</th>
                     <td>
 
@@ -654,9 +673,8 @@
                                value="查询"/>
                         <input id="businessQueryBtn" type="button" class="inputButton" onclick="doDeclare();"
                                value="报文发送"/>
-                     <span id="dateCheckMsg" style="color:red;"/>
+                        <span id="dateCheckMsg" style="color:red;"/>
                     </td>
-
                 </tr>
             </table>
         </div>

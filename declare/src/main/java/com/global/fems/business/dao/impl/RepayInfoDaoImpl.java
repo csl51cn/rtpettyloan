@@ -100,8 +100,7 @@ public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
     @Override
     public List<RepayInfo> findRepayInfoListByDateIdAndCounter(Integer dateId, String counter, String repayDate) throws DAOException {
         String sql = "SELECT * FROM DC_REPAY_INFO WHERE date_id = ? AND counter = ? AND repay_date = ?";
-        List<RepayInfo> RepayInfoList = (List<RepayInfo>) super.findForListBySql(sql, new Object[]{dateId, counter, repayDate}, RepayInfo.class);
-        return RepayInfoList;
+        return(List<RepayInfo>) super.findForListBySql(sql, new Object[]{dateId, counter, repayDate}, RepayInfo.class);
     }
 
     /**
@@ -313,6 +312,18 @@ public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
         logger.debug("Executing SQL query [{}], params: [{}]", sql, new Object[]{dateId});
         String repayMode = super.getJdbcTemplate().queryForObject(sql, new Object[]{dateId}, String.class);
         return repayMode;
+    }
+
+    /**
+     * 根据batchNo查询记录
+     *
+     * @param batchNo 批次号
+     * @return
+     */
+    @Override
+    public List<RepayInfo> findByBatchNo(String batchNo) {
+        String sql = "SELECT * FROM DC_REPAY_INFO WHERE batch_no = ? ";
+        return(List<RepayInfo>) super.findForListBySql(sql, new Object[]{batchNo}, RepayInfo.class);
     }
 
 

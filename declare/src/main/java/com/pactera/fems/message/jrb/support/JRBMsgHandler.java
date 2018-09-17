@@ -39,8 +39,12 @@ public class JRBMsgHandler {
         //将返回的报文转换成javaBean
         Map map = JRBIntfCodeCfgUtil.getCfgCache(getTx.getClass().getName());
         String serviceMethod = (String) map.get("serviceMethod");
-        return JRBXmlMsgParser.parseXml(serviceMethod, retMsg.substring(retMsg.indexOf("<")).trim());
-
+        try {
+            return JRBXmlMsgParser.parseXml(serviceMethod, retMsg.substring(retMsg.indexOf("<")).trim());
+        } catch (DataCheckException e) {
+            e.printStackTrace();
+            return JRBXmlMsgParser.xml2JSON(retMsg.substring(retMsg.indexOf("<")).trim());
+        }
     }
 
     /**
@@ -52,7 +56,7 @@ public class JRBMsgHandler {
      * @return
      * @throws Exception
      */
-    public static Map sendBatchFile(BatchFileInfo batchFileInfo, String dataType, String batchNo) throws Exception {
+    public static Map<String,String> sendBatchFile(BatchFileInfo batchFileInfo, String dataType, String batchNo) throws Exception {
         HashMap<String,String> map = new HashMap<>(2);
         JRBXmlMsgBuilder jrbXmlMsgBuilder = new JRBXmlMsgBuilder();
         //生成xml

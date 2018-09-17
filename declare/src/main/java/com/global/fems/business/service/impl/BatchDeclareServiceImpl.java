@@ -1,7 +1,7 @@
 package com.global.fems.business.service.impl;
 
-import com.global.fems.business.Strategy.SendBatchFileStrategy;
-import com.global.fems.business.Strategy.SendBatchFileStrategyFactory;
+import com.global.fems.business.strategy.SendBatchFileStrategy;
+import com.global.fems.business.strategy.SendBatchFileStrategyFactory;
 import com.global.fems.business.service.BatchDeclareService;
 import com.global.param.domain.ResultModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +27,10 @@ public class BatchDeclareServiceImpl implements BatchDeclareService {
      * @throws Exception
      */
     @Override
-    public ResultModel sendBatchFile(String ids, String transactionType) throws Exception {
+    public ResultModel sendBatchFile(String ids, String transactionType,String userId) throws Exception {
         Map<String, SendBatchFileStrategy> sendBatchFileStrategyMap = sendBatchFileStrategyFactory.getSendBatchFileStrategyMap();
         SendBatchFileStrategy sendBatchFileStrategy = sendBatchFileStrategyMap.get(transactionType);
-        ResultModel resultModel = sendBatchFileStrategy.sendBatchFile(ids);
+        ResultModel resultModel = sendBatchFileStrategy.sendBatchFile(ids,userId);
         return resultModel;
     }
 }

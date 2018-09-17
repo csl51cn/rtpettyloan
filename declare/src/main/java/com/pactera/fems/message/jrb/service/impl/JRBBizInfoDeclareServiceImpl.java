@@ -56,14 +56,20 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
         PropertyUtils.copyBean2Map(contract, map);
         JRBGetTxValidator.setFeild(realTimeOnlineContract, map);
         //判断是否是循环授信,如果是,将循环授信合同编号赋给实时网签的合同号
-        if(StringUtils.equals("740001",contract.getIsRealQuotaLoan())){
+        if (StringUtils.equals("740001", contract.getIsRealQuotaLoan())) {
             realTimeOnlineContract.setContractNo(contract.getRealQuotaNo());
         }
         //设置签约时间格式
         realTimeOnlineContract.setContractSignDate(realTimeOnlineContract.getContractSignDate());
         //发送数据
-        JRBRespMsg respMsg = (JRBRespMsg) JRBMsgHandler.sendMessage(realTimeOnlineContract, headerMsg);
-        result.put("respMsg", respMsg);
+        JRBRespMsg respMsg;
+        Object response = JRBMsgHandler.sendMessage(realTimeOnlineContract, headerMsg);
+        if (response instanceof JRBRespMsg) {
+            respMsg = (JRBRespMsg) response;
+            result.put("respMsg", respMsg);
+        } else {
+            result.put("respMsgJsonObject", response);
+        }
         return result;
     }
 
@@ -91,8 +97,14 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
         //设置签约时间格式
         realTimeOnlineEntrustedContract.setContractSignDate(realTimeOnlineEntrustedContract.getContractSignDate());
         //发送数据
-        JRBRespMsg respMsg = (JRBRespMsg) JRBMsgHandler.sendMessage(realTimeOnlineEntrustedContract, headerMsg);
-        result.put("respMsg", respMsg);
+        JRBRespMsg respMsg;
+        Object response = JRBMsgHandler.sendMessage(realTimeOnlineEntrustedContract, headerMsg);
+        if (response instanceof JRBRespMsg) {
+            respMsg = (JRBRespMsg) response;
+            result.put("respMsg", respMsg);
+        } else {
+            result.put("respMsgJsonObject", response);
+        }
         return result;
     }
 
@@ -107,25 +119,32 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
     @Override
     public Map doQueryDeclared(QueryDeclared queryDeclared, JRBReqHeaderMsg headerMsg) throws Exception {
         Map result = new HashMap();
+
         //发送数据
-        JRBRespMsg respMsg = (JRBRespMsg) JRBMsgHandler.sendMessage(queryDeclared, headerMsg);
-        result.put("respMsg", respMsg);
+        JRBRespMsg respMsg;
+        Object response = JRBMsgHandler.sendMessage(queryDeclared, headerMsg);
+        if (response instanceof JRBRespMsg) {
+            respMsg = (JRBRespMsg) response;
+            result.put("respMsg", respMsg);
+        } else {
+            result.put("respMsgJsonObject", response);
+        }
         return result;
     }
 
     /**
      * 贷款合同信息文件批量上传到SFTP服务器---自营贷款
      *
-     * @param ContractInfoCycleNodeList
+     * @param contractInfoCycleNodeList
      * @return
      * @throws Exception
      */
     @Override
-    public Map doSendContractInfoBatchFile(List<ContractInfoCycleNode> ContractInfoCycleNodeList, ContractInfo contractInfo) throws Exception {
+    public Map<String, String> doSendContractInfoBatchFile(List<ContractInfoCycleNode> contractInfoCycleNodeList, ContractInfo contractInfo) throws Exception {
 
-        Map result = new HashMap();
+        Map<String, String> result = new HashMap<>();
         List contractInfoParamList = new ArrayList();
-        for (ContractInfoCycleNode node : ContractInfoCycleNodeList) {
+        for (ContractInfoCycleNode node : contractInfoCycleNodeList) {
             //校验数据,如果校验失败,将不符合要求的数据信息返回到页面
             if (validateContract(node, result, new Class[]{First.class})) {
                 StringBuilder validateError = new StringBuilder("当前记录申报失败,此条记录之前的记录已申报(如果有).合同信息--合同编号:");
@@ -144,7 +163,7 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
             JRBGetTxValidator.setFeild(contractInfoParam, fieldAndValue, "coCustomerInfo");
             setCoCustomer(fieldAndValue, contractInfoParam);
             //判断是否是循环授信,如果是,将循环授信合同编号赋给实时网签的合同号
-            if(StringUtils.equals("740001",node.getIsRealQuotaLoan())){
+            if (StringUtils.equals("740001", node.getIsRealQuotaLoan())) {
                 contractInfoParam.setContractNo(node.getRealQuotaNo());
             }
             contractInfoParam.setContractSignDate(contractInfoParam.getContractSignDate());
@@ -155,13 +174,12 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
         }
         contractInfo.setRecordCount(contractInfoParamList.size() + "");
         contractInfo.setContractInfo(contractInfoParamList);
-        Map map = JRBMsgHandler.sendBatchFile(contractInfo, contractInfo.getDataType(), contractInfo.getBatchNo());
+        Map<String, String> map = JRBMsgHandler.sendBatchFile(contractInfo, contractInfo.getDataType(), contractInfo.getBatchNo());
         if (map.get("error") != null) {
             result.put("error", map.get("error"));
         } else {
             result.put("fileName", map.get("fileName"));
         }
-
         return result;
     }
 
@@ -202,8 +220,8 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
      * @throws Exception
      */
     @Override
-    public Map doSendContractInfoIssueBatchFile(ArrayList<ContractIssueInfo> contractIssueInfoList, ContractIssueInfoUpload contractIssueInfoUpload) throws Exception {
-        Map result = new HashMap();
+    public Map<String, String> doSendContractInfoIssueBatchFile(ArrayList<ContractIssueInfo> contractIssueInfoList, ContractIssueInfoUpload contractIssueInfoUpload) throws Exception {
+        Map<String, String> result = new HashMap<>();
         ArrayList<ContractIssueInfoUploadParam> contractIssueInfoUploadParamList = new ArrayList<>();
         for (ContractIssueInfo node : contractIssueInfoList) {
             //校验数据,如果校验失败,将不符合要求的数据信息返回到页面
@@ -223,7 +241,7 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
             //将合同信息循环节点转换为与xml对应的实体类
             JRBGetTxValidator.setFeild(contractIssueInfoUploadParam, fieldAndValue);
             //判断是否是循环授信,如果是,将循环授信合同编号赋给实时网签的合同号
-            if(StringUtils.equals("740001",node.getIsRealQuotaLoan())){
+            if (StringUtils.equals("740001", node.getIsRealQuotaLoan())) {
                 contractIssueInfoUploadParam.setContractNo(node.getRealQuotaNo());
             }
             //设置时间格式
@@ -242,7 +260,7 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
         }
         contractIssueInfoUpload.setRecordCount(contractIssueInfoUploadParamList.size() + "");
         contractIssueInfoUpload.setIssueInfo(contractIssueInfoUploadParamList);
-        Map map = JRBMsgHandler.sendBatchFile(contractIssueInfoUpload, contractIssueInfoUpload.getDataType(), contractIssueInfoUpload.getBatchNo());
+        Map<String, String> map = JRBMsgHandler.sendBatchFile(contractIssueInfoUpload, contractIssueInfoUpload.getDataType(), contractIssueInfoUpload.getBatchNo());
         if (map.get("error") != null) {
             result.put("error", map.get("error"));
         } else {
@@ -261,8 +279,8 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
      * @throws Exception
      */
     @Override
-    public Map doSendPayPlanInfoBatchFile(ArrayList<PayPlanInfo> payPlanInfolist, PayPlanInfoUpload payPlanInfoUpload) throws Exception {
-        Map result = new HashMap();
+    public Map<String, String> doSendPayPlanInfoBatchFile(ArrayList<PayPlanInfo> payPlanInfolist, PayPlanInfoUpload payPlanInfoUpload) throws Exception {
+        Map<String, String> result = new HashMap<>();
         ArrayList<PayPlanInfoUploadParam> payPlanInfoUploadParamList = new ArrayList<>();
         for (PayPlanInfo node : payPlanInfolist) {
             //校验数据,如果校验失败,将不符合要求的数据信息返回到页面
@@ -280,7 +298,7 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
             //将还款计划信息循环节点转换为与xml对应的实体类
             JRBGetTxValidator.setFeild(payPlanInfoUploadParam, fieldAndValue);
             //判断是否是循环授信,如果是,将循环授信合同编号赋给实时网签的合同号
-            if(StringUtils.equals("740001",node.getIsRealQuotaLoan())){
+            if (StringUtils.equals("740001", node.getIsRealQuotaLoan())) {
                 payPlanInfoUploadParam.setContractNo(node.getRealQuotaNo());
             }
             //设置时间格式
@@ -292,7 +310,7 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
         }
         payPlanInfoUpload.setRecordCount(payPlanInfoUploadParamList.size() + "");
         payPlanInfoUpload.setPayPlanInfo(payPlanInfoUploadParamList);
-        Map map = JRBMsgHandler.sendBatchFile(payPlanInfoUpload, payPlanInfoUpload.getDataType(), payPlanInfoUpload.getBatchNo());
+        Map<String, String> map = JRBMsgHandler.sendBatchFile(payPlanInfoUpload, payPlanInfoUpload.getDataType(), payPlanInfoUpload.getBatchNo());
         if (map.get("error") != null) {
             result.put("error", map.get("error"));
         } else {
@@ -311,8 +329,8 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
      * @throws Exception
      */
     @Override
-    public Map doSendRepayInfoBatchFile(ArrayList<RepayInfo> repayInfolist, RepayInfoUpload repayInfoUpload) throws Exception {
-        Map result = new HashMap();
+    public Map<String, String> doSendRepayInfoBatchFile(ArrayList<RepayInfo> repayInfolist, RepayInfoUpload repayInfoUpload) throws Exception {
+        Map<String, String> result = new HashMap<>();
         ArrayList<RepayInfoUploadParam> repayInfoUploadParamList = new ArrayList<>();
         for (RepayInfo node : repayInfolist) {
             //校验数据,如果校验失败,将不符合要求的数据信息返回到页面
@@ -330,7 +348,7 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
             //将还款计划信息循环节点转换为与xml对应的实体类
             JRBGetTxValidator.setFeild(repayInfoUploadParam, fieldAndValue);
             //判断是否是循环授信,如果是,将循环授信合同编号赋给实时网签的合同号
-            if(StringUtils.equals("740001",node.getIsRealQuotaLoan())){
+            if (StringUtils.equals("740001", node.getIsRealQuotaLoan())) {
                 repayInfoUploadParam.setContractNo(node.getRealQuotaNo());
             }
 
@@ -343,7 +361,7 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
         }
         repayInfoUpload.setRecordCount(repayInfoUploadParamList.size() + "");
         repayInfoUpload.setRepayInfo(repayInfoUploadParamList);
-        Map map = JRBMsgHandler.sendBatchFile(repayInfoUpload, repayInfoUpload.getDataType(), repayInfoUpload.getBatchNo());
+        Map<String, String> map = JRBMsgHandler.sendBatchFile(repayInfoUpload, repayInfoUpload.getDataType(), repayInfoUpload.getBatchNo());
         if (map.get("error") != null) {
             result.put("error", map.get("error"));
         } else {
@@ -355,14 +373,15 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
 
     /**
      * 授信额度信息文件批量上传到SFTP服务器
+     *
      * @param quotaInfoList
      * @param quotaInfoUpload
      * @return
      * @throws Exception
      */
     @Override
-    public Map doSendQuotaInfoBatchFile(ArrayList<QuotaInfo> quotaInfoList, QuotaInfoUpload quotaInfoUpload) throws Exception {
-        Map result = new HashMap();
+    public Map<String, String> doSendQuotaInfoBatchFile(ArrayList<QuotaInfo> quotaInfoList, QuotaInfoUpload quotaInfoUpload) throws Exception {
+        Map<String, String> result = new HashMap<>();
         ArrayList<QuotaInfoUploadParam> quotaInfoUploadParamList = new ArrayList<>();
         for (QuotaInfo node : quotaInfoList) {
             //校验数据,如果校验失败,将不符合要求的数据信息返回到页面
@@ -389,7 +408,7 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
         }
         quotaInfoUpload.setRecordCount(quotaInfoUploadParamList.size() + "");
         quotaInfoUpload.setQuotaInfo(quotaInfoUploadParamList);
-        Map map = JRBMsgHandler.sendBatchFile(quotaInfoUpload, quotaInfoUpload.getDataType(), quotaInfoUpload.getBatchNo());
+        Map<String, String> map = JRBMsgHandler.sendBatchFile(quotaInfoUpload, quotaInfoUpload.getDataType(), quotaInfoUpload.getBatchNo());
         if (map.get("error") != null) {
             result.put("error", map.get("error"));
         } else {

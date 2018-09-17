@@ -169,8 +169,8 @@ public class QuotaInfoDaoImpl extends BaseDaoSupport implements QuotaInfoDao {
     @Override
     public List<QuotaInfo> findQuotaoInfoListByDateId(String dateId) throws DAOException {
         String sql = "select * from DC_QUOTA_INFO where date_id = ?";
-        List<QuotaInfo> quotaInfoList = (List<QuotaInfo>) super.findForListBySql(sql, new Object[]{dateId}, QuotaInfo.class);
-        return quotaInfoList;
+        return (List<QuotaInfo>) super.findForListBySql(sql, new Object[]{dateId}, QuotaInfo.class);
+
     }
 
     @Override
@@ -280,7 +280,7 @@ public class QuotaInfoDaoImpl extends BaseDaoSupport implements QuotaInfoDao {
     @Override
     public PageBean findLastQuotaInfoBySendStatus(String sendStatusCode, String startDate, String endDate, PageBean pageBean) throws DAOException {
         StringBuilder sql = new StringBuilder("SELECT id, date_id,contract_no,contract_no_query,customer_name,contract_amount,contract_begin_date,contract_end_date," +
-                "contract_sign_date,used_amount,remain_amount,is_send,is_last,report_type FROM DC_QUOTA_INFO WHERE  1 = 1 ");
+                "contract_sign_date,used_amount,remain_amount,is_send,is_last,report_type,batch_no FROM DC_QUOTA_INFO WHERE  1 = 1 ");
         List<Object> list = new ArrayList<Object>();
         if (StringUtils.isNotBlank(sendStatusCode)) {
             sql.append(" AND is_send = ? ");
@@ -294,6 +294,19 @@ public class QuotaInfoDaoImpl extends BaseDaoSupport implements QuotaInfoDao {
         }
         pageBean.setSort("id");
         return super.findForPage(sql.toString(), list.toArray(), pageBean, QuotaInfo.class);
+    }
+
+    /**
+     * 根据batchNo查询记录
+     *
+     * @param batchNo 批次号
+     * @return
+     */
+    @Override
+    public List<QuotaInfo> findByBatchNo(String batchNo) {
+        String sql = "select * from DC_QUOTA_INFO where batch_no = ?";
+        return (List<QuotaInfo>) super.findForListBySql(sql, new Object[]{batchNo}, QuotaInfo.class);
+
     }
 
 }

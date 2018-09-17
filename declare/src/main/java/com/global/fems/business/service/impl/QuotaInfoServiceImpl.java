@@ -243,6 +243,7 @@ public class QuotaInfoServiceImpl implements QuotaInfoService {
             for (String id : idsArr) {
                 QuotaInfo quotaInfoById = quotaInfoDao.findQuotaInfoById(id);
                 quotaInfoById.setIsSend(0);
+                quotaInfoById.setBatchNo(null);
                 quotaInfoArrayList.add(quotaInfoById);
             }
             quotaInfoDao.batchUpdateQuotaoInfo(quotaInfoArrayList,true);

@@ -387,6 +387,7 @@ public class RepayInfoServiceImpl implements RepayInfoService {
             for (String id : idsArr) {
                 RepayInfo repayInfoById = repayInfoDao.findRepayInfoById(id);
                 repayInfoById.setIsSend(0);
+                repayInfoById.setBatchNo(null);
                 repayInfoArrayList.add(repayInfoById);
             }
             repayInfoDao.batchUpdateRepayInfo(repayInfoArrayList, true);

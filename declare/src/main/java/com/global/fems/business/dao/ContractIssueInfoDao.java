@@ -33,4 +33,11 @@ public interface ContractIssueInfoDao {
     PageBean findContractBySendStatus(String sendStatusCode, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException;
 
     PageBean findLastContractBySendStatus(String sendStatusCode, String contractNo, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException;
+
+    /**
+     * 根据batchNo查询记录
+     * @param batchNo 批次号
+     * @return
+     */
+    List<ContractIssueInfo> findByBatchNo(String batchNo);
 }

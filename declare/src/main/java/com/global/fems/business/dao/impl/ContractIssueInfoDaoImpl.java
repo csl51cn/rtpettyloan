@@ -217,7 +217,7 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
      */
     @Override
     public PageBean findLastContractBySendStatus(String sendStatusCode, String contractNo, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException {
-        StringBuilder sql = new StringBuilder("SELECT id,date_id,due_bill_no,contract_no,customer_name,dd_amt AS contract_amount,sign_date AS contract_sign_date,loan_cate,is_send,is_last,report_type,net_sign_no,is_real_quota_loan,real_quota_no FROM DC_CONTRACT_ISSUE_INFO WHERE  1 = 1 AND is_last = 'Y' ");
+        StringBuilder sql = new StringBuilder("SELECT id,date_id,due_bill_no,contract_no,customer_name,dd_amt AS contract_amount,sign_date AS contract_sign_date,loan_cate,is_send,is_last,report_type,net_sign_no,is_real_quota_loan,real_quota_no,batch_no FROM DC_CONTRACT_ISSUE_INFO WHERE  1 = 1 AND is_last = 'Y' ");
         List<Object> list = new ArrayList<Object>();
         if (StringUtils.isNotBlank(sendStatusCode)) {
             sql.append(" AND is_send = ? ");
@@ -239,5 +239,17 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
         }
         pageBean.setSort("id");
         return super.findForPage(sql.toString(), list.toArray(), pageBean, ContractInfoCycleNode.class);
+    }
+
+    /**
+     * 根据batchNo查询记录
+     *
+     * @param batchNo 批次号
+     * @return
+     */
+    @Override
+    public List<ContractIssueInfo> findByBatchNo(String batchNo) {
+        String sql = "SELECT * FROM DC_CONTRACT_ISSUE_INFO where batch_no = ?";
+        return (List<ContractIssueInfo>) super.findForListBySql(sql, new Object[]{batchNo}, ContractIssueInfo.class);
     }
 }

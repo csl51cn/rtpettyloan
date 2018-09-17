@@ -300,6 +300,7 @@ public class PayPlanInfoServiceImpl implements PayPlanInfoService {
             for (String id : idArr) {
                 PayPlanInfo payPlanInfoById = payPlanInfoDao.findPayPlanInfoById(id);
                 payPlanInfoById.setIsSend(0);
+                payPlanInfoById.setBatchNo(null);
                 payPlanInfoArrayList.add(payPlanInfoById);
             }
             payPlanInfoDao.batchUpdateContract(payPlanInfoArrayList, true);
