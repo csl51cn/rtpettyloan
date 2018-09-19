@@ -65,24 +65,28 @@ public class QueryDeclareServiceImpl implements QueryDeclareService {
                 if (StringUtils.equals("000000",msgCode)){
                     //上报成功
                     declareResult.setDeclareResult("上报成功");
-                    declareResult.setDeclareResult("上报成功");
                     declareResultDao.saveOrUpdate(declareResult);
                     notifyObservers(declareResult);
-                    return ResultModel.ok("查询成功:返回结果为"+ret.getRetMsg());
+                    return ResultModel.ok("查询成功:返回结果为"+msgInBody.getMsgInfo());
                 }else if (StringUtils.equals("000001",msgCode)){
                     //数据导入中
-                    return ResultModel.ok("查询成功:返回结果为"+ret.getRetMsg());
+                    declareResult.setDeclareResult("数据导入中");
+                    declareResultDao.saveOrUpdate(declareResult);
+                    return ResultModel.ok("查询成功:返回结果为"+msgInBody.getMsgInfo());
                 }else{
                     //上报失败
-                    declareResult.setDeclareResult("上报成功");
+                    declareResult.setDeclareResult("上报失败");
                     declareResultDao.saveOrUpdate(declareResult);
                     notifyObservers(declareResult);
-                    return ResultModel.fail("查询成功:返回结果为"+ret.getRetMsg());
+                    return ResultModel.fail("查询成功:返回结果为"+msgInBody.getMsgInfo());
                 }
-
 
             } else {
                 //查询失败
+                declareResult.setDeclareResultCode(ret.getRetCode());
+                declareResult.setDeclareResult(ret.getRetMsg());
+                declareResultDao.saveOrUpdate(declareResult);
+                notifyObservers(declareResult);
                 return ResultModel.fail("查询失败:" + (ReturnMsgCodeEnum.getValueByCode(retCode) == null ? ret.getRetMsg() : ReturnMsgCodeEnum.getValueByCode(retCode)));
             }
         } else {

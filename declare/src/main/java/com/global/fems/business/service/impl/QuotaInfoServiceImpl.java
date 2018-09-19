@@ -190,6 +190,12 @@ public class QuotaInfoServiceImpl implements QuotaInfoService {
         return quotaInfoDao.findQuotaInfoById(id);
     }
 
+    /**
+     * 已申报删除
+     * @param ids
+     * @return
+     * @throws DAOException
+     */
     @Override
     public ResultModel deleteRecord(String ids) throws DAOException {
         String[] idsArr = ids.split(",");
@@ -220,6 +226,8 @@ public class QuotaInfoServiceImpl implements QuotaInfoService {
                 //设置记录保存时间
                 quotaInfo.setInsertDate(new Date());
                 quotaInfo.setIsLast("Y");
+                //batchNo设置为空
+                quotaInfo.setBatchNo(null);
 
                 //校验属性值是否为空
                 validate(quotaInfo.getContractNoQuery(), quotaInfo);

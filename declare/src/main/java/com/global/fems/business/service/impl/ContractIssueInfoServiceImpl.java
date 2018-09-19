@@ -143,6 +143,8 @@ public class ContractIssueInfoServiceImpl implements ContractIssueInfoService {
         contractIssueInfo.setReportType("100002");
         //设置数据类型
         contractIssueInfo.setDataType("ISSUE_INFO");
+        //设置batch_no为空
+        contractIssueInfo.setBatchNo(null);
         if (StringUtils.isBlank(contractIssueInfo.getExtStartDate())) {
             //空串保存时,数据库中的日期为:1900-01-01 00:00:00:000
             contractIssueInfo.setExtStartDate(null);

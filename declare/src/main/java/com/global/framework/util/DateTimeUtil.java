@@ -157,7 +157,7 @@ public class DateTimeUtil {
         //日
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         calendar.set(year, month, day, 23, 59, 59);
-        return DateTimeUtil.getDateToStr(calendar.getTime(), defaultDatePattern);
+        return DateTimeUtil.getDateToStr(calendar.getTime(), defaultDateTimePattern);
     }
 
 

@@ -138,7 +138,8 @@ public class PayPlanInfoServiceImpl implements PayPlanInfoService {
                 validate(payPlanInfo.getContractNo(), payPlanInfo);
                 //设置上报类型为修改记录
                 payPlanInfo.setReportType("100003");
-
+                //设置batch_no为空
+                payPlanInfo.setBatchNo(null);
                 //查询已有记录,将是否为最新版本设置为N
                 List<PayPlanInfo> list = payPlanInfoDao.findPayPlanInfoListByDateIdAndCounter(payPlanInfo.getDateId(), payPlanInfo.getCounter());
                 if (list != null && list.size() > 0) {

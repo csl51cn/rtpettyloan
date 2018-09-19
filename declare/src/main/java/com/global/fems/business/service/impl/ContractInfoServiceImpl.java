@@ -275,6 +275,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         contractInfoCycleNode.setReportType("100002");
         //设置数据类型
         contractInfoCycleNode.setDataType("CONTRACT_INFO");
+        //设置batch_no为空
+        contractInfoCycleNode.setBatchNo(null);
         contractInfoDao.saveOrUpdate(contractInfoCycleNode);
 
     }

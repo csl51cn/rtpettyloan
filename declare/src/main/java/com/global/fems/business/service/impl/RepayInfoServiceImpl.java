@@ -331,6 +331,8 @@ public class RepayInfoServiceImpl implements RepayInfoService {
                 validate(repayInfo.getContractNo(), repayInfo);
                 //设置上报类型为修改记录
                 repayInfo.setReportType("100003");
+                //设置batch_no为空
+                repayInfo.setBatchNo(null);
 
                 //查询已有记录,将是否为最新版本设置为N
                 List<RepayInfo> list = repayInfoDao.findRepayInfoListByDateIdAndCounter(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());

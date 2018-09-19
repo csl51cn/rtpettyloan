@@ -36,7 +36,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th width="15%">签约日期(或还款日期)：</th>
+                    <th width="15%">上报日期：</th>
                     <td width="28%">
                         <input type="text" id="startDate" name="startDate"
                                class="easyui-validatebox"
