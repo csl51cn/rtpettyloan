@@ -111,7 +111,7 @@ public class QuotaInfoDaoImpl extends BaseDaoSupport implements QuotaInfoDao {
                 "  )) AS certificate_no,  " +
                 " ISNULL( " +
                 " " +
-                "  CASE WHEN e.num > 0 THEN " +
+                "  CASE WHEN e.num > 0 or a.产品类别=1760 or a.产品类别=2066 THEN " +
                 "   '240002' " +
                 "  ELSE " +
                 "  CASE WHEN (a.普通担保人 IS NULL " +
