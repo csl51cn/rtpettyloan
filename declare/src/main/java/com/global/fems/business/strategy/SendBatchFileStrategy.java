@@ -9,6 +9,7 @@ import java.util.Map;
 
 /**
  * 批量发送报文文件策略接口
+ * @author senlin.deng
  */
 public interface SendBatchFileStrategy  extends Observer {
 
