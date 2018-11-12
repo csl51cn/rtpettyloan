@@ -67,29 +67,29 @@ public class RepayInfoServiceImpl implements RepayInfoService {
             boolean isAdd = treeSet.add(repayInfo);
             if (isAdd) {
                 List<RepayInfo> existRepayInfoList = repayInfoDao.findRepayInfoListByDateIdAndCounter(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());
-                if (existRepayInfoList != null && existRepayInfoList.size() > 0) {//如果存在且上报类型不是删除，跳过,避免重复插入
-                    Boolean isDelete = false; //是否删除的标记
+                if (existRepayInfoList != null && existRepayInfoList.size() > 0) {
+                    //如果存在且上报类型不是删除，跳过,避免重复插入
+                    //是否删除的标记
+                    boolean isDelete = false;
                     for (RepayInfo repayInfoCycleNode : existRepayInfoList) {
                         if (!"100003".equals(repayInfoCycleNode.getReportType())) {
                             isDelete = true;
                             break;
-                        } else if (repayInfoCycleNode.getIsSend() == 0 && "Y".equals(repayInfoCycleNode.getIsLast())) {//上报类型不为删除,跳过
+                        } else if (repayInfoCycleNode.getIsSend() == 0 && "Y".equals(repayInfoCycleNode.getIsLast())) {
+                            //上报类型不为删除,跳过
                             continue a;
                         }
                     }
-                    if (!isDelete) { //已经被删除时,允许保存
+                    if (!isDelete) {
+                        //已经被删除时,允许保存
                         continue;
                     }
                 }
                 //设置实还本金,实还利息.findRepayInfoByIdFromBizSys()查询的结果不能合并同期同日多条记录;设置回收利息:提前结清时有违约金,违约金加到回收利息中
                 setRepayPrincipalInterest(repayInfo);
                 int totalCounter = repayInfoDao.findTotalCounter(repayInfo.getDateId());
-                repayInfo.setTotalCounter(Integer.toString(totalCounter));//设置总期数
-                //设置回收利息:提前结清时有违约金,违约金加到回收利息中
-//                Float penalty1 = repayInfoDao.findPenaltyPrincipalInterest(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());
-//                Float penalty2 = repayInfoDao.findPenaltyServiceFee(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());
-//                Double repayIntAmt = Double.parseDouble(repayInfo.getRepayIntAmt()) + Double.parseDouble(String.valueOf(penalty1)) + Double.parseDouble(String.valueOf(penalty2));
-//                repayInfo.setRepayIntAmt(String.valueOf(repayIntAmt));
+                //设置总期数
+                repayInfo.setTotalCounter(Integer.toString(totalCounter));
                 //将证件号字母转换为大写
                 repayInfo.setCertificateNo(repayInfo.getCertificateNo().toUpperCase());
                 //设置上报类型,初始保存时,默认为新增:100001
@@ -162,12 +162,8 @@ public class RepayInfoServiceImpl implements RepayInfoService {
         //设置扣款方式:银联代扣430002
         repayInfo.setGatherMode("430002");
         int totalCounter = repayInfoDao.findTotalCounter(repayInfo.getDateId());
-        repayInfo.setTotalCounter(Integer.toString(totalCounter));//设置总期数
-        //设置回收利息:提前结清时有违约金,违约金加到回收利息中
-//        Float penalty1 = repayInfoDao.findPenaltyPrincipalInterest(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());
-//        Float penalty2 = repayInfoDao.findPenaltyServiceFee(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());
-//        Double repayIntAmt = Double.parseDouble(repayInfo.getRepayIntAmt()) + Double.parseDouble(String.valueOf(penalty1)) + Double.parseDouble(String.valueOf(penalty2));
-//        repayInfo.setRepayIntAmt(String.valueOf(repayIntAmt));
+        //设置总期数
+        repayInfo.setTotalCounter(Integer.toString(totalCounter));
         //将证件号字母转换为大写
         repayInfo.setCertificateNo(repayInfo.getCertificateNo().toUpperCase());
         return repayInfo;
