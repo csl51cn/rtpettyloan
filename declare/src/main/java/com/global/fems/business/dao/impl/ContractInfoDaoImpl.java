@@ -112,6 +112,12 @@ public class ContractInfoDaoImpl extends BaseDaoSupport implements ContractInfoD
                 "  CASE dic.Word " +
                 "  WHEN '质房贷' THEN " +
                 "   a.intrate * 1.5 " +
+                "  WHEN '质房贷B' THEN " +
+                "   a.intrate * 1.5 " +
+                "  WHEN '质房贷C' THEN " +
+                "   a.intrate * 1.5 " +
+                "  WHEN '质房贷D' THEN " +
+                "   a.intrate * 1.5 " +
                 "  WHEN '付易贷' THEN " +
                 "   a.intrate * 1.5 " +
                 "  WHEN '车盈贷A' THEN " +
