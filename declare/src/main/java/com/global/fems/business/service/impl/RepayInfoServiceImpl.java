@@ -58,8 +58,12 @@ public class RepayInfoServiceImpl implements RepayInfoService {
             if (oldRepayInfo.getDateId().equals(newRepayInfo.getDateId()) && oldRepayInfo.getCounter().equals(newRepayInfo.getCounter())
                     && oldRepayInfo.getRepayDate().equals(newRepayInfo.getRepayDate())) {
                 return 0;
+            } else if (oldRepayInfo.getDateId() > newRepayInfo.getDateId()) {
+                return 1;
+            } else {
+                return -1;
             }
-            return 1;
+
         });
         a:
         for (String id : idsArr) {
@@ -395,7 +399,6 @@ public class RepayInfoServiceImpl implements RepayInfoService {
         }
         return ResultModel.ok();
     }
-
 
 
     private void validate(String contractNo, RepayInfo repayInfo) {
