@@ -37,7 +37,7 @@ public enum MessageTypeEnum {
     /**
      * 还款计划信息
      */
-    PAY_PLAN_INFO("0104", "PAYPLAN_INFO");
+    PAY_PLAN_INFO("0105", "PAYPLAN_INFO");
 
 
     private String code;
