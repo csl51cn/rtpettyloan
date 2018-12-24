@@ -145,10 +145,10 @@
                 data = eval(data);
                 if (data.sucesss) {
                     $.messager.alert("提示消息", data.msg, "info");
-                    doDeclareQuery();
                 } else {
                     $.messager.alert("提示消息", data.msg, "warning");
                 }
+                doDeclareQuery();
             }
         });
 
