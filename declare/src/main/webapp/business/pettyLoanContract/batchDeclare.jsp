@@ -515,6 +515,13 @@
             if (ids.length == 0){
                 return;
             }
+
+            // 显示进度条
+            $.messager.progress({
+                title:"申报数据",
+                text:"正在处理...",
+                interval:400
+            });
             $.ajax({
                 type: "POST",
                 timeout: 120000,
@@ -522,6 +529,7 @@
                 data: {"ids": ids.toString(),"transactionType":$("#transactionType").combobox("getValue")},
                 dataType: "json",
                 success: function (data) {
+                    $.messager.progress('close');
                     data = eval(data);
                     if (data.sucesss ) {
                         $.messager.alert("提示消息", "操作成功", "info");

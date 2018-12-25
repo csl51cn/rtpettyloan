@@ -46,11 +46,52 @@ public class QuotaInfoServiceImpl implements QuotaInfoService {
         return quotaInfo;
     }
 
+
+    /**
+     * 已申报修改
+     *
+     * @param quotaInfo 额度信息
+     * @throws DAOException
+     */
     @Override
     public void declaredUpdate(QuotaInfo quotaInfo) throws DAOException {
+        //查询已有记录,将是否为最新版本设置为N
+        List<QuotaInfo> list = quotaInfoDao.findQuotaInfoListByDateId(String.valueOf(quotaInfo.getDateId()));
+        for (QuotaInfo existedQuotaInfo : list) {
+            if ("100003".equals(existedQuotaInfo.getReportType()) && existedQuotaInfo.getIsSend() == 0) {
+                throw new DAOException("当前记录存在申报删除记录未申报,不能进行已申报合同信息修改");
+            }
+            if (!"N".equals(existedQuotaInfo.getIsLast())) {
+                existedQuotaInfo.setIsLast("N");
+            }
+        }
+        quotaInfoDao.batchUpdateQuotaoInfo(list, true);
+        quotaInfo.setId(null);
+        //设置上报类型,初始保存时,默认为新增:100001
+        quotaInfo.setReportType("100001");
+        //设置组织机构代码
+        quotaInfo.setOrgCode((OrgCode.getOrgCode()));
+        //设置是否发送,0:否,1:是
+        quotaInfo.setIsSend(0);
+        //设置数据类型
+        quotaInfo.setDataType("QUOTA_INFO");
+
+        if (StringUtil.isNullOrEmpty(quotaInfo.getInsertDate())) {
+            //设置记录保存时间
+            quotaInfo.setInsertDate(new Date());
+        }
+        //设置是否是最新记录
+        quotaInfo.setIsLast("Y");
+        quotaInfoDao.saveOrUpdate(quotaInfo);
 
     }
 
+    /**
+     * 保存或更新未申报额度信息
+     *
+     * @param quotaInfo 额度信息
+     * @throws DAOException
+     */
     @Override
     public void saveOrUpdate(QuotaInfo quotaInfo) throws DAOException {
         try {
@@ -109,26 +150,16 @@ public class QuotaInfoServiceImpl implements QuotaInfoService {
         String[] idsArr = ids.split(",");
 
         List<QuotaInfo> list = new ArrayList<>();
-        a:
         for (String dateId : idsArr) {
-
             List<QuotaInfo> existQuotaInfoList = quotaInfoDao.findQuotaoInfoListByDateId(dateId);
             //如果存在且上报类型不是删除，跳过,避免重复插入
             if (existQuotaInfoList != null && existQuotaInfoList.size() > 0) {
-                //是否删除的标记
-                Boolean isDelete = false;
-                for (QuotaInfo node : existQuotaInfoList) {
-                    if ("100003".equals(node.getReportType())) {
-                        isDelete = true;
-                        break;
-
-                    } else if (node.getIsSend() == 0 && "Y".equals(node.getIsLast())) {
-                        //上报类型不为删除,跳过
-                        continue a;
-                    }
-                }
-                //已经被删除时,允许保存
-                if (!isDelete) {
+                //如果成功删除的记录数=成功增加的记录数量,并且成功增加的记录数>0,允许新增,其余情况不允许再向数据库插入新数据
+                //deletedSuccessCount:删除成功的数量  addedSuccessCount:添加成功的数量
+                Long deletedSuccessCount = quotaInfoDao.findCountByDateIdAndReportTypeAndResult(dateId, "100003", "上报成功");
+                Long addedSuccessCount = quotaInfoDao.findCountByDateIdAndReportTypeAndResult(dateId, "100001", "上报成功");
+                boolean canInsertFlag = deletedSuccessCount >= addedSuccessCount && addedSuccessCount > 0;
+                if (!canInsertFlag) {
                     continue;
                 }
             }
@@ -192,6 +223,7 @@ public class QuotaInfoServiceImpl implements QuotaInfoService {
 
     /**
      * 已申报删除
+     *
      * @param ids
      * @return
      * @throws DAOException
@@ -209,12 +241,9 @@ public class QuotaInfoServiceImpl implements QuotaInfoService {
 
                         throw new BaseException("合同编号为:" + quotaInfoNode.getContractNoQuery() + ",此记录已设置申报删除,无需再次设置");
                     }
-                    if ("N".equals(quotaInfoNode.getIsLast())) {
-                        continue;
-                    } else {
+                    if (!"N".equals(quotaInfoNode.getIsLast())) {
                         quotaInfo = quotaInfoNode;
                         quotaInfoNode.setIsLast("N");
-
                     }
                 }
                 quotaInfoDao.batchUpdateQuotaoInfo(list, true);
@@ -236,7 +265,7 @@ public class QuotaInfoServiceImpl implements QuotaInfoService {
                 quotaInfoDao.saveOrUpdate(quotaInfo);
 
             } catch (BaseException e) {
-                LOGGER.debug("QuotaInfoServiceImpl:deleteRecord() "+e.getLocalizedMessage());
+                LOGGER.debug("QuotaInfoServiceImpl:deleteRecord() " + e.getLocalizedMessage());
                 return ResultModel.fail(e.getLocalizedMessage());
             }
         }
@@ -254,7 +283,7 @@ public class QuotaInfoServiceImpl implements QuotaInfoService {
                 quotaInfoById.setBatchNo(null);
                 quotaInfoArrayList.add(quotaInfoById);
             }
-            quotaInfoDao.batchUpdateQuotaoInfo(quotaInfoArrayList,true);
+            quotaInfoDao.batchUpdateQuotaoInfo(quotaInfoArrayList, true);
         } catch (DAOException e) {
             LOGGER.debug("QuotaInfoServiceImpl:setNotSend() " + e.getLocalizedMessage());
             return ResultModel.fail();

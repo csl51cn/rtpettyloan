@@ -5,609 +5,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>贷款合同上报合同信息操作</title>
-    <jsp:include page="../../common/include.jsp"></jsp:include>
-    <script type="text/javascript">
 
-
-        $(function () {
-            //保存或更新时根据返回值给出提示
-            var msg = "${msg}";
-            if (msg !== "") {
-                if (msg == '1') {
-                    $.messager.alert("提示消息", "操作成功", "info");
-                } else {
-                    $.messager.alert("提示消息", "操作失败," + msg, "warning");
-                }
-            }
-
-            //双击某条数据后，返回详细信息，根据返回的值，设置不可编辑状态，点"手动录入"按钮后解除锁定
-            if ("${disabled}") {
-                $("#fo input[type=text]").prop("disabled", true);
-                $("#loanCate").combogrid('disable');
-                $("#customerType").combogrid('disable');
-                $("#certificateType").combogrid('disable');
-                $("#conCustomerType").combogrid('disable');
-                $("#concertificatetype").combogrid('disable');
-            }
-
-            //默认委托人相关项隐藏,如果是查询会数据且贷款类型为委托贷款：530002，展示相关项
-            var loanCate = "${model.loanCate}";
-            if (loanCate == "" || loanCate == "530001") {
-                setDisplayStatus("conCustomerTbody", false);
-                $("#fo").prop("action", "${basePath}/contractInfo.do?method=saveContract");
-            } else if (loanCate == "530002") {
-                setDisplayStatus("conCustomerTbody", true);
-                $("#fo").prop("action", "${basePath}/contractInfo.do?method=saveEntrustedLoanContract");
-            }
-
-            //默认授信额度协议编号隐藏
-            $("#realQuotaNo").hide();
-            $("#realQuotaNo").parent().prev("th").hide();
-
-            //如果编辑已申报的记录,保存按钮失效,编辑未申报的记录,已申报修改,已申报删除按钮失效
-            if ($("#isSend").val() == '1') {
-                $("#saveBtn").linkbutton("disable");
-            } else {
-                $("#declarebusinessUpdateBtn").linkbutton("disable");
-                $("#declarebusinessDeleteBtn").linkbutton("disable");
-            }
-
-            $("#contract_no2").change(function () {
-                var value = $("#contract_no2").val();
-                if (value != "") {
-                    $("#sendStatusCode").combogrid('disable');
-                    $("#signStartDate").prop("disabled", true);
-                    $("#signEndDate").prop("disabled", true);
-                } else {
-                    $("#sendStatusCode").combogrid('enable');
-                    $("#signStartDate").removeProp("disabled");
-                    $("#signEndDate").removeProp("disabled");
-                }
-            })
-
-            $("#contract_no1").change(function () {
-                var value = $("#contract_no1").val();
-                if (value != "") {
-                    $("#startDate").prop("disabled", true);
-                    $("#endDate").prop("disabled", true);
-                } else {
-                    $("#startDate").removeProp("disabled");
-                    $("#endDate").removeProp("disabled");
-                }
-            })
-            //跳转当前页面时设置共借人信息
-            var coCustomerTypeArray = new Array();
-            var coCustomerType1 = "${model.coCustomerType1}";
-            var coCustomerType2 = "${model.coCustomerType2}";
-            var coCustomerType3 = "${model.coCustomerType3}";
-            var coCustomerType4 = "${model.coCustomerType4}";
-
-            coCustomerTypeArray.push(coCustomerType1);
-            coCustomerTypeArray.push(coCustomerType2);
-            coCustomerTypeArray.push(coCustomerType3);
-            coCustomerTypeArray.push(coCustomerType4);
-
-            for (var j = 0; j < coCustomerTypeArray.length; j++) {
-                var id = "coCustomerTbody" + (j + 1);
-                if (coCustomerTypeArray[j] != "") {
-                    setDisplayStatus(id, true);
-                } else {
-                    setDisplayStatus(id, false);
-                }
-            }
-            $("#declaredBatchDelete").hide();
-            $("#setNotSendBtn").hide();
-            $("#sendStatusCode").combobox({
-                onChange: function (newValue, oldValue) {
-                    if (newValue == 0) {
-                        $("#declaredBatchDelete").hide();
-                        $("#setNotSendBtn").hide();
-                    } else {
-                        $("#declaredBatchDelete").show();
-                        $("#setNotSendBtn").show();
-                    }
-                    ;
-                }
-            });
-        })
-
-        //点击“手工填写"按钮触发，解除锁定
-        function manualFill() {
-            $("#fo input[type=text]").removeProp("disabled");
-            $("#loanCate").combogrid('enable');
-            $("#customerType").combogrid('enable');
-            $("#certificateType").combogrid('enable');
-            $("#conCustomerType").combogrid('enable');
-            $("#concertificatetype").combogrid('enable');
-
-        }
-
-        //设置授信额度协议编号显示状态
-        function isRealQuotaLoan(value) {
-            if (value == '740001') {//是授信额度下贷款
-                $("#realQuotaNo").show();
-                $("#realQuotaNo").parent().prev("th").show();
-            } else if (value == "740002") {//不是授信额度下贷款
-                $("#realQuotaNo").hide();
-                $("#realQuotaNo").parent().prev("th").hide();
-            }
-        }
-
-
-
-        //设置委托贷款相关项的显示状态
-        function setDisplayStatus(id, flag) {
-            //true 代表显示，false 代表隐藏
-            if (flag) {
-                $("#" + id).show();
-            } else {
-                $("#" + id).hide();
-            }
-        }
-
-        //判断是否为委托贷款，530001代表自营贷款，530002代表委托贷款
-        function isEntrustedLoan(value) {
-            if (value == "530001") {
-                setDisplayStatus("conCustomerTbody", false);
-                $("#fo").prop("action", "${basePath}/contractInfo.do?method=saveContract");
-            } else if (value == "530002") {
-                setDisplayStatus("conCustomerTbody", true);
-                $("#fo").prop("action", "${basePath}/contractInfo.do?method=saveEntrustedLoanContract");
-            }
-        }
-
-        //保存记录
-        function doSave() {
-            manualFill();
-            $("#fo").submit();
-        }
-
-        //动态添加共同借款人相关项
-        var i = 1;
-        function addCoCustomerInfo() {
-            if (i == 5) {
-                $.messager.alert("提示消息", "最多添加四个共借人!", "warning");
-                return;
-            }
-            var id = "coCustomerTbody" + i;
-            setDisplayStatus(id, true);
-            i++;
-        }
-
-        //删除共借人信息
-        function delCoCustomerInfo() {
-            if (i > 0) {
-                i--;
-            } else {
-                return;
-            }
-            setDisplayStatus("coCustomerTbody" + i, false);
-        }
-
-
-        function openBusinessQueryWindow() {
-
-            //初始化业务查询的datagrid
-            $("#businessQueryResultTb").datagrid({
-                url: '',
-                pagination: true,
-                checkOnSelect: true,
-                pageSize: 15,
-                pageList: [5, 10, 15, 20, 30,50,100,300],
-                columns: [[{
-                    field: "id",
-                    title: "主键",
-                    checkbox: true
-                }, {
-                    field: "dateId",
-                    title: "Date_Id",
-                    hidden: true
-                }, {
-                    field: "contractNo",
-                    title: "合同编号",
-                    width: 95
-                }, {
-                    field: "customerName",
-                    title: "借款人名称",
-                    width: 95
-
-                }, {
-                    field: "contractAmount",
-                    title: "合同金额",
-                    width: 90
-                }, {
-                    field: "contractSignDate",
-                    title: "合同签订日期",
-                    width: 100,
-                    formatter: function (value, row) {
-                        return formatDatebox(value);
-                    }
-                }, {
-                    field: "isLast",
-                    title: "是否是最新",
-                    width: 80,
-                    formatter: function (value, row) {
-                        if (value == 'Y') {
-                            return '是';
-                        } else if (value == 'N') {
-                            return '否';
-                        }
-                    }
-                }, {
-                    field: "netSignNo",
-                    title: "网签编号",
-                    width: 220
-
-                }, {
-                    field: "isRealQuotaLoan",
-                    title: "是否额度项下贷款",
-                    width: 120,
-                    formatter: function (value, row) {
-                        if ('740001' == value) {
-                            return "是";
-                        } else {
-                            return "否";
-                        }
-                    }
-                }, {
-                    field: "realQuotaNo",
-                    title: "授信额度协议编号",
-                    width: 230
-                }]],
-                onDblClickRow: function (rowIndex, rowData) {
-                    queryContractByDateId(rowData.dateId);
-                },
-                onLoadSuccess: function (data) {
-                    if (data.total == 0) {
-                        //添加一个新数据行
-                        $(this).datagrid('appendRow', {contractNo: '<div style="text-align:center;color:red">没有相关记录！</div>'}).datagrid('mergeCells', {
-                            index: 0,
-                            field: 'contractNo',
-                            colspan: 6
-                        });
-                    }
-                    $(this).datagrid('clearChecked');
-                }
-            })
-            $('#businessQueryWindow').window('open');
-        }
-
-        function queryContractByDateId(dateId) {
-            if (dateId != undefined) {
-                window.location.href = "${basePath}/contractInfo.do?method=findContractByDateId&dateId=" + dateId;
-                $('#businessQueryWindow').window('close');
-            }
-
-        }
-        //批量保存
-        function doBatchSave() {
-            var ids = [];
-            var rows = $("#businessQueryResultTb").datagrid("getSelections");
-            for (var i = 0; i < rows.length; i++) {
-                ids.push(rows[i].dateId);
-            }
-            if (ids.length == 0) {
-                $.messager.alert("提示消息", "请选择至少一条记录进行操作", "info");
-                return;
-            }
-            $.ajax({
-                type: "POST",
-                url: "${basePath}/contractInfo.do?method=batchSaveContract",
-                data: {"ids": ids.toString()},
-                dataType: "json",
-                success: function (data) {
-                    if (data == "1") {
-                        $.messager.alert("提示消息", "操作成功", "info");
-                    } else {
-                        $.messager.alert("提示消息", "操作失败", "warning");
-                    }
-                }
-            });
-        }
-        //根据签订时间段从实时网签的表中查询,贷款合同信息上报依赖于实时网签,实时网签执行后才做贷款合同信息上报操作
-        function doBusinessQuery() {
-            var value = $("#contract_no1").val();
-            if (value != "") {
-                $("#businessQueryResultTb").datagrid({
-                    queryParams: {"contractNo": value, "sendStatus": ""},
-                    url: "${basePath}/contractInfo.do?method=findContractByContractNoFromRealTimeContract"
-                });
-            } else if ($("#businessQueryForm").form('validate') == true) {
-                $("#businessCheckMsg").html("");
-                if (!checkEndTime("startDate", "endDate")) {
-                    $("#businessCheckMsg").html("结束时间必须晚于开始时间！");
-                    return;
-                } else {
-                    $("#businessQueryResultTb").datagrid({
-                        queryParams: form2Json("businessQueryForm"),
-                        url: "${basePath}/pettyLoanContract.do?method=findLastPettyLoanContractBySendStatus"
-                    });
-                }
-            }
-        }
-        function openDeclareQueryWindow() {
-
-            //初始化申报查询的datagrid
-            $("#declareQueryResultTb").datagrid({
-                url: '',
-                checkOnSelect: true,
-                pagination: true,
-                pageSize: 15,
-                pageList: [5, 10, 15, 20, 30,50,100,200],
-                columns: [[{
-                    field: "id",
-                    title: "主键",
-                    checkbox: true
-                }, {
-                    field: "dateId",
-                    title: "Date_Id",
-                    hidden: true
-                }, {
-                    field: "contractNo",
-                    title: "合同编号",
-                    width: 100
-                }, {
-                    field: "customerName",
-                    title: "借款人名称",
-                    width: 100
-
-                }, {
-                    field: "contractAmount",
-                    title: "合同金额",
-                    width: 100,
-                }, {
-                    field: "contractSignDate",
-                    title: "合同签订日期",
-                    width: 100,
-                    formatter: function (value, row) {
-                        return formatDatebox(value);
-                    }
-                }, {
-                    field: "isSend",
-                    title: "是否已申报",
-                    width: 80,
-                    formatter: function (value, row) {
-                        if (1 == value) {
-                            return "是";
-                        } else {
-                            return "否";
-                        }
-                    }
-                }, {
-                    field: "isLast",
-                    title: "是否是最新",
-                    width: 80,
-                    formatter: function (value, row) {
-                        if (value == 'Y') {
-                            return '是';
-                        } else if (value == 'N') {
-                            return '否';
-                        }
-                    }
-                }, {
-                    field: "reportType",
-                    title: "上报类型",
-                    width: 80,
-                    formatter: function (value, row) {
-                        if ('100001' == value) {
-                            return '新增记录';
-                        } else if ('100002' == value) {
-                            return '修改记录';
-                        } else if ('100003' == value) {
-                            return '删除记录';
-                        }
-                    }
-
-                }, {
-                    field: "isRealQuotaLoan",
-                    title: "是否额度项下贷款",
-                    width: 120,
-                    formatter: function (value, row) {
-                        if ('740001' == value) {
-                            return "是";
-                        } else {
-                            return "否";
-                        }
-                    }
-                }, {
-                    field: "realQuotaNo",
-                    title: "授信额度协议编号",
-                    width: 230
-                }
-                ]],
-                onDblClickRow: function (rowIndex, rowData) {
-                    queryContractByContractId(rowData.id);
-                },
-                onLoadSuccess: function (data) {
-                    if (data.total == 0) {
-                        //添加一个新数据行
-                        $(this).datagrid('appendRow', {contractNo: '<div style="text-align:center;color:red">没有相关记录！</div>'}).datagrid('mergeCells', {
-                            index: 0,
-                            field: 'contractNo',
-                            colspan: 8
-                        });
-                    }
-                    $(this).datagrid('clearChecked');
-                }
-            })
-
-            $('#declareQueryWindow').window('open');
-        }
-        //根据申报状态查询合同简略信息
-        function doDeclareQuery() {
-            var value = $("#contract_no2").val();
-            if (value != "") {
-                $("#declareQueryResultTb").datagrid({
-                    queryParams: {"contractNo": value},
-                    url: "${basePath}/contractInfo.do?method=findContractBriefInfoByContractNo"
-                });
-
-            } else if ($("#declareQueryForm").form('validate') == true) {
-                var flag = true;
-                $("#businessCheckMsg").html("");
-                if ($("#insertEndDate").val() != null && !checkEndTime("insertStartDate", "insertEndDate")) {
-                    $("#declarebusinessCheckMsg").html("结束时间必须晚于开始时间！");
-                    flag = false;
-                    return;
-                }
-                if (flag) {
-                    $("#declareQueryResultTb").datagrid({
-                        queryParams: form2Json("declareQueryForm"),
-                        url: "${basePath}/contractInfo.do?method=findContractBySendStatus"
-                    });
-                }
-            }
-        }
-
-        //根据记录id查询合同信息
-        function queryContractByContractId(id) {
-            if (id != undefined) {
-                window.location.href = "${basePath}/contractInfo.do?method=findContractById&id=" + id;
-                $('#declareQueryWindow').window('close');
-            }
-        }
-
-        //已申报记录更新信息
-        function declaredUpdate() {
-            manualFill();
-            $("#fo").submit();
-        }
-
-        //已申报记录删除
-        function declaredDelete() {
-            manualFill();
-            $.ajax({
-                    type: "POST",
-                    url: "${basePath}/contractInfo.do?method=deleteRecord",
-                    data: form2Json("fo"),
-                    dataType: "json",
-                    success: function (data) {
-
-                        if (data.sucesss) {
-                            $.messager.alert("提示消息", "操作成功", "info");
-                        } else {
-                            $.messager.alert("提示消息", "操作失败," + data.msg, "warning");
-                        }
-                    }
-                }
-            )
-        }
-        //已申报批量删除
-        function doDeclaredBatchDelete() {
-            var ids = [];
-            var rows = $("#declareQueryResultTb").datagrid("getSelections");
-            for (var i = 0; i < rows.length; i++) {
-                ids.push(rows[i].dateId);
-            }
-            if (ids.length == 0) {
-                $.messager.alert("提示消息", "请选择至少一条记录进行操作", "info");
-                return;
-            }
-            $.ajax({
-                type: "POST",
-                url: "${basePath}/contractInfo.do?method=deleteRecordBatch",
-                data: {"ids": ids.toString()},
-                dataType: "json",
-                success: function (data) {
-                    if (data.sucesss) {
-                        $.messager.alert("提示消息", "操作成功", "info");
-                    } else {
-                        $.messager.alert("提示消息", "操作失败," + data.msg, "warning");
-                    }
-                }
-            });
-        }
-        //设置为未申报
-        function doSetNotSend() {
-            var ids = [];
-            var rows = $("#declareQueryResultTb").datagrid("getSelections");
-            for (var i = 0; i < rows.length; i++) {
-                ids.push(rows[i].id);
-            }
-            if (ids.length == 0) {
-                $.messager.alert("提示消息", "请选择至少一条记录进行操作", "info");
-                return;
-            }
-            $.ajax({
-                type: "POST",
-                url: "${basePath}/contractInfo.do?method=setNotSend",
-                data: {"ids": ids.toString()},
-                dataType: "json",
-                success: function (data) {
-                    if (data.sucesss) {
-                        $.messager.alert("提示消息", "操作成功", "info");
-                    } else {
-                        $.messager.alert("提示消息", "操作失败 " + data.msg, "warning");
-                    }
-                }
-            });
-        }
-        //刷新当前页
-        function doReset() {
-            window.location.href = "${basePath}/contractInfo.do?method=showContractInfo";
-        }
-
-        //检查结束时间是否大于等于开始时间
-        function checkEndTime(dateId1, dateId2) {
-            var startDate = $("#" + dateId1).val();
-            var start = new Date(startDate.replace("-", "/").replace("-", "/"));
-            var endDate = $("#" + dateId2).val();
-            var end = new Date(endDate.replace("-", "/").replace("-", "/"));
-            if (end < start) {
-                return false;
-            }
-            return true;
-        }
-        //将表单数据转为json
-        function form2Json(id) {
-
-            var arr = $("#" + id).serializeArray();
-            var jsonStr = "";
-
-            jsonStr += '{';
-            for (var i = 0; i < arr.length; i++) {
-                jsonStr += '"' + arr[i].name + '":"' + arr[i].value + '",'
-            }
-            jsonStr = jsonStr.substring(0, (jsonStr.length - 1));
-            jsonStr += '}'
-
-            var json = JSON.parse(jsonStr)
-            return json
-        }
-        //格式化时间
-        Date.prototype.format = function (format) {
-            var o = {
-                "M+": this.getMonth() + 1, // month
-                "d+": this.getDate(), // day
-                "h+": this.getHours(), // hour
-                "m+": this.getMinutes(), // minute
-                "s+": this.getSeconds(), // second
-                "q+": Math.floor((this.getMonth() + 3) / 3), // quarter
-                "S": this.getMilliseconds()
-                // millisecond
-            }
-            if (/(y+)/.test(format))
-                format = format.replace(RegExp.$1, (this.getFullYear() + "")
-                    .substr(4 - RegExp.$1.length));
-            for (var k in o)
-                if (new RegExp("(" + k + ")").test(format))
-                    format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
-            return format;
-        }
-        function formatDatebox(value) {
-            if (value == null || value == '') {
-                return '';
-            }
-            var dt;
-            if (value instanceof Date) {
-                dt = value;
-            } else {
-                dt = new Date(value);
-            }
-
-            return dt.format("yyyy-MM-dd"); //扩展的Date的format方法
-        }
-    </script>
 </head>
 <body>
 <form id="fo" action="" method="post">
@@ -1507,12 +905,628 @@
     <table id="declareQueryResultTb">
     </table>
 </div>
-<script type="application/javascript">
+<jsp:include page="../../common/include.jsp"></jsp:include>
+<script type="text/javascript">
+
+
     $(function () {
+
+        //保存或更新时根据返回值给出提示
+        var msg = "${msg}";
+        if (msg !== "") {
+            if (msg == '1') {
+                $.messager.alert("提示消息", "操作成功", "info");
+            } else {
+                $.messager.alert("提示消息", "操作失败," + msg, "warning");
+            }
+        }
+
+        //双击某条数据后，返回详细信息，根据返回的值，设置不可编辑状态，点"手动录入"按钮后解除锁定
+        if ("${disabled}") {
+            $("#fo input[type=text]").prop("disabled", true);
+            $("#loanCate").combogrid('disable');
+            $("#customerType").combogrid('disable');
+            $("#certificateType").combogrid('disable');
+            $("#conCustomerType").combogrid('disable');
+            $("#concertificatetype").combogrid('disable');
+        }
+
+        //默认委托人相关项隐藏,如果是查询会数据且贷款类型为委托贷款：530002，展示相关项
+        var loanCate = "${model.loanCate}";
+        if (loanCate == "" || loanCate == "530001") {
+            setDisplayStatus("conCustomerTbody", false);
+            $("#fo").prop("action", "${basePath}/contractInfo.do?method=saveContract");
+        } else if (loanCate == "530002") {
+            setDisplayStatus("conCustomerTbody", true);
+            $("#fo").prop("action", "${basePath}/contractInfo.do?method=saveEntrustedLoanContract");
+        }
+
+        //默认授信额度协议编号隐藏
+        $("#realQuotaNo").hide();
+        $("#realQuotaNo").parent().prev("th").hide();
+
+        //如果编辑已申报的记录,保存按钮失效,编辑未申报的记录,已申报修改,已申报删除按钮失效
+        if ($("#isSend").val() == '1') {
+            $("#saveBtn").linkbutton("disable");
+        } else {
+            $("#declarebusinessUpdateBtn").linkbutton("disable");
+            $("#declarebusinessDeleteBtn").linkbutton("disable");
+        }
+
+        $("#contract_no2").change(function () {
+            var value = $("#contract_no2").val();
+            if (value != "") {
+                $("#sendStatusCode").combogrid('disable');
+                $("#signStartDate").prop("disabled", true);
+                $("#signEndDate").prop("disabled", true);
+            } else {
+                $("#sendStatusCode").combogrid('enable');
+                $("#signStartDate").removeProp("disabled");
+                $("#signEndDate").removeProp("disabled");
+            }
+        })
+
+        $("#contract_no1").change(function () {
+            var value = $("#contract_no1").val();
+            if (value != "") {
+                $("#startDate").prop("disabled", true);
+                $("#endDate").prop("disabled", true);
+            } else {
+                $("#startDate").removeProp("disabled");
+                $("#endDate").removeProp("disabled");
+            }
+        })
+        //跳转当前页面时设置共借人信息
+        var coCustomerTypeArray = new Array();
+        var coCustomerType1 = "${model.coCustomerType1}";
+        var coCustomerType2 = "${model.coCustomerType2}";
+        var coCustomerType3 = "${model.coCustomerType3}";
+        var coCustomerType4 = "${model.coCustomerType4}";
+
+        coCustomerTypeArray.push(coCustomerType1);
+        coCustomerTypeArray.push(coCustomerType2);
+        coCustomerTypeArray.push(coCustomerType3);
+        coCustomerTypeArray.push(coCustomerType4);
+
+        for (var j = 0; j < coCustomerTypeArray.length; j++) {
+            var id = "coCustomerTbody" + (j + 1);
+            if (coCustomerTypeArray[j] != "") {
+                setDisplayStatus(id, true);
+            } else {
+                setDisplayStatus(id, false);
+            }
+        }
+        $("#declaredBatchDelete").hide();
+        $("#setNotSendBtn").hide();
+        $("#sendStatusCode").combobox({
+            onChange: function (newValue, oldValue) {
+                if (newValue == 0) {
+                    $("#declaredBatchDelete").hide();
+                    $("#setNotSendBtn").hide();
+                } else {
+                    $("#declaredBatchDelete").show();
+                    $("#setNotSendBtn").show();
+                }
+                ;
+            }
+        });
+
         var realQuotaNo = "${model.realQuotaNo}";
         if(realQuotaNo != ""){
             isRealQuotaLoan("${model.isRealQuotaLoan}");
         }
+
+    })
+
+    //点击“手工填写"按钮触发，解除锁定
+    function manualFill() {
+        $("#fo input[type=text]").removeProp("disabled");
+        $("#loanCate").combogrid('enable');
+        $("#customerType").combogrid('enable');
+        $("#certificateType").combogrid('enable');
+        $("#conCustomerType").combogrid('enable');
+        $("#concertificatetype").combogrid('enable');
+
+    }
+
+    //设置授信额度协议编号显示状态
+    function isRealQuotaLoan(value) {
+        if (value == '740001') {//是授信额度下贷款
+            $("#realQuotaNo").show();
+            $("#realQuotaNo").parent().prev("th").show();
+        } else if (value == "740002") {//不是授信额度下贷款
+            $("#realQuotaNo").hide();
+            $("#realQuotaNo").parent().prev("th").hide();
+        }
+    }
+
+
+
+    //设置委托贷款相关项的显示状态
+    function setDisplayStatus(id, flag) {
+        //true 代表显示，false 代表隐藏
+        if (flag) {
+            $("#" + id).show();
+        } else {
+            $("#" + id).hide();
+        }
+    }
+
+    //判断是否为委托贷款，530001代表自营贷款，530002代表委托贷款
+    function isEntrustedLoan(value) {
+        if (value == "530001") {
+            setDisplayStatus("conCustomerTbody", false);
+            $("#fo").prop("action", "${basePath}/contractInfo.do?method=saveContract");
+        } else if (value == "530002") {
+            setDisplayStatus("conCustomerTbody", true);
+            $("#fo").prop("action", "${basePath}/contractInfo.do?method=saveEntrustedLoanContract");
+        }
+    }
+
+    //保存记录
+    function doSave() {
+        manualFill();
+        $("#fo").submit();
+    }
+
+    //动态添加共同借款人相关项
+    var i = 1;
+    function addCoCustomerInfo() {
+        if (i == 5) {
+            $.messager.alert("提示消息", "最多添加四个共借人!", "warning");
+            return;
+        }
+        var id = "coCustomerTbody" + i;
+        setDisplayStatus(id, true);
+        i++;
+    }
+
+    //删除共借人信息
+    function delCoCustomerInfo() {
+        if (i > 0) {
+            i--;
+        } else {
+            return;
+        }
+        setDisplayStatus("coCustomerTbody" + i, false);
+    }
+
+
+    function openBusinessQueryWindow() {
+
+        //初始化业务查询的datagrid
+        $("#businessQueryResultTb").datagrid({
+            url: '',
+            pagination: true,
+            checkOnSelect: true,
+            pageSize: 15,
+            pageList: [5, 10, 15, 20, 30,50,100,300],
+            columns: [[{
+                field: "id",
+                title: "主键",
+                checkbox: true
+            }, {
+                field: "dateId",
+                title: "Date_Id",
+                hidden: true
+            }, {
+                field: "contractNo",
+                title: "合同编号",
+                width: 95
+            }, {
+                field: "customerName",
+                title: "借款人名称",
+                width: 95
+
+            }, {
+                field: "contractAmount",
+                title: "合同金额",
+                width: 90
+            }, {
+                field: "contractSignDate",
+                title: "合同签订日期",
+                width: 100,
+                formatter: function (value, row) {
+                    return formatDatebox(value);
+                }
+            }, {
+                field: "isLast",
+                title: "是否是最新",
+                width: 80,
+                formatter: function (value, row) {
+                    if (value == 'Y') {
+                        return '是';
+                    } else if (value == 'N') {
+                        return '否';
+                    }
+                }
+            }, {
+                field: "netSignNo",
+                title: "网签编号",
+                width: 220
+
+            }, {
+                field: "isRealQuotaLoan",
+                title: "是否额度项下贷款",
+                width: 120,
+                formatter: function (value, row) {
+                    if ('740001' == value) {
+                        return "是";
+                    } else {
+                        return "否";
+                    }
+                }
+            }, {
+                field: "realQuotaNo",
+                title: "授信额度协议编号",
+                width: 230
+            }]],
+            onDblClickRow: function (rowIndex, rowData) {
+                queryContractByDateId(rowData.dateId);
+            },
+            onLoadSuccess: function (data) {
+                if (data.total == 0) {
+                    //添加一个新数据行
+                    $(this).datagrid('appendRow', {contractNo: '<div style="text-align:center;color:red">没有相关记录！</div>'}).datagrid('mergeCells', {
+                        index: 0,
+                        field: 'contractNo',
+                        colspan: 6
+                    });
+                }
+                $(this).datagrid('clearChecked');
+            }
+        })
+        $('#businessQueryWindow').window('open');
+    }
+
+    function queryContractByDateId(dateId) {
+        if (dateId != undefined) {
+            window.location.href = "${basePath}/contractInfo.do?method=findContractByDateId&dateId=" + dateId;
+            $('#businessQueryWindow').window('close');
+        }
+
+    }
+    //批量保存
+    function doBatchSave() {
+        var ids = [];
+        var rows = $("#businessQueryResultTb").datagrid("getSelections");
+        for (var i = 0; i < rows.length; i++) {
+            ids.push(rows[i].dateId);
+        }
+        if (ids.length == 0) {
+            $.messager.alert("提示消息", "请选择至少一条记录进行操作", "info");
+            return;
+        }
+        // 显示进度条
+        $.messager.progress({
+            title:"批量保存",
+            text:"正在处理...",
+            interval:400
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "${basePath}/contractInfo.do?method=batchSaveContract",
+            data: {"ids": ids.toString()},
+            dataType: "json",
+            success: function (data) {
+                $.messager.progress('close');
+                if (data == "1") {
+                    $.messager.alert("提示消息", "操作成功", "info");
+                } else {
+                    $.messager.alert("提示消息", "操作失败", "warning");
+                }
+
+            }
+        });
+    }
+    //根据签订时间段从实时网签的表中查询,贷款合同信息上报依赖于实时网签,实时网签执行后才做贷款合同信息上报操作
+    function doBusinessQuery() {
+        var value = $("#contract_no1").val();
+        if (value != "") {
+            $("#businessQueryResultTb").datagrid({
+                queryParams: {"contractNo": value, "sendStatus": ""},
+                url: "${basePath}/contractInfo.do?method=findContractByContractNoFromRealTimeContract"
+            });
+        } else if ($("#businessQueryForm").form('validate') == true) {
+            $("#businessCheckMsg").html("");
+            if (!checkEndTime("startDate", "endDate")) {
+                $("#businessCheckMsg").html("结束时间必须晚于开始时间！");
+                return;
+            } else {
+                $("#businessQueryResultTb").datagrid({
+                    queryParams: form2Json("businessQueryForm"),
+                    url: "${basePath}/pettyLoanContract.do?method=findLastPettyLoanContractBySendStatus"
+                });
+            }
+        }
+    }
+    function openDeclareQueryWindow() {
+
+        //初始化申报查询的datagrid
+        $("#declareQueryResultTb").datagrid({
+            url: '',
+            checkOnSelect: true,
+            pagination: true,
+            pageSize: 15,
+            pageList: [5, 10, 15, 20, 30,50,100,200],
+            columns: [[{
+                field: "id",
+                title: "主键",
+                checkbox: true
+            }, {
+                field: "dateId",
+                title: "Date_Id",
+                hidden: true
+            }, {
+                field: "contractNo",
+                title: "合同编号",
+                width: 100
+            }, {
+                field: "customerName",
+                title: "借款人名称",
+                width: 100
+
+            }, {
+                field: "contractAmount",
+                title: "合同金额",
+                width: 100,
+            }, {
+                field: "contractSignDate",
+                title: "合同签订日期",
+                width: 100,
+                formatter: function (value, row) {
+                    return formatDatebox(value);
+                }
+            }, {
+                field: "isSend",
+                title: "是否已申报",
+                width: 80,
+                formatter: function (value, row) {
+                    if (1 == value) {
+                        return "是";
+                    } else {
+                        return "否";
+                    }
+                }
+            }, {
+                field: "isLast",
+                title: "是否是最新",
+                width: 80,
+                formatter: function (value, row) {
+                    if (value == 'Y') {
+                        return '是';
+                    } else if (value == 'N') {
+                        return '否';
+                    }
+                }
+            }, {
+                field: "reportType",
+                title: "上报类型",
+                width: 80,
+                formatter: function (value, row) {
+                    if ('100001' == value) {
+                        return '新增记录';
+                    } else if ('100002' == value) {
+                        return '修改记录';
+                    } else if ('100003' == value) {
+                        return '删除记录';
+                    }
+                }
+
+            }, {
+                field: "isRealQuotaLoan",
+                title: "是否额度项下贷款",
+                width: 120,
+                formatter: function (value, row) {
+                    if ('740001' == value) {
+                        return "是";
+                    } else {
+                        return "否";
+                    }
+                }
+            }, {
+                field: "realQuotaNo",
+                title: "授信额度协议编号",
+                width: 230
+            }
+            ]],
+            onDblClickRow: function (rowIndex, rowData) {
+                queryContractByContractId(rowData.id);
+            },
+            onLoadSuccess: function (data) {
+                if (data.total == 0) {
+                    //添加一个新数据行
+                    $(this).datagrid('appendRow', {contractNo: '<div style="text-align:center;color:red">没有相关记录！</div>'}).datagrid('mergeCells', {
+                        index: 0,
+                        field: 'contractNo',
+                        colspan: 8
+                    });
+                }
+                $(this).datagrid('clearChecked');
+            }
+        })
+
+        $('#declareQueryWindow').window('open');
+    }
+    //根据申报状态查询合同简略信息
+    function doDeclareQuery() {
+        var value = $("#contract_no2").val();
+        if (value != "") {
+            $("#declareQueryResultTb").datagrid({
+                queryParams: {"contractNo": value},
+                url: "${basePath}/contractInfo.do?method=findContractBriefInfoByContractNo"
+            });
+
+        } else if ($("#declareQueryForm").form('validate') == true) {
+            var flag = true;
+            $("#businessCheckMsg").html("");
+            if ($("#insertEndDate").val() != null && !checkEndTime("insertStartDate", "insertEndDate")) {
+                $("#declarebusinessCheckMsg").html("结束时间必须晚于开始时间！");
+                flag = false;
+                return;
+            }
+            if (flag) {
+                $("#declareQueryResultTb").datagrid({
+                    queryParams: form2Json("declareQueryForm"),
+                    url: "${basePath}/contractInfo.do?method=findContractBySendStatus"
+                });
+            }
+        }
+    }
+
+    //根据记录id查询合同信息
+    function queryContractByContractId(id) {
+        if (id != undefined) {
+            window.location.href = "${basePath}/contractInfo.do?method=findContractById&id=" + id;
+            $('#declareQueryWindow').window('close');
+        }
+    }
+
+    //已申报记录更新信息
+    function declaredUpdate() {
+        manualFill();
+        $("#fo").submit();
+    }
+
+    //已申报记录删除
+    function declaredDelete() {
+        manualFill();
+        $.ajax({
+                type: "POST",
+                url: "${basePath}/contractInfo.do?method=deleteRecord",
+                data: form2Json("fo"),
+                dataType: "json",
+                success: function (data) {
+
+                    if (data.sucesss) {
+                        $.messager.alert("提示消息", "操作成功", "info");
+                    } else {
+                        $.messager.alert("提示消息", "操作失败," + data.msg, "warning");
+                    }
+                }
+            }
+        )
+    }
+    //已申报批量删除
+    function doDeclaredBatchDelete() {
+        var ids = [];
+        var rows = $("#declareQueryResultTb").datagrid("getSelections");
+        for (var i = 0; i < rows.length; i++) {
+            ids.push(rows[i].dateId);
+        }
+        if (ids.length == 0) {
+            $.messager.alert("提示消息", "请选择至少一条记录进行操作", "info");
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "${basePath}/contractInfo.do?method=deleteRecordBatch",
+            data: {"ids": ids.toString()},
+            dataType: "json",
+            success: function (data) {
+                if (data.sucesss) {
+                    $.messager.alert("提示消息", "操作成功", "info");
+                } else {
+                    $.messager.alert("提示消息", "操作失败," + data.msg, "warning");
+                }
+            }
+        });
+    }
+    //设置为未申报
+    function doSetNotSend() {
+        var ids = [];
+        var rows = $("#declareQueryResultTb").datagrid("getSelections");
+        for (var i = 0; i < rows.length; i++) {
+            ids.push(rows[i].id);
+        }
+        if (ids.length == 0) {
+            $.messager.alert("提示消息", "请选择至少一条记录进行操作", "info");
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "${basePath}/contractInfo.do?method=setNotSend",
+            data: {"ids": ids.toString()},
+            dataType: "json",
+            success: function (data) {
+                if (data.sucesss) {
+                    $.messager.alert("提示消息", "操作成功", "info");
+                } else {
+                    $.messager.alert("提示消息", "操作失败 " + data.msg, "warning");
+                }
+            }
+        });
+    }
+    //刷新当前页
+    function doReset() {
+        window.location.href = "${basePath}/contractInfo.do?method=showContractInfo";
+    }
+
+    //检查结束时间是否大于等于开始时间
+    function checkEndTime(dateId1, dateId2) {
+        var startDate = $("#" + dateId1).val();
+        var start = new Date(startDate.replace("-", "/").replace("-", "/"));
+        var endDate = $("#" + dateId2).val();
+        var end = new Date(endDate.replace("-", "/").replace("-", "/"));
+        if (end < start) {
+            return false;
+        }
+        return true;
+    }
+    //将表单数据转为json
+    function form2Json(id) {
+
+        var arr = $("#" + id).serializeArray();
+        var jsonStr = "";
+
+        jsonStr += '{';
+        for (var i = 0; i < arr.length; i++) {
+            jsonStr += '"' + arr[i].name + '":"' + arr[i].value + '",'
+        }
+        jsonStr = jsonStr.substring(0, (jsonStr.length - 1));
+        jsonStr += '}'
+
+        var json = JSON.parse(jsonStr)
+        return json
+    }
+    //格式化时间
+    Date.prototype.format = function (format) {
+        var o = {
+            "M+": this.getMonth() + 1, // month
+            "d+": this.getDate(), // day
+            "h+": this.getHours(), // hour
+            "m+": this.getMinutes(), // minute
+            "s+": this.getSeconds(), // second
+            "q+": Math.floor((this.getMonth() + 3) / 3), // quarter
+            "S": this.getMilliseconds()
+            // millisecond
+        }
+        if (/(y+)/.test(format))
+            format = format.replace(RegExp.$1, (this.getFullYear() + "")
+                .substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(format))
+                format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+        return format;
+    }
+    function formatDatebox(value) {
+        if (value == null || value == '') {
+            return '';
+        }
+        var dt;
+        if (value instanceof Date) {
+            dt = value;
+        } else {
+            dt = new Date(value);
+        }
+
+        return dt.format("yyyy-MM-dd"); //扩展的Date的format方法
+    }
+</script>
+<script type="application/javascript">
+    $(function () {
+
     })
 
 </script>

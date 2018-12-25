@@ -53,7 +53,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             }
 
             if (contractInfoCycleNode.getIsSend() != null && contractInfoCycleNode.getIsSend() == 1) {
-                throw new DAOException("当前记录已申报,不能使用保存按钮,请使用已申报修改");
+                throw new DAOException("当前记录已存在申报删除未上报,不能使用保存按钮,请使用已申报修改");
             }
             List<ContractInfoCycleNode> existContractList = contractInfoDao.findContractListByDateId(contractInfoCycleNode.getDateId() + "");
             if (existContractList != null && existContractList.size() > 0) {
@@ -102,22 +102,16 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         String[] idsArr = ids.split(",");
 
         List<ContractInfoCycleNode> list = new ArrayList<ContractInfoCycleNode>();
-        a:
         for (String dateId : idsArr) {
 
             List<ContractInfoCycleNode> existContractList = contractInfoDao.findContractListByDateId(dateId);
-            if (existContractList != null && existContractList.size() > 0) {//如果存在且上报类型不是删除，跳过,避免重复插入
-                Boolean isDelete = false; //是否删除的标记
-                for (ContractInfoCycleNode contractInfoCycleNode : existContractList) {
-                    if ("100003".equals(contractInfoCycleNode.getReportType())) {
-                        isDelete = true;
-                        break;
-                    } else if (contractInfoCycleNode.getIsSend() == 0 && "Y".equals(contractInfoCycleNode.getIsLast())) {//上报类型不为删除,跳过
-                        continue a;
-                    }
-                }
-
-                if (!isDelete) { //已经被删除时,允许保存
+            if (existContractList != null && existContractList.size() > 0) {
+                //如果成功删除的记录数=成功增加的记录数量,并且成功增加的记录数>0,允许新增,其余情况不允许再向数据库插入新数据
+                //deletedSuccessCount:删除成功的数量  addedSuccessCount:添加成功的数量
+                Long deletedSuccessCount = contractInfoDao.findCountByDateIdAndReportTypeAndResult(dateId, "100003", "上报成功");
+                Long addedSuccessCount = contractInfoDao.findCountByDateIdAndReportTypeAndResult(dateId, "100001", "上报成功");
+                boolean canInsertFlag = deletedSuccessCount >= addedSuccessCount && addedSuccessCount > 0;
+                if (!canInsertFlag) {
                     continue;
                 }
             }
@@ -252,9 +246,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
                 if ("100003".equals(contractInfoNode.getReportType())) {
                     throw new DAOException("当前记录已申报删除,不能进行已申报合同信息修改");
                 }
-                if ("N".equals(contractInfoNode.getIsLast())) {
-                    continue;
-                } else {
+                if (!"N".equals(contractInfoNode.getIsLast())) {
                     contractInfoNode.setIsLast("N");
                 }
             }
@@ -302,9 +294,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
                         throw new BaseException("合同编号为:" + contractInfoNode.getContractNo() + ",此记录已设置申报删除,无需再次设置");
                     }
-                    if ("N".equals(contractInfoNode.getIsLast())) {
-                        continue;
-                    } else {
+                    if (!"N".equals(contractInfoNode.getIsLast())) {
                         contractInfoCycleNode = contractInfoNode;
                         contractInfoNode.setIsLast("N");
                     }

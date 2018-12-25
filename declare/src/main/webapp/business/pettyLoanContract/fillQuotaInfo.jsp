@@ -184,12 +184,19 @@
                 $.messager.alert("提示消息", "请选择至少一条记录进行操作", "info");
                 return;
             }
+            // 显示进度条
+            $.messager.progress({
+                title:"批量保存",
+                text:"正在处理...",
+                interval:400
+            });
             $.ajax({
                 type: "POST",
                 url: "${basePath}/quotaInfo.do?method=batchSaveQuotaInfo",
                 data: {"ids": ids.toString()},
                 dataType: "json",
                 success: function (data) {
+                    $.messager.progress('close');
                     if (data == "1") {
                         $.messager.alert("提示消息", "操作成功", "info");
                     } else {

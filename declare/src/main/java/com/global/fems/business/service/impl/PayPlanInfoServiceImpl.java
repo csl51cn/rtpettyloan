@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 还款计划信息管理Service接口实现类
@@ -42,26 +43,22 @@ public class PayPlanInfoServiceImpl implements PayPlanInfoService {
     public void batchSaveContract(String ids) throws DAOException {
         String[] idsArr = ids.split(",");
         List<PayPlanInfo> list = new ArrayList<PayPlanInfo>();
-        a:
         for (String dateId : idsArr) {
-            List<PayPlanInfo> existPayPlanInfoList = payPlanInfoDao.findPayPlanInfoListByDateId(dateId);
-            if (existPayPlanInfoList != null && existPayPlanInfoList.size() > 0) {//如果存在且上报类型不是删除，跳过,避免重复插入
-                Boolean isDelete = false; //是否删除的标记
-                for (PayPlanInfo payPlanInfo : existPayPlanInfoList) {
-                    if (!"100003".equals(payPlanInfo.getReportType())) {
-                        isDelete = true;
-                        break;
-                    } else if (payPlanInfo.getIsSend() == 0 && "Y".equals(payPlanInfo.getIsLast())) {//上报类型不为删除,跳过
-                        continue a;
-                    }
-                }
-                if (!isDelete) { //已经被删除时,允许保存
-                    continue;
-                }
-            }
             //根据dateId从还款计划表中查询还款计划信息
             List<PayPlanInfo> payPlanInfoList = payPlanInfoDao.findPayPlanInfoListByDateIdFromBizSys(dateId);
             for (PayPlanInfo payPlanInfo : payPlanInfoList) {
+                List<PayPlanInfo> existPayPlanInfoList = payPlanInfoDao.findPayPlanInfoListByDateIdAndCounter(payPlanInfo.getDateId(), payPlanInfo.getCounter());
+                if (Objects.nonNull(existPayPlanInfoList) && existPayPlanInfoList.size() > 0) {
+
+                    //如果成功删除的记录数=成功增加的记录数量,并且成功增加的记录数>0,允许新增,其余情况不允许再向数据库插入新数据
+                    //deletedSuccessCount:删除成功的数量  addedSuccessCount:添加成功的数量
+                    Long deletedSuccessCount = payPlanInfoDao.findCountByDateIdAndCounterAndReportTypeAndResult(dateId, payPlanInfo.getCounter(), "100003", "上报成功");
+                    Long addedSuccessCount = payPlanInfoDao.findCountByDateIdAndCounterAndReportTypeAndResult(dateId, payPlanInfo.getCounter(), "100001", "上报成功");
+                    boolean canInsertFlag = deletedSuccessCount >= addedSuccessCount && addedSuccessCount > 0;
+                    if (!canInsertFlag) {
+                        continue;
+                    }
+                }
                 //设置上报类型,初始保存时,默认为新增:100001
                 payPlanInfo.setReportType("100001");
                 //设置组织机构代码
@@ -147,9 +144,7 @@ public class PayPlanInfoServiceImpl implements PayPlanInfoService {
                         if ("100003".equals(payPlanInfoNode.getReportType())) {
                             throw new DAOException("合同编号为:" + payPlanInfoNode.getContractNo() + ",此记录第" + payPlanInfoNode.getCounter() + "期已设置申报删除,无需再次设置");
                         }
-                        if ("N".equals(payPlanInfoNode.getIsLast())) {
-                            continue;
-                        } else {
+                        if (!"N".equals(payPlanInfoNode.getIsLast())) {
                             payPlanInfoNode.setIsLast("N");
                         }
                     }
@@ -189,7 +184,7 @@ public class PayPlanInfoServiceImpl implements PayPlanInfoService {
         List<PayPlanInfo> list = payPlanInfoDao.findPayPlanInfoListByDateIdAndCounter(payPlanInfo.getDateId(), payPlanInfo.getCounter());
         for (PayPlanInfo node : list) {
             if ("100003".equals(node.getReportType()) && node.getIsSend() == 0) {
-                throw new DAOException("当前记录已申报删除,不能进行已申报合同信息修改");
+                throw new DAOException("当前记录已存在申报删除未上报,不能进行已申报合同信息修改");
             }
             if ("N".equals(node.getIsLast())) {
                 continue;

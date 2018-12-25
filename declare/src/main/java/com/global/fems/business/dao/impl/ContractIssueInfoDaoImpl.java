@@ -252,4 +252,18 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
         String sql = "SELECT * FROM DC_CONTRACT_ISSUE_INFO where batch_no = ?";
         return (List<ContractIssueInfo>) super.findForListBySql(sql, new Object[]{batchNo}, ContractIssueInfo.class);
     }
+
+    /**
+     * 根据交易类型和上报结果查询记录数
+     *
+     * @param dateId     dateId
+     * @param reportType 交易类型
+     * @param result     上报结果
+     * @return 满足条件的记录数
+     */
+    @Override
+    public Long findCountByDateIdAndReportTypeAndResult(String dateId, String reportType, String result) {
+        String sql = "SELECT COUNT(*) FROM DC_CONTRACT_ISSUE_INFO a LEFT JOIN DC_DECLARE_RESULT b ON a.batch_no = b.batch_no WHERE  a.date_id =? and a.report_type = ? AND b.declare_result = ? ";
+        return super.findForLongBySql(sql, new Object[]{dateId, reportType, result});
+    }
 }

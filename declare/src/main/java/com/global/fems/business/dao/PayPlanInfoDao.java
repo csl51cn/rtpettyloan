@@ -35,8 +35,20 @@ public interface PayPlanInfoDao {
 
     /**
      * 根据batchNo查询记录
+     *
      * @param batchNo 批次号
      * @return
      */
     List<PayPlanInfo> findByBatchNo(String batchNo);
+
+    /**
+     * 根据date_id,期数,交易类型和上报结果查询记录数
+     *
+     * @param dateId     dateId
+     * @param counter    期数
+     * @param reportType 交易类型
+     * @param result     上报结果
+     * @return 满足条件的记录数
+     */
+    Long findCountByDateIdAndCounterAndReportTypeAndResult(String dateId, String counter, String reportType, String result);
 }

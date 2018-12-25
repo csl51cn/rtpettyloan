@@ -65,27 +65,19 @@ public class RepayInfoServiceImpl implements RepayInfoService {
             }
 
         });
-        a:
         for (String id : idsArr) {
             RepayInfo repayInfo = repayInfoDao.findRepayInfoByIdFromBizSys(id);
             boolean isAdd = treeSet.add(repayInfo);
             if (isAdd) {
                 List<RepayInfo> existRepayInfoList = repayInfoDao.findRepayInfoListByDateIdAndCounter(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());
                 if (existRepayInfoList != null && existRepayInfoList.size() > 0) {
-                    //如果存在且上报类型不是删除，跳过,避免重复插入
-                    //是否删除的标记
-                    boolean isDelete = false;
-                    for (RepayInfo repayInfoCycleNode : existRepayInfoList) {
-                        if (!"100003".equals(repayInfoCycleNode.getReportType())) {
-                            isDelete = true;
-                            break;
-                        } else if (repayInfoCycleNode.getIsSend() == 0 && "Y".equals(repayInfoCycleNode.getIsLast())) {
-                            //上报类型不为删除,跳过
-                            continue a;
-                        }
-                    }
-                    if (!isDelete) {
-                        //已经被删除时,允许保存
+                    //如果成功删除的记录数=成功增加的记录数量,并且成功增加的记录数>0,允许新增,其余情况不允许再向数据库插入新数据
+                    //deletedSuccessCount:删除成功的数量  addedSuccessCount:添加成功的数量
+                    Long deletedSuccessCount = repayInfoDao.findCountByDateIdAndCounterAndReportTypeAndResult(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate(),"100003", "上报成功");
+                    Long addedSuccessCount = repayInfoDao.findCountByDateIdAndCounterAndReportTypeAndResult(repayInfo.getDateId(), repayInfo.getCounter(),repayInfo.getRepayDate() ,"100001", "上报成功");
+                    boolean canInsertFlag = deletedSuccessCount >= addedSuccessCount && addedSuccessCount > 0;
+                    if (!canInsertFlag) {
+                        treeSet.remove(repayInfo);
                         continue;
                     }
                 }
@@ -239,11 +231,9 @@ public class RepayInfoServiceImpl implements RepayInfoService {
         List<RepayInfo> list = repayInfoDao.findRepayInfoListByDateIdAndCounter(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());
         for (RepayInfo repayInfoNode : list) {
             if ("100003".equals(repayInfoNode.getReportType()) && repayInfoNode.getIsSend() == 0) {
-                throw new DAOException("当前记录已申报删除,不能进行已申报合同信息修改");
+                throw new DAOException("当前记录已存在申报删除未上报,不能进行已申报合同信息修改");
             }
-            if ("N".equals(repayInfoNode.getIsLast())) {
-                continue;
-            } else {
+            if (!"N".equals(repayInfoNode.getIsLast())) {
                 repayInfoNode.setIsLast("N");
             }
         }
@@ -276,7 +266,7 @@ public class RepayInfoServiceImpl implements RepayInfoService {
      */
     @Override
     public PageBean findBriefInfoByContractNo(String contractNo, PageBean pageBean) throws DAOException {
-        return repayInfoDao.findBriefInfoByContractNo(contractNo, pageBean);
+        return repayInfoDao.findBriefInfoByContractNo(contractNo.trim(), pageBean);
     }
 
     /**

@@ -70,11 +70,11 @@ public class ContractInfoDaoImpl extends BaseDaoSupport implements ContractInfoD
                 " ISNULL( " +
                 "  CASE WHEN d.num > 0 or c.产品类别=1760 or c.产品类别=2066 then " +
                 "   '240002' " +
-                "  else  case when (c.普通担保人 is null or len(c.普通担保人) =0) then"+
-                "    '240001'  "+
+                "  else  case when (c.普通担保人 is null or len(c.普通担保人) =0) then" +
+                "    '240001'  " +
                 "  else " +
-                "      '240004'"+
-                "  END"+
+                "      '240004'" +
+                "  END" +
                 "  END, " +
                 "  '' " +
                 " ) AS guar_type, " +
@@ -282,12 +282,12 @@ public class ContractInfoDaoImpl extends BaseDaoSupport implements ContractInfoD
             sql.append(" AND contract_sign_date >= ?");
             list.add(signStartDate);
         }
-        if (StringUtils.isNotEmpty(signEndDate)){
+        if (StringUtils.isNotEmpty(signEndDate)) {
             sql.append(" AND contract_sign_date <= ?");
             list.add(signEndDate);
         }
 
-        if (StringUtils.isNotEmpty(contractNo)){
+        if (StringUtils.isNotEmpty(contractNo)) {
             sql.append(" AND  contract_no = ? ");
             list.add(contractNo.trim());
         }
@@ -305,6 +305,20 @@ public class ContractInfoDaoImpl extends BaseDaoSupport implements ContractInfoD
     public List<ContractInfoCycleNode> findByBatchNo(String batchNo) {
         String sql = "select * from DC_CONTRACT_INFO where batch_no = ?";
         return (List<ContractInfoCycleNode>) super.findForListBySql(sql, new Object[]{batchNo}, ContractInfoCycleNode.class);
+    }
+
+    /**
+     * 根据交易类型和上报结果查询记录数
+     *
+     * @param dateId     dateId
+     * @param reportType 交易类型
+     * @param result     上报结果
+     * @return 满足条件的记录数
+     */
+    @Override
+    public Long findCountByDateIdAndReportTypeAndResult(String dateId, String reportType, String result) {
+        String sql = "SELECT COUNT(*) FROM DC_CONTRACT_INFO a LEFT JOIN DC_DECLARE_RESULT b ON a.batch_no = b.batch_no WHERE  a.date_id =? and a.report_type = ? AND b.declare_result = ? ";
+        return super.findForLongBySql(sql, new Object[]{dateId, reportType, result});
     }
 
 

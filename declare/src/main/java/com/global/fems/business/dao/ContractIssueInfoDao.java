@@ -40,4 +40,14 @@ public interface ContractIssueInfoDao {
      * @return
      */
     List<ContractIssueInfo> findByBatchNo(String batchNo);
+
+    /**
+     * 根据交易类型和上报结果查询记录数
+     *
+     * @param dateId     dateId
+     * @param reportType 交易类型
+     * @param result     上报结果
+     * @return 满足条件的记录数
+     */
+    Long findCountByDateIdAndReportTypeAndResult(String dateId, String reportType, String result);
 }

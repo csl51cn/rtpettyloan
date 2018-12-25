@@ -34,7 +34,7 @@ public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
      */
     @Override
     public PageBean findRepayInfoByRepayDateAndContractNoFromBizSys(String repayStartDate, String repayEndDate, String contractNo, PageBean pageBean) throws DAOException {
-        String sql  = "SELECT  b.Id AS id , a.合同编号 AS contract_no , a.Date_Id AS date_id, ISNULL(CASE a.授信主体类型 WHEN 1 THEN d.客户名称 WHEN 2 THEN c.中文客户名称 END,'') AS customer_name," +
+        String sql = "SELECT  b.Id AS id , a.合同编号 AS contract_no , a.Date_Id AS date_id, ISNULL(CASE a.授信主体类型 WHEN 1 THEN d.客户名称 WHEN 2 THEN c.中文客户名称 END,'') AS customer_name," +
                 " (CASE a.还款方式 WHEN 1835 THEN b.还款期数+1 WHEN 818 THEN b.还款期数+1 ELSE b.还款期数 END) AS counter,b.入账日期 AS repay_date,(CASE b.是否逾期 WHEN 0 THEN b.实还利息 WHEN 1 THEN 0 END) AS repay_int_amt, " +
                 " (CASE b.是否逾期 WHEN 0 THEN b.实还本金 WHEN 1 THEN 0 END) AS repay_pri_amt,(CASE a.还款方式 WHEN 1835 THEN e.计划还款日 WHEN 818 THEN e.计划还款日 WHEN 820 THEN(CASE dic.Word WHEN '付易贷' THEN " +
                 " (CASE f.Word WHEN '日' THEN DATEADD(d, - 1, e.计划还款日) WHEN '周' THEN DATEADD(ww, - 1, e.计划还款日) WHEN '月' THEN DATEADD(m, - 1, e.计划还款日) END )ELSE DATEADD(m, - 1, e.计划还款日)END ) ELSE DATEADD(m, - 1, e.计划还款日) END ) AS start_date," +
@@ -44,24 +44,22 @@ public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
                 "WHERE  b.还款计划类别 = 1212 AND e.还款计划类别 = 1212 AND b.还款期数 = e.计划期数  AND (b.实还本金 >0 or b.实还利息 >0 or b.实还罚息>0 or b.实还费用Two >0) ";
 
         List<Object> list = new ArrayList<>();
-        if (StringUtils.isNotEmpty(repayStartDate)){
+        if (StringUtils.isNotEmpty(repayStartDate)) {
             sql = sql + "  AND b.入账日期 >= ?  ";
             list.add(repayStartDate);
         }
-        if(StringUtils.isNotEmpty(repayEndDate)){
+        if (StringUtils.isNotEmpty(repayEndDate)) {
             sql = sql + "   AND b.入账日期 <= ? ";
             list.add(repayEndDate);
         }
 
-        if(StringUtils.isNotEmpty(contractNo)){
+        if (StringUtils.isNotEmpty(contractNo)) {
             sql = sql + "    AND a.合同编号 = ?  ";
             list.add(contractNo.trim());
         }
         pageBean.setSort("c.id,b.id");
         return super.findForPage(sql, list.toArray(), pageBean, RepayInfo.class);
     }
-
-
 
 
     /**
@@ -100,7 +98,7 @@ public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
     @Override
     public List<RepayInfo> findRepayInfoListByDateIdAndCounter(Integer dateId, String counter, String repayDate) throws DAOException {
         String sql = "SELECT * FROM DC_REPAY_INFO WHERE date_id = ? AND counter = ? AND repay_date = ?";
-        return(List<RepayInfo>) super.findForListBySql(sql, new Object[]{dateId, counter, repayDate}, RepayInfo.class);
+        return (List<RepayInfo>) super.findForListBySql(sql, new Object[]{dateId, counter, repayDate}, RepayInfo.class);
     }
 
     /**
@@ -323,7 +321,23 @@ public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
     @Override
     public List<RepayInfo> findByBatchNo(String batchNo) {
         String sql = "SELECT * FROM DC_REPAY_INFO WHERE batch_no = ? ";
-        return(List<RepayInfo>) super.findForListBySql(sql, new Object[]{batchNo}, RepayInfo.class);
+        return (List<RepayInfo>) super.findForListBySql(sql, new Object[]{batchNo}, RepayInfo.class);
+    }
+
+    /**
+     * 根据date_id,期数,交易类型和上报结果查询记录数
+     *
+     * @param dateId     dateId
+     * @param counter    期数
+     * @param repayDate  还款日期
+     * @param reportType 交易类型
+     * @param result     上报结果
+     * @return 满足条件的记录数
+     */
+    @Override
+    public Long findCountByDateIdAndCounterAndReportTypeAndResult(Integer dateId, String counter, String repayDate, String reportType, String result) {
+        String sql = "SELECT COUNT(*) FROM DC_REPAY_INFO a LEFT JOIN DC_DECLARE_RESULT b ON a.batch_no = b.batch_no WHERE  a.date_id =?  and  a.counter =?   and  a.repay_date = ?  and a.report_type = ?  AND b.declare_result = ? ";
+        return super.findForLongBySql(sql, new Object[]{dateId, counter, repayDate, reportType, result});
     }
 
 

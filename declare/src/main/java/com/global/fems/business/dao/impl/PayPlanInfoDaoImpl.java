@@ -175,11 +175,11 @@ public class PayPlanInfoDaoImpl extends BaseDaoSupport implements PayPlanInfoDao
             sql.append(" AND sign_date >= ? ");
             list.add(signStartDate);
         }
-        if (StringUtils.isNotEmpty(signEndDate) ) {
+        if (StringUtils.isNotEmpty(signEndDate)) {
             sql.append("  AND sign_date <= ?");
             list.add(signEndDate);
         }
-        if (StringUtils.isNotEmpty(contractNo) ) {
+        if (StringUtils.isNotEmpty(contractNo)) {
             sql.append("  AND contract_no = ?");
             list.add(contractNo);
         }
@@ -212,6 +212,21 @@ public class PayPlanInfoDaoImpl extends BaseDaoSupport implements PayPlanInfoDao
     public List<PayPlanInfo> findByBatchNo(String batchNo) {
         String sql = "SELECT * FROM  DC_PAYPLAN_INFO WHERE batch_no = ?  ";
         return (List<PayPlanInfo>) super.findForListBySql(sql, new Object[]{batchNo}, PayPlanInfo.class);
+    }
+
+    /**
+     * 根据date_id,期数,交易类型和上报结果查询记录数
+     *
+     * @param dateId     dateId
+     * @param counter    期数
+     * @param reportType 交易类型
+     * @param result     上报结果
+     * @return 满足条件的记录数
+     */
+    @Override
+    public Long findCountByDateIdAndCounterAndReportTypeAndResult(String dateId, String counter, String reportType, String result) {
+        String sql = "SELECT COUNT(*) FROM DC_PAYPLAN_INFO a LEFT JOIN DC_DECLARE_RESULT b ON a.batch_no = b.batch_no WHERE  a.date_id =?  and  a.counter =?  and a.report_type = ? AND b.declare_result = ? ";
+        return super.findForLongBySql(sql, new Object[]{dateId, counter, reportType, result});
     }
 
 }
