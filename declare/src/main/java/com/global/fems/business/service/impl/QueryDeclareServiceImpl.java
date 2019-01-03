@@ -110,7 +110,7 @@ public class QueryDeclareServiceImpl implements QueryDeclareService {
     @Override
     public PageBean queryRawDeclareData(String batchNo, String transactionType, String startDate, String endDate, PageBean pageBean) {
 
-        return declareResultDao.findRawDeclareData(batchNo.trim(), transactionType, startDate, endDate, pageBean);
+        return declareResultDao.findRawDeclareData(StringUtils.trim(batchNo), transactionType, startDate, endDate, pageBean);
     }
 
 

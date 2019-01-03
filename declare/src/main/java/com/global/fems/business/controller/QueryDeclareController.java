@@ -5,6 +5,7 @@ import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.system.web.common.session.SessionManager;
 import com.global.framework.util.DateTimeUtil;
 import com.global.param.domain.ResultModel;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +44,7 @@ public class QueryDeclareController extends BaseController {
     @RequestMapping(params = "method=queryRawDeclareData")
     @ResponseBody
     public Map queryRawDeclareData(String batchNo, String transactionType, String startDate, String endDate, PageBean pageBean) {
-        pageBean = queryDeclareService.queryRawDeclareData(batchNo, transactionType, startDate, DateTimeUtil.toMidNight(endDate) , pageBean);
+        pageBean = queryDeclareService.queryRawDeclareData(batchNo, transactionType, startDate, StringUtils.isEmpty(endDate) ? endDate : DateTimeUtil.toMidNight(endDate), pageBean);
         return pageBean2Map(pageBean);
     }
 
