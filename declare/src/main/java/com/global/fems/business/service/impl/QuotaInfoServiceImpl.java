@@ -3,6 +3,7 @@ package com.global.fems.business.service.impl;
 import com.global.fems.business.dao.PettyLoanContractDao;
 import com.global.fems.business.dao.QuotaInfoDao;
 import com.global.fems.business.domain.QuotaInfo;
+import com.global.fems.business.service.CommonService;
 import com.global.fems.business.service.QuotaInfoService;
 import com.global.fems.message.util.OrgCode;
 import com.global.framework.dbutils.support.DAOException;
@@ -36,13 +37,17 @@ public class QuotaInfoServiceImpl implements QuotaInfoService {
 
     @Override
     public PageBean findQuotaInfoByContractNoFromBizSys(String contractNo, PageBean pageBean) throws DAOException {
-        pageBean = quotaInfoDao.findQuotaInfoByContractNoFromBizSys(contractNo, pageBean);
-        return pageBean;
+        PageBean result = quotaInfoDao.findQuotaInfoByContractNoFromBizSys(contractNo, pageBean);
+        for (QuotaInfo quotaInfo : (List<QuotaInfo>) result.getDataList()) {
+            quotaInfo.setContractNo(CommonService.getRealQuotaNo(quotaInfo.getDateId(), quotaInfo.getContractNo()));
+        }
+        return result;
     }
 
     @Override
     public QuotaInfo findQuotaInfoByDateId(String dateId) throws DAOException {
         QuotaInfo quotaInfo = quotaInfoDao.findQuotaInfoByDateId(dateId);
+        quotaInfo.setContractNo(CommonService.getRealQuotaNo(quotaInfo.getDateId(), quotaInfo.getContractNo()));
         return quotaInfo;
     }
 
@@ -167,6 +172,8 @@ public class QuotaInfoServiceImpl implements QuotaInfoService {
             QuotaInfo quotaInfo = quotaInfoDao.findQuotaInfoByDateId(dateId);
             //设置数据类型
             quotaInfo.setDataType("QUOTA_INFO");
+            //循环授信合同编号格式修正
+            quotaInfo.setContractNo(CommonService.getRealQuotaNo(quotaInfo.getDateId(), quotaInfo.getContractNo()));
 
             //设置币种,人民币:730001
             quotaInfo.setCcy("730001");
@@ -201,8 +208,11 @@ public class QuotaInfoServiceImpl implements QuotaInfoService {
 
     @Override
     public PageBean findQuotaInfoByDateFromBizSys(String signStartDate, String signEndDate, PageBean pageBean) throws DAOException {
-
-        return quotaInfoDao.findQuotaInfoByDateFromBizSys(signStartDate, signEndDate, pageBean);
+        PageBean result = quotaInfoDao.findQuotaInfoByDateFromBizSys(signStartDate, signEndDate, pageBean);
+        for (QuotaInfo quotaInfo : (List<QuotaInfo>) result.getDataList()) {
+            quotaInfo.setContractNo(CommonService.getRealQuotaNo(quotaInfo.getDateId(), quotaInfo.getContractNo()));
+        }
+        return result;
     }
 
     @Override

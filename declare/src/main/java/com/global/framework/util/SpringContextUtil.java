@@ -20,6 +20,7 @@ public class SpringContextUtil implements ApplicationContextAware {
 	 * @param applicationContext
 	 * @throws BeansException
 	 */
+	@Override
 	public void setApplicationContext(ApplicationContext applicationContext)
 			throws BeansException {
 		SpringContextUtil.applicationContext = applicationContext;
@@ -42,4 +43,16 @@ public class SpringContextUtil implements ApplicationContextAware {
 	public static Object getBean(String name) throws BeansException {
 		return applicationContext.getBean(name);
 	}
+	/**
+	 * 通过class获取Bean.
+	 *
+	 * @param clazz 目标类的Class对象
+	 * @param <T>   目标类类型
+	 * @return 返回目标类实例
+	 * @throws BeansException 如果目标对象不能被创建,抛出异常
+	 */
+	public static <T> T getBean(Class<T> clazz) throws BeansException {
+		return getApplicationContext().getBean(clazz);
+	}
+
 }

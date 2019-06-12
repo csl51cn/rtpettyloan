@@ -3,6 +3,7 @@ package com.global.fems.business.service.impl;
 import com.global.fems.business.dao.PettyLoanContractDao;
 import com.global.fems.business.dao.RepayInfoDao;
 import com.global.fems.business.domain.RepayInfo;
+import com.global.fems.business.service.CommonService;
 import com.global.fems.business.service.RepayInfoService;
 import com.global.fems.message.util.OrgCode;
 import com.global.framework.dbutils.support.DAOException;
@@ -40,8 +41,11 @@ public class RepayInfoServiceImpl implements RepayInfoService {
      */
     @Override
     public PageBean findRepayInfoByRepayDateAndContractNoFromBizSys(String repayStartDate, String repayEndDate, String contractNo, PageBean pageBean) throws DAOException {
-        pageBean = repayInfoDao.findRepayInfoByRepayDateAndContractNoFromBizSys(repayStartDate, repayEndDate, contractNo, pageBean);
-        return pageBean;
+        PageBean result = repayInfoDao.findRepayInfoByRepayDateAndContractNoFromBizSys(repayStartDate, repayEndDate, contractNo, pageBean);
+        for (RepayInfo repayInfo : (List<RepayInfo>) result.getDataList()) {
+            setRealQuotaNo(repayInfo);
+        }
+        return result;
     }
 
 
@@ -73,8 +77,8 @@ public class RepayInfoServiceImpl implements RepayInfoService {
                 if (existRepayInfoList != null && existRepayInfoList.size() > 0) {
                     //如果成功删除的记录数=成功增加的记录数量,并且成功增加的记录数>0,允许新增,其余情况不允许再向数据库插入新数据
                     //deletedSuccessCount:删除成功的数量  addedSuccessCount:添加成功的数量
-                    Long deletedSuccessCount = repayInfoDao.findCountByDateIdAndCounterAndReportTypeAndResult(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate(),"100003", "上报成功");
-                    Long addedSuccessCount = repayInfoDao.findCountByDateIdAndCounterAndReportTypeAndResult(repayInfo.getDateId(), repayInfo.getCounter(),repayInfo.getRepayDate() ,"100001", "上报成功");
+                    Long deletedSuccessCount = repayInfoDao.findCountByDateIdAndCounterAndReportTypeAndResult(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate(), "100003", "上报成功");
+                    Long addedSuccessCount = repayInfoDao.findCountByDateIdAndCounterAndReportTypeAndResult(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate(), "100001", "上报成功");
                     boolean canInsertFlag = deletedSuccessCount >= addedSuccessCount && addedSuccessCount > 0;
                     if (!canInsertFlag) {
                         treeSet.remove(repayInfo);
@@ -83,6 +87,7 @@ public class RepayInfoServiceImpl implements RepayInfoService {
                 }
                 //设置实还本金,实还利息.findRepayInfoByIdFromBizSys()查询的结果不能合并同期同日多条记录;设置回收利息:提前结清时有违约金,违约金加到回收利息中
                 setRepayPrincipalInterest(repayInfo);
+                setRealQuotaNo(repayInfo);
                 int totalCounter = repayInfoDao.findTotalCounter(repayInfo.getDateId());
                 //设置总期数
                 repayInfo.setTotalCounter(Integer.toString(totalCounter));
@@ -111,6 +116,16 @@ public class RepayInfoServiceImpl implements RepayInfoService {
 
         }
 
+    }
+
+    private void setRealQuotaNo(RepayInfo repayInfo) {
+        if (StringUtils.equals(repayInfo.getIsRealQuotaLoan(), "740001")) {
+            /*
+             * 740001为循环授信,需要判断合同编号是否为"循环授信合同编号-n"格式,其中首次提款时,不需要添加,从第二次提款起,每次添加的
+             * n为相同循环授信合同编号提款次数-1.例如,循环授信合同编号A,第一次提款时,上报合同编号为"A",第3次提款,此时上报的合同编号为"A-2"
+             */
+            repayInfo.setRealQuotaNo(CommonService.getRealQuotaNo(repayInfo.getDateId(), repayInfo.getRealQuotaNo()));
+        }
     }
 
     private void setRepayPrincipalInterest(RepayInfo repayInfo) {
@@ -154,6 +169,7 @@ public class RepayInfoServiceImpl implements RepayInfoService {
     @Override
     public RepayInfo findRepayInfoByIdFromBizSys(String id) throws DAOException {
         RepayInfo repayInfo = repayInfoDao.findRepayInfoByIdFromBizSys(id);
+        setRealQuotaNo(repayInfo);
         setRepayPrincipalInterest(repayInfo);
         //设置扣款方式:银联代扣430002
         repayInfo.setGatherMode("430002");

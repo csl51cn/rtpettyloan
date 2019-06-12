@@ -42,4 +42,6 @@ public interface PettyLoanContractDao {
     String findTermUnit(Integer dateId) throws DAOException;
 
     String findProductType(Integer dateId) throws DAOException;
+
+    int findBusinessCount(Integer dateId,String revolvingCreditContractNo);
 }

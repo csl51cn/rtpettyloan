@@ -2,10 +2,12 @@ package com.global.fems.business.service.impl;
 
 import com.global.fems.business.dao.ContractIssueInfoDao;
 import com.global.fems.business.dao.PettyLoanContractDao;
+import com.global.fems.business.domain.ContractInfoCycleNode;
 import com.global.fems.business.domain.ContractIssueInfo;
 import com.global.fems.business.enums.IndustryEnum;
 import com.global.fems.business.enums.RateCalcModeEnum;
 import com.global.fems.business.enums.ZoneEnum;
+import com.global.fems.business.service.CommonService;
 import com.global.fems.business.service.ContractIssueInfoService;
 import com.global.fems.message.util.OrgCode;
 import com.global.framework.dbutils.support.DAOException;
@@ -49,8 +51,13 @@ public class ContractIssueInfoServiceImpl implements ContractIssueInfoService {
      */
     @Override
     public PageBean findContractByContractNoFromContractInfo(String contractNo, String sendStatus, PageBean pageBean) throws DAOException {
-
-        return contractIssueInfoDao.findContractByContractNoFromContractInfo(contractNo, sendStatus, pageBean);
+        PageBean result = contractIssueInfoDao.findContractByContractNoFromContractInfo(contractNo, sendStatus, pageBean);
+        for (ContractInfoCycleNode contractInfoCycleNode : (List<ContractInfoCycleNode>) result.getDataList()) {
+            if (StringUtils.equals(contractInfoCycleNode.getIsRealQuotaLoan(), "740001")) {
+                contractInfoCycleNode.setRealQuotaNo(CommonService.getRealQuotaNo(contractInfoCycleNode.getDateId(), contractInfoCycleNode.getRealQuotaNo()));
+            }
+        }
+        return result;
     }
 
     /**
@@ -78,6 +85,7 @@ public class ContractIssueInfoServiceImpl implements ContractIssueInfoService {
 
             //根据dateId查询贷款发放信息
             ContractIssueInfo contractIssueInfo = contractIssueInfoDao.findContractByDateId(dateId);
+            setRealQuotaNo(contractIssueInfo);
             //设置投放区域,贷款期限,投放行业,计息方式,利率性质,扣款方式,五级分类,发放状态
             setFieldValue(contractIssueInfo);
             //设置上报类型,初始保存时,默认为新增:100001
@@ -99,6 +107,21 @@ public class ContractIssueInfoServiceImpl implements ContractIssueInfoService {
         }
         if (list.size() > 0) {
             contractIssueInfoDao.batchSaveContract(list);
+        }
+    }
+
+    /**
+     * 如果是循环授信,设置-n格式的循环授信合同号
+     *
+     * @param contractIssueInfo
+     */
+    private void setRealQuotaNo(ContractIssueInfo contractIssueInfo) {
+        if (StringUtils.equals(contractIssueInfo.getIsRealQuotaLoan(), "740001")) {
+            /*
+             * 740001为循环授信,需要判断合同编号是否为"循环授信合同编号-n"格式,其中首次提款时,不需要添加,从第二次提款起,每次添加的
+             * n为相同循环授信合同编号提款次数-1.例如,循环授信合同编号A,第一次提款时,上报合同编号为"A",第3次提款,此时上报的合同编号为"A-2"
+             */
+            contractIssueInfo.setRealQuotaNo(CommonService.getRealQuotaNo(contractIssueInfo.getDateId(), contractIssueInfo.getRealQuotaNo()));
         }
     }
 
@@ -239,7 +262,18 @@ public class ContractIssueInfoServiceImpl implements ContractIssueInfoService {
      */
     @Override
     public PageBean findLastContractBySendStatus(String sendStatusCode, String contractNo, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException {
-        return contractIssueInfoDao.findLastContractBySendStatus(sendStatusCode, contractNo, signStartDate, signEndDate, pageBean);
+        PageBean result = contractIssueInfoDao.findLastContractBySendStatus(sendStatusCode, contractNo, signStartDate, signEndDate, pageBean);
+        for (ContractInfoCycleNode contractInfoCycleNode : (List<ContractInfoCycleNode>)result.getDataList()){
+            if (StringUtils.equals(contractInfoCycleNode.getIsRealQuotaLoan(), "740001")) {
+                String realQuotaNo = contractInfoCycleNode.getRealQuotaNo();
+                int index = realQuotaNo.indexOf("-");
+                if (index > -1) {
+                    realQuotaNo = realQuotaNo.substring(0, index);
+                }
+                contractInfoCycleNode.setRealQuotaNo(CommonService.getRealQuotaNo(contractInfoCycleNode.getDateId(), realQuotaNo));
+            }
+        }
+        return result;
     }
 
     /**
@@ -433,6 +467,7 @@ public class ContractIssueInfoServiceImpl implements ContractIssueInfoService {
     @Override
     public ContractIssueInfo findContractByDateId(String dateId) throws DAOException {
         ContractIssueInfo contractIssueInfo = contractIssueInfoDao.findContractByDateId(dateId);
+        setRealQuotaNo(contractIssueInfo);
         setFieldValue(contractIssueInfo);
         return contractIssueInfo;
     }

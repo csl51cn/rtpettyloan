@@ -87,7 +87,8 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
                 "      Flow_Title = '现场签约'  " +
                 "  )  " +
                 " AND d.form_arrno = 24  " +
-                " AND d.GoBackId = 0  ");
+                " AND d.GoBackId = 0  " +
+                " AND w.是否放款=485 ");
         List<Object> list = new ArrayList<Object>();
         if (StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
             sql.append(" AND d.content >= ? AND d.content <= ?");
@@ -121,7 +122,8 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
 
     /**
      * 根据申报状态从表DC_PETTY_LOAN_CONTRACT查询小额贷款合同记录
-     *  @param sendStatus 0表示未申报，1表示已申报
+     *
+     * @param sendStatus 0表示未申报，1表示已申报
      * @param contractNo 合同编号
      * @param startDate  签约时间起始时间
      * @param endDate    签约时间终止时间
@@ -136,18 +138,18 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
             list.add(sendStatus);
         }
 
-        if (StringUtils.isNotEmpty(startDate) ) {
+        if (StringUtils.isNotEmpty(startDate)) {
             sql.append(" AND contractsigndate >= ? ");
             list.add(startDate);
 
         }
-        if (StringUtils.isNotEmpty(endDate)){
+        if (StringUtils.isNotEmpty(endDate)) {
             sql.append(" AND contractsigndate <= ?");
             endDate = endDate + " 23:59:59";
             list.add(endDate);
         }
 
-        if (StringUtils.isNotEmpty(contractNo)){
+        if (StringUtils.isNotEmpty(contractNo)) {
             sql.append(" AND  contractno = ? ");
             list.add(contractNo.trim());
         }
@@ -428,7 +430,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
         if (StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
             sql.append(" AND contractsigndate >= ? AND contractsigndate <= ?");
             list.add(startDate);
-            endDate = endDate + " 23:59:59";;
+            endDate = endDate + " 23:59:59";
             list.add(endDate);
         }
         pageBean.setSort("id");
@@ -438,11 +440,12 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
 
     /**
      * 查询授信期限单位
+     *
      * @param dateId
      * @return
      */
     @Override
-    public String findTermUnit(Integer dateId)  throws DAOException {
+    public String findTermUnit(Integer dateId) throws DAOException {
         String sql = "SELECT b.Word FROM Data_WorkInfo a LEFT JOIN Dictionary b ON a.[授信期限单位] = b.Id WHERE  Date_Id =  ?";
         logger.debug("Executing SQL query [{}], params: [{}]", sql, new Object[]{dateId});
         return (String) super.getJdbcTemplate().queryForObject(sql, new Object[]{dateId}, String.class);
@@ -450,6 +453,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
 
     /**
      * 查询产品类型
+     *
      * @param dateId
      * @return
      * @throws DAOException
@@ -459,6 +463,21 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
         String sql = "SELECT dic.Word FROM Data_WorkInfo a LEFT JOIN  Dictionary As dic On a.产品类别 = dic.Id WHERE Date_Id = ? ";
         logger.debug("Executing SQL query [{}], params: [{}]", sql, new Object[]{dateId});
         return (String) super.getJdbcTemplate().queryForObject(sql, new Object[]{dateId}, String.class);
+    }
+
+
+    /**
+     * 查询循环授信提款次数
+     *
+     * @param dateId                    当前业务dateId
+     * @param revolvingCreditContractNo 循环授信合同编号
+     * @return   返回
+     */
+    @Override
+    public int findBusinessCount(Integer dateId, String revolvingCreditContractNo) {
+        String sql = "SELECT count(*) FROM Data_WorkInfo WHERE  是否放款 = 485 AND Date_Id <= ? AND 循环授信合同编号 = ?  ";
+        logger.debug("Executing SQL query [{}], params: [{}]", sql, new Object[]{dateId,revolvingCreditContractNo});
+        return (Integer) super.getJdbcTemplate().queryForObject(sql, new Object[]{dateId,revolvingCreditContractNo}, Integer.class);
     }
 
 

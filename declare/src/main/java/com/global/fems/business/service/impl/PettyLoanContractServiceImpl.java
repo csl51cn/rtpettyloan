@@ -2,6 +2,7 @@ package com.global.fems.business.service.impl;
 
 import com.global.fems.business.dao.PettyLoanContractDao;
 import com.global.fems.business.domain.PettyLoanContract;
+import com.global.fems.business.service.CommonService;
 import com.global.fems.business.service.PettyLoanContractService;
 import com.global.framework.dbutils.support.DAOException;
 import com.global.framework.dbutils.support.PageBean;
@@ -85,8 +86,11 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
      */
     @Override
     public PageBean findPettyLoanContractByDate(String startDate, String endDate, PageBean pageBean) throws BaseException {
-
-        return pettyLoanContractDao.findPettyLoanContractByDate(startDate, endDate, pageBean);
+        PageBean result = pettyLoanContractDao.findPettyLoanContractByDate(startDate, endDate, pageBean);
+        for (PettyLoanContract pettyLoanContract : (List<PettyLoanContract>) result.getDataList()) {
+            setRealQuotaNo(pettyLoanContract);
+        }
+        return result;
 
     }
 
@@ -125,6 +129,7 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
     @Override
     public PettyLoanContract findPettyLoanContractByWorkInfoId(Integer dateId) throws BaseException {
         PettyLoanContract pettyLoanContract = pettyLoanContractDao.findPettyLoanContractByWorkInfoId(dateId);
+        setRealQuotaNo(pettyLoanContract);
         setIntRate(pettyLoanContract);
         //当前查询的业务数据贷款类型都是自营贷款，委托贷款未走业务系统，设置贷款类型为自营贷款530001
         if (StringUtils.isEmpty(pettyLoanContract.getConCustomerName())) {
@@ -135,6 +140,21 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
         //身份证或组织机构码把字母转为大写
         pettyLoanContract.setCertificateNo(pettyLoanContract.getCertificateNo().toUpperCase());
         return pettyLoanContract;
+    }
+
+    /**
+     * 如果是循环授信,设置-n格式的循环授信合同号
+     *
+     * @param pettyLoanContract
+     */
+    private void setRealQuotaNo(PettyLoanContract pettyLoanContract) {
+        if (StringUtils.equals(pettyLoanContract.getIsRealQuotaLoan(), "740001")) {
+            /*
+             * 740001为循环授信,需要判断合同编号是否为"循环授信合同编号-n"格式,其中首次提款时,不需要添加,从第二次提款起,每次添加的
+             * n为相同循环授信合同编号提款次数-1.例如,循环授信合同编号A,第一次提款时,上报合同编号为"A",第3次提款,此时上报的合同编号为"A-2"
+             */
+            pettyLoanContract.setRealQuotaNo(CommonService.getRealQuotaNo(pettyLoanContract.getDateId(), pettyLoanContract.getRealQuotaNo()));
+        }
     }
 
     //设置利率
@@ -171,6 +191,7 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
                 continue;
             }
             PettyLoanContract pettyLoanContract = pettyLoanContractDao.findPettyLoanContractByWorkInfoId(dateId);
+            setRealQuotaNo(pettyLoanContract);
             setIntRate(pettyLoanContract);
             //当前查询的业务数据贷款类型都是自营贷款，委托贷款未走业务系统，设置贷款类型为自营贷款530001
             if (StringUtils.isEmpty(pettyLoanContract.getConCustomerName())) {
@@ -206,6 +227,7 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
      * 根据合同编号从DC_PETTY_LOAN_CONTRACT中查询合同信息
      *
      * @param contractNo
+     * @param contractNo
      * @param pageBean
      * @return
      * @throws BaseException
@@ -226,7 +248,11 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
      */
     @Override
     public PageBean findPettyLoanContractByContractNoFromBizSys(String contractNo, PageBean pageBean) throws BaseException {
-        return pettyLoanContractDao.findPettyLoanContractByContractNoFromBizSys(contractNo, pageBean);
+        PageBean result = pettyLoanContractDao.findPettyLoanContractByContractNoFromBizSys(contractNo, pageBean);
+        for (PettyLoanContract pettyLoanContract : (List<PettyLoanContract>) result.getDataList()) {
+            setRealQuotaNo(pettyLoanContract);
+        }
+        return result;
     }
 
     /**
@@ -276,7 +302,18 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
      */
     @Override
     public PageBean findLastPettyLoanContractBySendStatus(Integer sendStatusCode, String signStartDate, String signEndDate, PageBean pageBean) throws BaseException {
-        return pettyLoanContractDao.findLastPettyLoanContractBySendStatus(sendStatusCode, signStartDate, signEndDate, pageBean);
+        PageBean result = pettyLoanContractDao.findLastPettyLoanContractBySendStatus(sendStatusCode, signStartDate, signEndDate, pageBean);
+        for (PettyLoanContract pettyLoanContract : (List<PettyLoanContract>) result.getDataList()) {
+            if (StringUtils.equals(pettyLoanContract.getIsRealQuotaLoan(), "740001")) {
+                String realQuotaNo = pettyLoanContract.getRealQuotaNo();
+                int index = realQuotaNo.indexOf("-");
+                if (index > -1) {
+                    realQuotaNo = realQuotaNo.substring(0, index);
+                }
+                pettyLoanContract.setRealQuotaNo(CommonService.getRealQuotaNo(pettyLoanContract.getDateId(), realQuotaNo));
+            }
+        }
+        return result;
     }
 
     /**
@@ -305,5 +342,4 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
             logger.error("批量插入合同数据：Date_Id：" + id + "合同金额为空");
         }
     }
-
 }
