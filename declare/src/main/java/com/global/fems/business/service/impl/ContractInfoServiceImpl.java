@@ -4,8 +4,6 @@ import com.global.fems.business.dao.ContractInfoDao;
 import com.global.fems.business.dao.PettyLoanContractDao;
 import com.global.fems.business.domain.CoCustomerCycleNode;
 import com.global.fems.business.domain.ContractInfoCycleNode;
-import com.global.fems.business.domain.PettyLoanContract;
-import com.global.fems.business.service.CommonService;
 import com.global.fems.business.service.ContractInfoService;
 import com.global.fems.message.util.OrgCode;
 import com.global.framework.dbutils.support.DAOException;
@@ -119,7 +117,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             }
             //根据dateId查询合同信息
             ContractInfoCycleNode contractInfoCycleNode = contractInfoDao.findContractByDateIdFromBizSys(dateId);
-            setRealQuotaNo(contractInfoCycleNode);
             //设置数据类型
             contractInfoCycleNode.setDataType("CONTRACT_INFO");
             //设置共同借款人相关信息
@@ -159,20 +156,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
 
     }
 
-    /**
-     * 如果是循环授信,设置-n格式的循环授信合同号
-     *
-     * @param contractInfoCycleNode
-     */
-    private void setRealQuotaNo(ContractInfoCycleNode contractInfoCycleNode) {
-        if (StringUtils.equals(contractInfoCycleNode.getIsRealQuotaLoan(), "740001")) {
-            /*
-             * 740001为循环授信,需要判断合同编号是否为"循环授信合同编号-n"格式,其中首次提款时,不需要添加,从第二次提款起,每次添加的
-             * n为相同循环授信合同编号提款次数-1.例如,循环授信合同编号A,第一次提款时,上报合同编号为"A",第3次提款,此时上报的合同编号为"A-2"
-             */
-            contractInfoCycleNode.setRealQuotaNo(CommonService.getRealQuotaNo(contractInfoCycleNode.getDateId(), contractInfoCycleNode.getRealQuotaNo()));
-        }
-    }
 
 
     /**
@@ -184,7 +167,6 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     @Override
     public ContractInfoCycleNode findContractByDateId(String dateId) {
         ContractInfoCycleNode contractInfoCycleNode = contractInfoDao.findContractByDateIdFromBizSys(dateId);
-        setRealQuotaNo(contractInfoCycleNode);
         if (!StringUtil.isNullOrEmpty(contractInfoCycleNode)) {
             setCoCustomer(contractInfoCycleNode);
         }
@@ -202,13 +184,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      */
     @Override
     public PageBean findContractByContractNoFromRealTimeContract(String contractNo, String sendStatus, PageBean pageBean) throws DAOException {
-        PageBean result = pettyLoanContractDao.findContractByContractNoFromRealTimeContract(contractNo, sendStatus, pageBean);
-        for(PettyLoanContract pettyLoanContract : (List<PettyLoanContract>)result.getDataList()){
-            if (StringUtils.equals(pettyLoanContract.getIsRealQuotaLoan(), "740001")) {
-                pettyLoanContract.setRealQuotaNo(CommonService.getRealQuotaNo(pettyLoanContract.getDateId(), pettyLoanContract.getRealQuotaNo()));
-            }
-        }
-        return result;
+        return pettyLoanContractDao.findContractByContractNoFromRealTimeContract(contractNo, sendStatus, pageBean);
     }
 
     /**
@@ -221,11 +197,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      */
     @Override
     public PageBean findContractBriefInfoByContractNo(String contractNo, PageBean pageBean) throws DAOException {
-        PageBean result = contractInfoDao.findContractBriefInfoByContractNo(contractNo, pageBean);
-        for(ContractInfoCycleNode contractInfoCycleNode : (List<ContractInfoCycleNode>)result.getDataList()){
-            setRealQuotaNo(contractInfoCycleNode);
-        }
-        return result;
+        return contractInfoDao.findContractBriefInfoByContractNo(contractNo, pageBean);
     }
 
     /**
@@ -364,18 +336,7 @@ public class ContractInfoServiceImpl implements ContractInfoService {
      */
     @Override
     public PageBean findLastContractBySendStatus(String sendStatusCode, String contractNo, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException {
-        PageBean result = contractInfoDao.findLastContractBySendStatus(sendStatusCode, contractNo, signStartDate, signEndDate, pageBean);
-        for (ContractInfoCycleNode contractInfoCycleNode:(List<ContractInfoCycleNode>)result.getDataList()){
-            if (StringUtils.equals(contractInfoCycleNode.getIsRealQuotaLoan(), "740001")) {
-                String realQuotaNo = contractInfoCycleNode.getRealQuotaNo();
-                int index = realQuotaNo.indexOf("-");
-                if (index > -1) {
-                    realQuotaNo = realQuotaNo.substring(0, index);
-                }
-                contractInfoCycleNode.setRealQuotaNo(CommonService.getRealQuotaNo(contractInfoCycleNode.getDateId(), realQuotaNo));
-            }
-        }
-        return result;
+        return contractInfoDao.findLastContractBySendStatus(sendStatusCode, contractNo, signStartDate, signEndDate, pageBean);
     }
     /**
      * 设置为未申报

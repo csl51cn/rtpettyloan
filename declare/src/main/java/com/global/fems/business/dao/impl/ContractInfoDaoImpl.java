@@ -138,7 +138,7 @@ public class ContractInfoDaoImpl extends BaseDaoSupport implements ContractInfoD
                 " ELSE  " +
                 "   '740002' " +
                 " END ) AS is_real_quota_loan, " +
-                " ISNULL(c.循环授信合同编号, '') as real_quota_no " +
+                " ISNULL(a.real_quota_no, '') as real_quota_no " +
                 "FROM " +
                 " DC_PETTY_LOAN_CONTRACT a " +
                 "LEFT JOIN 已放款客户表 b ON a.dateid = b.Date_Id " +

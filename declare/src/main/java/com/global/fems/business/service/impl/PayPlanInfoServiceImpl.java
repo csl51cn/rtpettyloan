@@ -2,9 +2,7 @@ package com.global.fems.business.service.impl;
 
 import com.global.fems.business.dao.PayPlanInfoDao;
 import com.global.fems.business.dao.PettyLoanContractDao;
-import com.global.fems.business.domain.ContractInfoCycleNode;
 import com.global.fems.business.domain.PayPlanInfo;
-import com.global.fems.business.service.CommonService;
 import com.global.fems.business.service.PayPlanInfoService;
 import com.global.fems.message.util.OrgCode;
 import com.global.framework.dbutils.support.DAOException;
@@ -61,13 +59,6 @@ public class PayPlanInfoServiceImpl implements PayPlanInfoService {
                         continue;
                     }
                 }
-                if (StringUtils.equals(payPlanInfo.getIsRealQuotaLoan(), "740001")) {
-                    /*
-                     * 740001为循环授信,需要判断合同编号是否为"循环授信合同编号-n"格式,其中首次提款时,不需要添加,从第二次提款起,每次添加的
-                     * n为相同循环授信合同编号提款次数-1.例如,循环授信合同编号A,第一次提款时,上报合同编号为"A",第3次提款,此时上报的合同编号为"A-2"
-                     */
-                    payPlanInfo.setRealQuotaNo(CommonService.getRealQuotaNo(payPlanInfo.getDateId(),payPlanInfo.getRealQuotaNo()));
-                }
                 //设置上报类型,初始保存时,默认为新增:100001
                 payPlanInfo.setReportType("100001");
                 //设置组织机构代码
@@ -102,13 +93,7 @@ public class PayPlanInfoServiceImpl implements PayPlanInfoService {
      */
     @Override
     public PageBean findContractInfoByContractNo(String contractNo, PageBean pageBean) throws DAOException {
-        PageBean result = payPlanInfoDao.findContractInfoByContractNo(contractNo, pageBean);
-        for (ContractInfoCycleNode contractInfoCycleNode  : (List<ContractInfoCycleNode>)result.getDataList()){
-            if (StringUtils.equals(contractInfoCycleNode.getIsRealQuotaLoan(), "740001")) {
-                contractInfoCycleNode.setRealQuotaNo(CommonService.getRealQuotaNo(contractInfoCycleNode.getDateId(), contractInfoCycleNode.getRealQuotaNo()));
-            }
-        }
-        return result;
+        return payPlanInfoDao.findContractInfoByContractNo(contractNo, pageBean);
 
     }
 

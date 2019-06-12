@@ -26,7 +26,7 @@ public class QuotaInfoDaoImpl extends BaseDaoSupport implements QuotaInfoDao {
         String sql = "SELECT " +
                 " a.Date_Id, " +
                 " a.合同编号 as contract_no_query, " +
-                " a.循环授信合同编号 as contract_no, " +
+                " e.real_quota_no as contract_no, " +
                 " ISNULL( " +
                 "  CASE a.授信主体类型 " +
                 "  WHEN 1 THEN " +
@@ -58,6 +58,7 @@ public class QuotaInfoDaoImpl extends BaseDaoSupport implements QuotaInfoDao {
                 "AND b.form_arrno = 24 " +
                 "LEFT JOIN Data_CompanyInfo c ON a.授信主体编号 = c.Id " +
                 "LEFT JOIN Data_MemberInfo d ON a.授信主体编号 = d.ID " +
+                "LEFT JOIN DC_PETTY_LOAN_CONTRACT e on e.dateid = a.Date_Id and e.islast='Y' " +
                 "WHERE " +
                 " a.是否为循环授信贷款 = 870 and " +
                 " a.合同编号 = ? ";
@@ -72,7 +73,7 @@ public class QuotaInfoDaoImpl extends BaseDaoSupport implements QuotaInfoDao {
         String sql = "SELECT DISTINCT " +
                 " a.Date_Id, " +
                 " a.合同编号 AS contract_no_query, " +
-                " a.循环授信合同编号 AS contract_no, " +
+                " f.real_quota_no AS contract_no, " +
                 " ISNULL( " +
                 "  CASE a.授信主体类型 " +
                 "  WHEN 1 THEN " +
@@ -161,6 +162,7 @@ public class QuotaInfoDaoImpl extends BaseDaoSupport implements QuotaInfoDao {
                 " GROUP BY " +
                 "  date_id " +
                 ") AS e ON e.date_id = a.date_id " +
+                "LEFT JOIN DC_PETTY_LOAN_CONTRACT f on f.dateid = a.Date_Id and f.islast='Y' " +
                 "WHERE " +
                 " a.Date_Id = ?";
         return super.findForObjectBySql(sql, new Object[]{dateId}, QuotaInfo.class);
@@ -193,7 +195,7 @@ public class QuotaInfoDaoImpl extends BaseDaoSupport implements QuotaInfoDao {
         StringBuilder sql = new StringBuilder("SELECT " +
                 " a.Date_Id, " +
                 " a.合同编号 as contract_no_query, " +
-                " a.循环授信合同编号 as contract_no, " +
+                " e.real_quota_no as contract_no, " +
                 " ISNULL( " +
                 "  CASE a.授信主体类型 " +
                 "  WHEN 1 THEN " +
@@ -225,6 +227,7 @@ public class QuotaInfoDaoImpl extends BaseDaoSupport implements QuotaInfoDao {
                 "AND b.form_arrno = 24 " +
                 "LEFT JOIN Data_CompanyInfo c ON a.授信主体编号 = c.Id " +
                 "LEFT JOIN Data_MemberInfo d ON a.授信主体编号 = d.ID " +
+                "LEFT JOIN DC_PETTY_LOAN_CONTRACT e on e.dateid = a.Date_Id and e.islast='Y' " +
                 "WHERE " +
                 " a.是否为循环授信贷款 = 870  " +
                 " AND  a.是否放款=485  ");
