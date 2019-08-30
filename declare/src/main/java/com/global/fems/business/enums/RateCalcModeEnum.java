@@ -1,6 +1,7 @@
 package com.global.fems.business.enums;
 
 /**
+ * @author senlin.deng
  * 计息方式枚举,rateCalMode是业务系统中的代码,code是申报系统中的代码
  */
 public enum RateCalcModeEnum {
@@ -39,12 +40,12 @@ public enum RateCalcModeEnum {
     /**
      * 按月付息，到期还本---按期还息，到期还本
      */
-    RateCalcMode_2087("2087","270003"),
+    RateCalcMode_2087("2087", "270003"),
 
     /**
      * 分期付息，到期还本---按期还息，到期还本
      */
-    RateCalcMode_2116("2116","270003");
+    RateCalcMode_2116("2116", "270003");
 
     private String rateCalMode;
     private String code;
@@ -71,13 +72,12 @@ public enum RateCalcModeEnum {
     }
 
     public static String getCodeByRateCalMode(String rateCalMode) {
-        RateCalcModeEnum[] arr$ = values();
-        int len$ = arr$.length;
+        RateCalcModeEnum[] array = values();
+        int length = array.length;
 
-        for (int i$ = 0; i$ < len$; ++i$) {
-            RateCalcModeEnum _enum = arr$[i$];
-            if (rateCalMode.equals(_enum.getRateCalMode())) {
-                return _enum.getCode();
+        for (RateCalcModeEnum rateCalcModeEnum : array) {
+            if (rateCalMode.equals(rateCalcModeEnum.getRateCalMode())) {
+                return rateCalcModeEnum.getCode();
             }
         }
 
