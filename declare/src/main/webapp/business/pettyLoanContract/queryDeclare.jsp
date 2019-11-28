@@ -67,6 +67,34 @@
         init_table();
     });
 
+
+
+    /*重新发送通知报文*/
+    function reReportFilePath(id) {
+        $.messager.progress({
+            title : '提示',
+            text : '数据提交中，请稍后....'
+        });
+        $.ajax({
+            async:true,
+            type: "POST",
+            timeout: 120000,
+            url: "${basePath}/batchDeclare.do?method=reReportFilePath",
+            data: {"id": id},
+            dataType: "json",
+            success: function (data) {
+                $.messager.progress('close');
+                data = eval(data);
+                if (data.sucesss) {
+                    $.messager.alert("提示消息", data.msg, "info");
+                } else {
+                    $.messager.alert("提示消息", data.msg, "warning");
+                }
+                doDeclareQuery();
+            }
+        });
+    }
+
     function init_table() {
         //初始化
         $("#declareQueryResultTb").datagrid({
@@ -77,6 +105,9 @@
             singleSelect: true,
             pageSize: 20,
             pageList: [5, 10, 15, 20, 30, 40],
+            // onLoadSuccess: function (data) {
+            //     $("a[name='opera']").linkbutton({text: '重新通知', plain: true, iconCls: 'icon-add'});
+            // },
             columns: [[{
                 field: "id",
                 title: "主键",
@@ -120,6 +151,19 @@
                 field: "gmtModified",
                 title: "最后修改时间"
             }
+            // , {
+            //     field: "lastReReportDate",
+            //     title: "最后重新发送通知报文时间"
+            // }, {
+            //     field: "id1", title: '操作', width: 120, sortable: true,
+            //     formatter: function (value, rowData) {
+            //         if (rowData.declareResultCode === "888888" && StringToDate(rowData.gmtCreate).DateDiff('d', new Date())) {
+            //             return "<a onClick='reReportFilePath(" + rowData.id + ")' style='color:blue;'>重新发送通知报文</a>";
+            //         } else {
+            //             return "";
+            //         }
+            //     }
+            // }
             ]]
 
         })
@@ -139,7 +183,7 @@
         $.ajax({
             type: "POST",
             url: "${basePath}/queryDeclare.do?method=queryDeclare",
-            data: {"id":ids.toString()},
+            data: {"id": ids.toString()},
             dataType: "json",
             success: function (data) {
                 data = eval(data);

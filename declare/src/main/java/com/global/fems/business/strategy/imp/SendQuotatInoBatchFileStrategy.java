@@ -107,6 +107,19 @@ public class SendQuotatInoBatchFileStrategy implements SendBatchFileStrategy {
 
     }
 
+    /**
+     * 更新上报状态
+     *
+     * @param batchNo 批次号
+     * @param isSend  是否上报
+     */
+    @Override
+    public void updateStatus(String batchNo, int isSend) {
+        List<QuotaInfo> byBatchNo = quotaInfoDao.findByBatchNo(batchNo);
+        byBatchNo.forEach(quotaInfo -> quotaInfo.setIsSend(isSend));
+        quotaInfoDao.batchUpdateQuotaoInfo(byBatchNo,true);
+    }
+
     @Override
     public void update(Entity entity) {
         DeclareResult declareResult = (DeclareResult) entity;

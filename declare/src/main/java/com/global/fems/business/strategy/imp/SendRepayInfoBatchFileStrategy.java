@@ -95,6 +95,19 @@ public class SendRepayInfoBatchFileStrategy implements SendBatchFileStrategy {
         }
     }
 
+    /**
+     * 更新上报状态
+     *
+     * @param batchNo 批次号
+     * @param isSend  是否上报
+     */
+    @Override
+    public void updateStatus(String batchNo, int isSend) {
+        List<RepayInfo> byBatchNo = repayInfoDao.findByBatchNo(batchNo);
+        byBatchNo.forEach(repayInfo -> repayInfo.setIsSend(isSend));
+        repayInfoDao.batchUpdateRepayInfo(byBatchNo,true);
+    }
+
     @Override
     public void update(Entity entity) {
         DeclareResult declareResult = (DeclareResult) entity;

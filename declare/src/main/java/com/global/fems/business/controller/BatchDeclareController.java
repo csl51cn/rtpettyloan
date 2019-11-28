@@ -46,5 +46,24 @@ public class BatchDeclareController {
 
     }
 
+    /**
+     * 批量申报重新发送通知报文
+     *
+     * @param id      上报结果记录id
+     * @param request
+     * @return
+     */
+    @RequestMapping(params = "method=reReportFilePath", produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public ResultModel reReportFilePath(String id, HttpServletRequest request) {
+        try {
+            return batchDeclareService.reReportFilePath(id, SessionManager.getSession(request).getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultModel.fail();
+        }
+
+    }
+
 
 }

@@ -53,7 +53,8 @@ public class SendContractInoBatchFileStrategy implements SendBatchFileStrategy {
         }
         //上传批量文件
         Map<String, String> sendContractInfoBatchFileResult = jrbBizInfoDeclareManager.sendContractInfoBatchFile(list);
-
+        DeclareResult declareResult = createDeclareResult(userId, sendContractInfoBatchFileResult);
+        declareResultDao.saveOrUpdate(declareResult);
 
         //是否有错误信息
         if (sendContractInfoBatchFileResult.get("validateError") != null) {
@@ -72,10 +73,6 @@ public class SendContractInoBatchFileStrategy implements SendBatchFileStrategy {
         //发送实时报文,指明文件位置
         Map contractInfoDeclareResult = jrbBizInfoDeclareManager.packageMsgHeader(fileName);
         JRBRespBatchFileMsg respMsg = (JRBRespBatchFileMsg) contractInfoDeclareResult.get("respMsg");
-
-        DeclareResult declareResult = createDeclareResult(userId, sendContractInfoBatchFileResult);
-        declareResultDao.saveOrUpdate(declareResult);
-
 
         if (respMsg != null) {
             JRBRespHeaderMsg msg = respMsg.getHeader().getMsg();
@@ -105,6 +102,19 @@ public class SendContractInoBatchFileStrategy implements SendBatchFileStrategy {
             return ResultModel.fail("申报失败:批量报文文件已发送,实时报文未获得响应");
         }
 
+    }
+
+    /**
+     * 更新上报状态
+     *
+     * @param batchNo 批次号
+     * @param isSend  上报状态
+     */
+    @Override
+    public void updateStatus(String batchNo, int isSend) {
+        List<ContractInfoCycleNode> contractInfoCycleNodes = contractInfoDao.findByBatchNo(batchNo);
+        contractInfoCycleNodes.forEach(contractInfoCycleNode -> contractInfoCycleNode.setIsSend(isSend));
+        contractInfoDao.batchUpdateContract(contractInfoCycleNodes,true);
     }
 
     @Override

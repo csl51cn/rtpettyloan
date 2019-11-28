@@ -7,4 +7,6 @@ import com.global.param.domain.ResultModel;
  */
 public interface BatchDeclareService {
     ResultModel sendBatchFile(String ids, String transactionType,String userId) throws Exception;
+
+    ResultModel reReportFilePath(String id, String userId);
 }

@@ -104,6 +104,19 @@ public class SendContractIssueInfoBatchFileStrategy implements SendBatchFileStra
         }
     }
 
+    /**
+     * 更新上报状态
+     *
+     * @param batchNo 批次号
+     * @param isSend  是否上报
+     */
+    @Override
+    public void updateStatus(String batchNo, int isSend) {
+        List<ContractIssueInfo> byBatchNo = contractIssueInfoDao.findByBatchNo(batchNo);
+        byBatchNo.forEach(contractIssueInfo -> contractIssueInfo.setIsSend(isSend));
+        contractIssueInfoDao.batchUpdateContract(byBatchNo,true);
+    }
+
     @Override
     public void update(Entity entity) {
         DeclareResult declareResult = (DeclareResult) entity;

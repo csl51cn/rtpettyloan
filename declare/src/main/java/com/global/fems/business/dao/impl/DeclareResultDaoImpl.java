@@ -46,7 +46,7 @@ public class DeclareResultDaoImpl extends BaseDaoSupport implements DeclareResul
     @Override
     public PageBean findRawDeclareData(String batchNo, String transactionType, String startDate, String endDate, PageBean pageBean) {
 
-        StringBuilder sql = new StringBuilder("select a.id,a.batch_no,a.record_count,a.data_type,a.declare_result,a.declare_result_code,a.gmt_create,a.gmt_modified,b.username as create_id, c.username as modified_id from  DC_DECLARE_RESULT a LEFT JOIN DC_SYS_USER b on a.create_id = b.userid  LEFT JOIN DC_SYS_USER c on a.modified_id = c.userid  where 1=1");
+        StringBuilder sql = new StringBuilder("select a.id,a.batch_no,a.record_count,a.data_type,a.declare_result,a.declare_result_code,a.gmt_create,a.gmt_modified,b.username as create_id, c.username as modified_id,a.last_re_report_date from  DC_DECLARE_RESULT a LEFT JOIN DC_SYS_USER b on a.create_id = b.userid  LEFT JOIN DC_SYS_USER c on a.modified_id = c.userid  where 1=1");
         List<Object> list = new ArrayList<Object>();
 
         if (StringUtils.isNotBlank(batchNo)) {

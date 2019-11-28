@@ -38,7 +38,18 @@ public class DeclareResult extends Entity {
     @ColumnMapping(columnName = "data_type", columnType = "String")
     private String dataType;
 
+    /**
+     * sftp上的文件路径
+     */
+    @ColumnMapping(columnName = "remote_file_path", columnType = "String")
+    private String remoteFilePath;
 
+    /**
+     * 最后一次重新发送通知报文时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @ColumnMapping(columnName = "last_re_report_date", columnType = "Date")
+    private Date lastReReportDate;
     /**
      * 上报结果码
      */
@@ -54,28 +65,28 @@ public class DeclareResult extends Entity {
     /**
      * 创建时间
      */
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
-    @ColumnMapping(columnName = "gmt_create",columnType = "Date")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @ColumnMapping(columnName = "gmt_create", columnType = "Date")
     private Date gmtCreate;
 
     /**
      * 修改时间
      */
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
-    @ColumnMapping(columnName = "gmt_modified",columnType = "Date")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @ColumnMapping(columnName = "gmt_modified", columnType = "Date")
     private Date gmtModified;
 
 
     /**
      * 创建人id
      */
-    @ColumnMapping(columnName = "create_id",columnType = "String")
+    @ColumnMapping(columnName = "create_id", columnType = "String")
     private String createId;
 
     /**
      * 最后一个修改人id
      */
-    @ColumnMapping(columnName = "modified_id",columnType = "String")
+    @ColumnMapping(columnName = "modified_id", columnType = "String")
     private String modifiedId;
 
 
@@ -157,5 +168,21 @@ public class DeclareResult extends Entity {
 
     public void setModifiedId(String modifiedId) {
         this.modifiedId = modifiedId;
+    }
+
+    public String getRemoteFilePath() {
+        return remoteFilePath;
+    }
+
+    public void setRemoteFilePath(String remoteFilePath) {
+        this.remoteFilePath = remoteFilePath;
+    }
+
+    public Date getLastReReportDate() {
+        return lastReReportDate;
+    }
+
+    public void setLastReReportDate(Date lastReReportDate) {
+        this.lastReReportDate = lastReReportDate;
     }
 }

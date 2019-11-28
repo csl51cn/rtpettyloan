@@ -96,6 +96,19 @@ public class SendPayPlanInfoBatchFileStrategy implements SendBatchFileStrategy {
         }
     }
 
+    /**
+     * 更新上报状态
+     *
+     * @param batchNo 批次号
+     * @param isSend  是否上报
+     */
+    @Override
+    public void updateStatus(String batchNo, int isSend) {
+        List<PayPlanInfo> byBatchNo = payPlanInfoDao.findByBatchNo(batchNo);
+        byBatchNo.forEach(payPlanInfo -> payPlanInfo.setIsSend(isSend));
+        payPlanInfoDao.batchUpdateContract(byBatchNo,true);
+    }
+
     @Override
     public void update(Entity entity) {
         DeclareResult declareResult = (DeclareResult) entity;
