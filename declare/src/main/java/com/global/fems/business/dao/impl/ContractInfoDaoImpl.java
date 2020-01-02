@@ -97,6 +97,8 @@ public class ContractInfoDaoImpl extends BaseDaoSupport implements ContractInfoD
                 "   '280002' " +
                 "  WHEN '付易贷' THEN " +
                 "   '280002' " +
+                "  WHEN '个信贷' THEN " +
+                "   '280002' " +
                 "  ELSE  " +
                 "   '280003' " +
                 "  END, " +
