@@ -68,7 +68,7 @@ public class ContractInfoDaoImpl extends BaseDaoSupport implements ContractInfoD
                 " a.confee AS con_fee, " +
                 " a.netsignno AS net_sign_no, " +
                 " ISNULL( " +
-                "  CASE WHEN d.num > 0 or c.产品类别=1760 or c.产品类别=2066 then " +
+                "  CASE WHEN d.num > 0 or c.产品类别=1760 or c.产品类别=2066 or c.产品类别=1711 or c.产品类别=1849  or c.产品类别=1851 or c.产品类别=2089  then " +
                 "   '240002' " +
                 "  else  case when (c.普通担保人 is null or len(c.普通担保人) =0) then" +
                 "    '240001'  " +
