@@ -62,23 +62,23 @@ public class QueryDeclareServiceImpl implements QueryDeclareService {
                 QueryDeclaredRtrTx msgInBody = (QueryDeclaredRtrTx) body.getRtrtx();
                 String msgCode = msgInBody.getMsgCode();
                 declareResult.setDeclareResultCode(msgCode);
-                if (StringUtils.equals("000000",msgCode)){
+                if (StringUtils.equals("000000", msgCode)) {
                     //上报成功
                     declareResult.setDeclareResult("上报成功");
                     declareResultDao.saveOrUpdate(declareResult);
                     notifyObservers(declareResult);
-                    return ResultModel.ok("查询成功:返回结果为"+msgInBody.getMsgInfo());
-                }else if (StringUtils.equals("000001",msgCode)){
+                    return ResultModel.ok("查询成功:返回结果为" + msgInBody.getMsgInfo());
+                } else if (StringUtils.equals("000001", msgCode) || StringUtils.equals("991210", msgCode)) {
                     //数据导入中
                     declareResult.setDeclareResult("数据导入中");
                     declareResultDao.saveOrUpdate(declareResult);
-                    return ResultModel.ok("查询成功:返回结果为"+msgInBody.getMsgInfo());
-                }else{
+                    return ResultModel.ok("查询成功:返回结果为" + msgInBody.getMsgInfo());
+                } else {
                     //上报失败
                     declareResult.setDeclareResult("上报失败");
                     declareResultDao.saveOrUpdate(declareResult);
                     notifyObservers(declareResult);
-                    return ResultModel.fail("查询成功:返回结果为"+msgInBody.getMsgInfo());
+                    return ResultModel.fail("查询成功:返回结果为" + msgInBody.getMsgInfo());
                 }
 
             } else {
