@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>批量报文发送</title>
     <jsp:include page="../../common/include.jsp"></jsp:include>
-    <script type="application/javascript" src="../../resources/js/multiSelectSupport.js"></script>
+    <script type="text/javascript" src="../../resources/js/multiSelectSupport.js"></script>
 
     <script type="text/javascript">
             var  urlMap  = new Map();
