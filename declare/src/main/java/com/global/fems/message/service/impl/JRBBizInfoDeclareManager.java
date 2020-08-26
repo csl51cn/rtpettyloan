@@ -79,18 +79,6 @@ public class JRBBizInfoDeclareManager {
         return map;
     }
 
-    /**
-     * 额度信息申报
-     *
-     * @param list
-     * @return
-     */
-
-    public Map quotaInfoDeclare(List list) {
-
-        return null;
-    }
-
 
     /**
      * 组装批量文件gettx信息,调用jrbBizInfoDeclareService的方法发送打SFTP服务器上
@@ -102,7 +90,8 @@ public class JRBBizInfoDeclareManager {
         ContractInfo contractInfo = new ContractInfo();
         contractInfo.setBatchNo(sysCommonService.getSeqNo("wfl_taskinfo"));
         Map<String, String> map = null;
-        if ("530002".equals(list.get(0).getLoanCate())) {//委托贷款
+        if ("530002".equals(list.get(0).getLoanCate())) {
+            //委托贷款
             map = jrbBizInfoDeclareService.doSendEntrustedContractInfoBatchFile(list, contractInfo);
         } else {//自营贷款
             map = jrbBizInfoDeclareService.doSendContractInfoBatchFile(list, contractInfo);
@@ -140,7 +129,7 @@ public class JRBBizInfoDeclareManager {
 
         //设置渠道流水号
         StringBuilder seqNo = new StringBuilder(info[0]);
-        String num = String.format("%08d", Integer.parseInt(info[2].substring(0, 2)));
+        String num = String.format("%08d", Integer.parseInt(info[2].replaceAll("\\D", "")));
         seqNo.append(num);
         headerMsg.setSeqNo(seqNo.toString());
         setHeaderMsgFieldValue(headerMsg);
@@ -156,11 +145,11 @@ public class JRBBizInfoDeclareManager {
     /**
      * 查询上报结果:组装实时报文得到报文头
      *
-     * @param batchNo  批次号
+     * @param fileName 文件名
      * @param dataType 数据类型
      * @return
      */
-    public Map packageMsgHeader(String batchNo, String dataType) throws Exception {
+    public Map packageMsgHeader(String fileName, String dataType) throws Exception {
         JRBReqHeaderMsg headerMsg = new JRBReqHeaderMsg();
         setHeaderMsgFieldValue(headerMsg);
         headerMsg.setServiceCode("SVR_PTLN");
@@ -172,7 +161,7 @@ public class JRBBizInfoDeclareManager {
         headerMsg.setSeqNo(sysCommonService.getSeqNo("wfl_taskinfo"));
 
         QueryDeclared queryDeclared = new QueryDeclared();
-        queryDeclared.setBatchNo(batchNo);
+        queryDeclared.setFileName(fileName);
         queryDeclared.setDataType(dataType);
 
         return jrbBizInfoDeclareService.doQueryDeclared(queryDeclared, headerMsg);
@@ -267,6 +256,18 @@ public class JRBBizInfoDeclareManager {
         map.put("batchNo", quotaInfo.getBatchNo());
         map.put("recordCount", quotaInfo.getRecordCount());
         map.put("dataType", quotaInfo.getDataType());
+        return map;
+    }
+
+
+    public Map<String, String> sendPettyLoanContractBatchFile(List<PettyLoanContract> list) throws Exception {
+
+        PettyLoanContractInfoUpload pettyLoanContractInfo = new PettyLoanContractInfoUpload();
+        pettyLoanContractInfo.setBatchNo(sysCommonService.getSeqNo("wfl_taskinfo"));
+        Map<String, String> map = jrbBizInfoDeclareService.doSendPettyLoanContractBatchFile(list, pettyLoanContractInfo);
+        map.put("batchNo", pettyLoanContractInfo.getBatchNo());
+        map.put("recordCount", pettyLoanContractInfo.getRecordCount());
+        map.put("dataType", pettyLoanContractInfo.getDataType());
         return map;
     }
 }

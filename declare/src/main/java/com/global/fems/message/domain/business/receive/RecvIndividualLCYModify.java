@@ -4,12 +4,12 @@ import com.global.fems.message.domain.DataStores;
 
 /**
  * 类描述：个人结售汇信息修改 接口代码：000006
- * 
+ *
  * @ClassName: RecvIndividualLCYModify
- * @Description: TODO
+ * @Description:
  * @author leonardLeo
  * @date 2015-6-24 下午09:28:23
- * 
+ *
  */
 public class RecvIndividualLCYModify extends DataStores {
 	/** 1.业务流水号 */
@@ -56,9 +56,9 @@ public class RecvIndividualLCYModify extends DataStores {
 	private String MOD_REASON_CODE;
 	/** 22.修改原因说明 */
 	private String MODIFY_REMARK;
-	/**	23.业务类型代码 */ 
+	/**	23.业务类型代码 */
 	private String BIZ_TYPE_CODE;
-	
+
 	public String getBIZ_TYPE_CODE() {
 		return BIZ_TYPE_CODE;
 	}

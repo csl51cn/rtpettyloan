@@ -4,12 +4,12 @@ import com.global.fems.message.domain.DataStores;
 
 /**
  *类描述：个人结售汇信息撤消 接口代码：000005
- * 
+ *
  * @ClassName: RecvIndividualLCYCancel
- * @Description: TODO
+ * @Description:
  * @author leonardLeo
  * @date 2015-6-24 下午09:27:28
- * 
+ *
  */
 public class RecvIndividualLCYCancel extends DataStores {
 	/** 1.业务流水号 */

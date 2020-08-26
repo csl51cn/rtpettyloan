@@ -7,15 +7,15 @@ import com.pactera.fems.message.jrb.domain.JRBGetTx;
  */
 public class QueryDeclared extends JRBGetTx {
 
-    private String batchNo;
+    private String fileName;
     private String dataType;
 
-    public String getBatchNo() {
-        return batchNo;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setBatchNo(String batchNo) {
-        this.batchNo = batchNo;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public String getDataType() {

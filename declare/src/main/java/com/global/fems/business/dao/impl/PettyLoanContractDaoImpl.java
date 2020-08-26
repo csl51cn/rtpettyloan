@@ -1,6 +1,7 @@
 package com.global.fems.business.dao.impl;
 
 import com.global.fems.business.dao.PettyLoanContractDao;
+import com.global.fems.business.domain.ContractIssueInfo;
 import com.global.fems.business.domain.PettyLoanContract;
 import com.global.framework.dbutils.support.BaseDaoSupport;
 import com.global.framework.dbutils.support.DAOException;
@@ -29,7 +30,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
      * @param contract
      */
     @Override
-    public void saveOrUpdate(PettyLoanContract contract) throws BaseException {
+    public void saveOrUpdate(PettyLoanContract contract) throws DAOException {
         super.saveOrUpdate(contract);
 
     }
@@ -471,13 +472,26 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
      *
      * @param dateId                    当前业务dateId
      * @param revolvingCreditContractNo 循环授信合同编号
-     * @return   返回
+     * @return 返回
      */
     @Override
     public int findBusinessCount(Integer dateId, String revolvingCreditContractNo) {
         String sql = "SELECT count(*) FROM Data_WorkInfo WHERE  是否放款 = 485 AND Date_Id <= ? AND 循环授信合同编号 = ?  ";
-        logger.debug("Executing SQL query [{}], params: [{}]", sql, new Object[]{dateId,revolvingCreditContractNo});
-        return (Integer) super.getJdbcTemplate().queryForObject(sql, new Object[]{dateId,revolvingCreditContractNo}, Integer.class);
+        logger.debug("Executing SQL query [{}], params: [{}]", sql, new Object[]{dateId, revolvingCreditContractNo});
+        return (Integer) super.getJdbcTemplate().queryForObject(sql, new Object[]{dateId, revolvingCreditContractNo}, Integer.class);
+    }
+
+
+
+    @Override
+    public List<PettyLoanContract> findByBatchNo(String batchNo) {
+        String sql = "SELECT * FROM DC_CONTRACT_ISSUE_INFO where batch_no = ?";
+        return (List<PettyLoanContract>) super.findForListBySql(sql, new Object[]{batchNo}, ContractIssueInfo.class);
+    }
+
+    @Override
+    public void batchUpdateInfo(List<PettyLoanContract> list, boolean isUpdateValueNullField) {
+        super.batchUpdate(list, isUpdateValueNullField);
     }
 
 

@@ -4,9 +4,9 @@ import com.global.fems.message.domain.DataStores;
 /**
  * 类描述：个人结售汇额度登记反馈 接口代码：000004
 * @ClassName: RspIndividualLCYRegister
-* @Description: TODO
-* @author leonardLeo 
-* @date 2015-6-25 上午11:41:36 
+* @Description:
+* @author leonardLeo
+* @date 2015-6-25 上午11:41:36
 *
  */
 public class RspIndividualLCYRegister extends DataStores {
@@ -28,7 +28,7 @@ public class RspIndividualLCYRegister extends DataStores {
 	private String PUB_CODE;
 	/** 10.发布原因 */
 	private String PUB_REASON;
-	
+
 	public String getSEQNO() {
 		return SEQNO;
 	}

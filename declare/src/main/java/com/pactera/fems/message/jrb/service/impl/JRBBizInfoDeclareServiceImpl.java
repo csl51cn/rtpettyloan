@@ -3,7 +3,9 @@ package com.pactera.fems.message.jrb.service.impl;
 import com.global.fems.business.domain.*;
 import com.global.fems.business.interfaces.First;
 import com.global.fems.business.interfaces.Second;
+import com.global.fems.message.util.OrgCode;
 import com.global.framework.util.StringUtil;
+import com.global.framework.util.SysUtils;
 import com.pactera.fems.message.jrb.domain.JRBReqBatchFileMsg;
 import com.pactera.fems.message.jrb.domain.JRBReqHeaderMsg;
 import com.pactera.fems.message.jrb.domain.JRBRespBatchFileMsg;
@@ -129,6 +131,44 @@ public class JRBBizInfoDeclareServiceImpl implements JRBBizInfoDeclareService {
         } else {
             result.put("respMsgJsonObject", response);
         }
+        return result;
+    }
+
+    @Override
+    public Map<String, String> doSendPettyLoanContractBatchFile(List<PettyLoanContract> pettyLoanContractList, PettyLoanContractInfoUpload pettyLoanContractInfoUpload) throws Exception {
+        Map<String, String> result = new HashMap<>();
+        ArrayList<PettyLoanContractInfoUploadParam> pettyLoanContractInfoUploadParams = new ArrayList<>();
+        Map<String, Object> fieldAndValue = new HashMap<>();
+        for (PettyLoanContract node : pettyLoanContractList) {
+            //校验数据,如果校验失败,将不符合要求的数据信息返回到页面
+            if (validateContract(node, result, new Class[]{})) {
+                StringBuilder validateError = new StringBuilder("当前记录申报失败,此条记录之前的记录已申报(如果有).合同信息--合同编号:");
+                validateError.append(node.getContractNo());
+                validateError.append(" ");
+                validateError.append(result.get("validateError"));
+                result.put("validateError", validateError.toString());
+                return result;
+            }
+            PettyLoanContractInfoUploadParam pettyLoanContractInfoUploadParam = new PettyLoanContractInfoUploadParam();
+            PropertyUtils.copyBean2Map(node, fieldAndValue);
+            //将还款计划信息循环节点转换为与xml对应的实体类
+            JRBGetTxValidator.setFeild(pettyLoanContractInfoUploadParam, fieldAndValue);
+            //设置组织机构代码
+            pettyLoanContractInfoUploadParam.setOrgCode(OrgCode.getOrgCode());
+            //设置时间格式
+            pettyLoanContractInfoUploadParam.setContractSignDate(SysUtils.formatDateStrToString(pettyLoanContractInfoUploadParam.getContractSignDate(), "yyyyMMdd"));
+            pettyLoanContractInfoUploadParams.add(pettyLoanContractInfoUploadParam);
+            fieldAndValue.clear();
+        }
+        pettyLoanContractInfoUpload.setRecordCount(pettyLoanContractInfoUploadParams.size() + "");
+        pettyLoanContractInfoUpload.setPettyLoanContractInfo(pettyLoanContractInfoUploadParams);
+        Map<String, String> map = JRBMsgHandler.sendBatchFile(pettyLoanContractInfoUpload, pettyLoanContractInfoUpload.getDataType(), pettyLoanContractInfoUpload.getBatchNo());
+        if (map.get("error") != null) {
+            result.put("error", map.get("error"));
+        } else {
+            result.put("fileName", map.get("fileName"));
+        }
+
         return result;
     }
 

@@ -3,6 +3,7 @@
 <transaction className="com.pactera.fems.message.jrb.domain.business.response.QueryDeclaredRtrTx" fieldName="rtrtx"
              nodeName="RtrTx" type="Single" extends="JRBRspMsg" extendsfield="transaction.body" isHide="N">
 
-    <field fieldName="msgCode" nodeName="MSG_CODE" text="上报结果代码" type = "String" required = "Y" length="[1,6]"/>
-    <field fieldName="msgInfo" nodeName="MSG_INFO" text="上报结果信息" type = "String" required = "Y" length="[1,200]"/>
+    <field fieldName="msgCode" nodeName="MSG_CODE" text="上报结果代码" type="String" required="Y" length="[1,6]"/>
+    <field fieldName="msgInfo" nodeName="MSG_INFO" text="上报结果信息" type="String" required="Y" length="[1,200]"/>
+    <field fieldName="batchNo" nodeName="BATCH_NO" text="大数据跑批解析此文件的批次号" type="String" required="N" length="[1,100]"/>
 </transaction>

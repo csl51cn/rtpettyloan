@@ -4,12 +4,12 @@ import com.global.fems.message.domain.DataStores;
 
 /**
  * 类描述：个人结售汇信息修改反馈 接口代码：000006
- * 
+ *
  * @ClassName: RspIndividualLCYModify
- * @Description: TODO
+ * @Description:
  * @author leonardLeo
  * @date 2015-6-25 上午11:42:47
- * 
+ *
  */
 public class RspIndividualLCYModify extends DataStores {
 	/** 1.业务流水号 */

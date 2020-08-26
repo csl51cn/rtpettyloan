@@ -4,8 +4,20 @@ import com.pactera.fems.message.jrb.domain.JRBRtrTx;
 
 public class QueryDeclaredRtrTx extends JRBRtrTx {
 
-    private String  msgCode;//上报结果代码
-    private String  msgInfo;//上报结果信息
+    /**
+     * 上报结果代码
+     */
+    private String  msgCode ;
+
+    /**
+     * 上报结果信息
+     */
+    private String  msgInfo;
+
+    /**
+     * 大数据跑批解析此文件的批次号
+     */
+    private  String batchNo;
 
     public String getMsgCode() {
         return msgCode;
@@ -21,5 +33,13 @@ public class QueryDeclaredRtrTx extends JRBRtrTx {
 
     public void setMsgInfo(String msgInfo) {
         this.msgInfo = msgInfo;
+    }
+
+    public String getBatchNo() {
+        return batchNo;
+    }
+
+    public void setBatchNo(String batchNo) {
+        this.batchNo = batchNo;
     }
 }

@@ -40,4 +40,11 @@ public interface DeclareResultDao {
      * @throws DAOException
      */
     DeclareResult findDeclareResultById(String id) throws DAOException;
+    /**
+     * 通过文件名查询上报结果记录
+     *
+     * @param batchFileName 文件名
+     * @return
+     */
+    DeclareResult findByRemoteFilePath(String batchFileName);
 }

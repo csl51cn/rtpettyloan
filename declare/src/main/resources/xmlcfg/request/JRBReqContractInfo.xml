@@ -26,7 +26,7 @@
             <field fieldName="ccy" nodeName="ccy" text="币种" type = "String" required = "Y"  length="[1,6]"/>
             <field fieldName="isRealQuotaLoan" nodeName="is_real_quota_loan" text="是否额度项下贷款" type = "String" required = "Y"  length="[1,16]" />
             <field fieldName="realQuotaNo" nodeName="real_quota_no" text="授信额度协议编号" type = "String" required = "Y"  length="[1,16]" />
-            <field fieldName="intRate" nodeName="int_rate" text="逾期月利率" type = "Double" required = "Y" length="[1,18]" format="#.########"/>
+            <field fieldName="intRate" nodeName="int_rate" text="月利率" type = "Double" required = "Y" length="[1,18]" format="#.########"/>
             <field fieldName="priPltyRate" nodeName="pri_plty_rate" text="逾期月利率" type = "Double" required = "Y" length="[1,18]" format="#.########"/>
             <field fieldName="contractStatus" nodeName="contract_status" text="合同状态" type = "String" required = "Y"  length="[1,16]" />
             <field fieldName="relationManager" nodeName="relation_manager" text="客户经理" type = "String" required = "Y"  length="[1,16]"/>

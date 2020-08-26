@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!--网签批量文件上传-->
+<transaction className="com.pactera.fems.message.jrb.domain.business.request.PettyLoanContractInfoUpload" fieldName="gettx" nodeName="gettx" type="Single" extends="JRBReqBatchFileUploadMsg" extendsfield="transaction.body" isHide="N">
+<field fieldName="batchNo" nodeName="batch_no" text="批次号" type = "String" required = "Y" length="[1,50]"/>
+<field fieldName="dataType" nodeName="data_type" text="数据类型" type = "String" required = "Y" length="[1,10]"/>
+<field fieldName="recordCount" nodeName="record_count" text="总记录数" type = "String" required = "Y" length="[16]"/>
+<field fieldName="pettyLoanContractInfo" nodeName="netbook_info" text="网签信息数组" className="java.util.ArrayList" type = "Group" subNodeName="netbook_info" isHide="H" >
+    <field className="com.pactera.fems.message.jrb.domain.business.request.PettyLoanContractInfoUploadParam" type="Single" fieldName="pettyLoanContractInfo" nodeName="netbook_info" isHide="N">
+        <field fieldName="orgCode" nodeName="org_code" text="组织机构代码" type = "String" required = "Y" length="[1,20]"/>
+        <field fieldName="contractNo" nodeName="contract_no" text="合同编号" type = "String" required = "Y" length="[1,100]" />
+        <field fieldName="loanCate" nodeName="loan_cate" text="贷款类型" type = "String" required = "Y" length="[1,6]" />
+        <field fieldName="customerType" nodeName="customer_type" text="借款人类型" type = "String" required = "Y" length="[1,6]" />
+        <field fieldName="customerName" nodeName="customer_name" text="借款人姓名" type = "String" required = "Y" length="[1,100]" />
+        <field fieldName="certificateType" nodeName="certificate_type" text="借款人证件类型" type = "String" required = "Y" length="[1,6]" />
+        <field fieldName="certificateNo" nodeName="certificate_no" text="借款人证件号码" type = "String" required = "Y" length="[1,50]" />
+        <field fieldName="contractAmount" nodeName="contract_amount" text="合同金额" type = "Double" required = "Y"  length="[1,18]" format="#.##"/>
+        <field fieldName="contractSignDate" nodeName="contract_sign_date" text="合同签订日期" type = "Date" required = "Y"  format="yyyyMMdd"/>
+        <field fieldName="intRate" nodeName="int_rate" text="月利率" type = "Double" required = "Y" length="[1,18]" format="#.########"/>
+    </field>
+</field>
+</transaction>
+

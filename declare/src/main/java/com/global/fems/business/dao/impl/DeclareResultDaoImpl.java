@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * @author: Senlin.Deng
- * @Description:  批量文件申报结果DAO
+ * @Description: 批量文件申报结果DAO
  * @date: Created in 2018/9/3 16:16
  * @Modified By:
  */
@@ -54,19 +54,18 @@ public class DeclareResultDaoImpl extends BaseDaoSupport implements DeclareResul
             list.add(batchNo);
         }
 
-        if (!StringUtils.equals("all",transactionType)){
+        if (!StringUtils.equals("all", transactionType)) {
             String messageTypeDesc = MessageTypeEnum.findDescByCode(transactionType);
             sql.append("AND  data_type  = ?");
             list.add(messageTypeDesc);
         }
 
 
-
         if (StringUtils.isNotBlank(startDate)) {
             sql.append(" AND gmt_create >= ? ");
             list.add(startDate);
         }
-        if (StringUtils.isNotBlank(endDate) ) {
+        if (StringUtils.isNotBlank(endDate)) {
             sql.append("  AND gmt_create <= ?");
             list.add(endDate);
         }
@@ -87,5 +86,17 @@ public class DeclareResultDaoImpl extends BaseDaoSupport implements DeclareResul
     public DeclareResult findDeclareResultById(String id) throws DAOException {
         String sql = "SELECT * FROM  DC_DECLARE_RESULT WHERE id = ?";
         return super.findForObjectBySql(sql, new Object[]{id}, DeclareResult.class);
+    }
+
+    /**
+     * 通过文件名查询上报结果记录
+     *
+     * @param batchFileName 文件名
+     * @return
+     */
+    @Override
+    public DeclareResult findByRemoteFilePath(String batchFileName) {
+        String sql = "SELECT * FROM  DC_DECLARE_RESULT WHERE remote_file_path = ?";
+        return super.findForObjectBySql(sql, new Object[]{batchFileName}, DeclareResult.class);
     }
 }

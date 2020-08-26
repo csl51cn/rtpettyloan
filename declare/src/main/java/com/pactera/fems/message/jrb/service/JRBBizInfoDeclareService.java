@@ -30,5 +30,6 @@ public interface JRBBizInfoDeclareService {
 
     Map doQueryDeclared(QueryDeclared queryDeclared, JRBReqHeaderMsg headerMsg) throws Exception;
 
+    Map<String, String> doSendPettyLoanContractBatchFile(List<PettyLoanContract> list, PettyLoanContractInfoUpload pettyLoanContractInfo) throws Exception;
 }
 

@@ -113,8 +113,8 @@ public class JRBXmlMsgBuilder {
         fileName.append("-");
         fileName.append(dataType);
         fileName.append("-");
-        //文件名规则：组织机构代码-YYYYMMDD-数据类型-XX.xml,这里序号是两位
-        fileName.append(batchNo.substring(14, batchNo.length()));
+        //文件名规则：组织机构代码-YYYYMMDD-数据类型-XX.xml,这里序号xx是batchNo日期后的序号
+        fileName.append(batchNo.substring(8));
         FileOutputStream fileOutputStream = null;
         OutputStreamWriter outputStreamWriter = null;
         String path = null;

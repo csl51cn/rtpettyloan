@@ -17,7 +17,7 @@ public interface PettyLoanContractDao {
 
     PettyLoanContract findPettyLoanContractById(String id) throws BaseException;
 
-    void saveOrUpdate(PettyLoanContract contract) throws BaseException;
+    void saveOrUpdate(PettyLoanContract contract) throws DAOException;
 
     PageBean findPettyLoanContractBySendStatus(Integer sendStatus, String contractNo, String startDate, String endDate, PageBean pageBean) throws BaseException;
 
@@ -44,4 +44,11 @@ public interface PettyLoanContractDao {
     String findProductType(Integer dateId) throws DAOException;
 
     int findBusinessCount(Integer dateId,String revolvingCreditContractNo);
+
+
+
+    List<PettyLoanContract> findByBatchNo(String batchNo);
+
+
+    void batchUpdateInfo(List<PettyLoanContract> byBatchNo,  boolean isUpdateValueNullField);
 }

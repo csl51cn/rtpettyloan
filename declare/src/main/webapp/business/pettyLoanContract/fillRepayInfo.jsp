@@ -845,19 +845,19 @@
             <tr>
                 <th width="15%">还款日期：</th>
                 <td>
-                    <input type="text" id="repayStartDate" name="repayStartDate"
+                    <input type="text" autocomplete="off" id="repayStartDate" name="repayStartDate"
                            style="border:1px solid #95B8E7;*color:#007fca;width:245px;padding:4px 2px;"
                            onclick="WdatePicker({maxDate:'#F{$dp.$D(\'repayEndDate\')}'})"/>至
                 </td>
                 <td>
-                    <input type="text" id="repayEndDate" name="repayEndDate" style="border:1px solid #95B8E7;
+                    <input type="text" autocomplete="off" id="repayEndDate" name="repayEndDate" style="border:1px solid #95B8E7;
                         *color:#007fca;width:245px;padding:4px 2px;" onclick="WdatePicker({minDate:'#F{$dp.$D(\'repayStartDate\')}'})"/>
                 </td>
             </tr>
             <tr>
                 <th width="5%">合同编号:</th>
                 <td>
-                    <input type="text" id="contract_no1" name="contractNo" style="border:1px solid #95B8E7;
+                    <input type="text" autocomplete="off" id="contract_no1" name="contractNo" style="border:1px solid #95B8E7;
                         *color:#007fca;width:180px;padding:4px 2px;">
                 </td>
 
@@ -899,14 +899,14 @@
             <tr>
                 <th width="15%">还款日期：</th>
                 <td>
-                    <input type="text" id="startDate_1" name="repayStartDate" data-options="required:true"
+                    <input type="text" autocomplete="off" id="startDate_1" name="repayStartDate" data-options="required:true"
                            class="easyui-validatebox" style="border:1px solid #95B8E7;
                         *color:#007fca;width:180px;padding:4px 2px;"
                            onclick="WdatePicker()" class="inputText"/> 至
                 </td>
 
                 <td>
-                    <input type="text" id="endDate_1" name="repayEndDate" data-options="required:true"
+                    <input type="text" autocomplete="off" id="endDate_1" name="repayEndDate" data-options="required:true"
                            class="easyui-validatebox" style="border:1px solid #95B8E7;
                         *color:#007fca;width:180px;padding:4px 2px;"
                            onclick="WdatePicker()" class="inputText"/>
@@ -915,7 +915,7 @@
             <tr>
                 <th width="5%">合同编号:</th>
                 <td>
-                    <input type="text" id="contract_no2" name="contract_no" style="border:1px solid #95B8E7;
+                    <input type="text" autocomplete="off" id="contract_no2" name="contract_no" style="border:1px solid #95B8E7;
                         *color:#007fca;width:180px;padding:4px 2px;">
                 </td>
 

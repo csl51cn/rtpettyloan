@@ -4,12 +4,12 @@ import com.global.fems.message.domain.DataStores;
 
 /**
  * 类描述：结售汇额度登记指令同步核对接口 接口代码：000007
- * 
+ *
  * @ClassName: RecvIndividualLCYRegCheck
- * @Description: TODO
+ * @Description:
  * @author leonardLeo
  * @date 2015-6-24 下午09:29:57
- * 
+ *
  */
 public class RecvIndividualLCYRegCheck extends DataStores {
 

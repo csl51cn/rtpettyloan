@@ -1,5 +1,6 @@
 package com.global.fems.business.service;
 
+import com.global.fems.business.domain.DeclareResult;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.param.domain.ResultModel;
 
@@ -10,7 +11,8 @@ public interface QueryDeclareService extends Subject {
 
     /**
      * 向监管平台查询申报状态
-     * @param id 记录id
+     *
+     * @param id     记录id
      * @param userId 用户id
      * @return
      * @throws Exception
@@ -28,4 +30,18 @@ public interface QueryDeclareService extends Subject {
      * @return
      */
     PageBean queryRawDeclareData(String batchNo, String transactionType, String startDate, String endDate, PageBean pageBean);
+
+    /**
+     * 通过文件名查询上报结果记录
+     *
+     * @param batchFileName 文件名
+     * @return
+     */
+    DeclareResult findByRemoteFilePath(String batchFileName);
+
+    /**
+     * 更新记录
+     * @param declareResult
+     */
+    void update(DeclareResult declareResult);
 }

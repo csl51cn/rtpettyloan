@@ -14,6 +14,7 @@ import java.util.Date;
 
 /**
  * 小额贷款合同实体类
+ *
  * @author senlin.deng
  */
 @TableMapping(primaryKey = "id", primaryKeyType = "Single", tableName = "DC_PETTY_LOAN_CONTRACT")
@@ -166,6 +167,17 @@ public class PettyLoanContract extends Entity {
     @ColumnMapping(columnName = "real_quota_no", columnType = "String")
     private String realQuotaNo;
 
+    /**
+     * 批次号
+     */
+    @ColumnMapping(columnName = "batch_no", columnType = "String")
+    private String batchNo;
+
+    /**
+     * 同批次总记录数
+     */
+    @ColumnMapping(columnName = "record_count", columnType = "String")
+    private String recordCount;
 
     public String getId() {
         return id;
@@ -365,5 +377,21 @@ public class PettyLoanContract extends Entity {
 
     public void setRealQuotaNo(String realQuotaNo) {
         this.realQuotaNo = realQuotaNo;
+    }
+
+    public void setBatchNo(String batchNo) {
+        this.batchNo = batchNo;
+    }
+
+    public String getBatchNo() {
+        return batchNo;
+    }
+
+    public String getRecordCount() {
+        return recordCount;
+    }
+
+    public void setRecordCount(String recordCount) {
+        this.recordCount = recordCount;
     }
 }

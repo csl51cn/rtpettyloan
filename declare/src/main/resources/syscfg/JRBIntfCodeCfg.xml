@@ -45,4 +45,9 @@
            rspEntity="com.pactera.fems.message.jrb.domain.JRBRespBatchFileMsg"
            reqXmlMapping="JRBReqQuotaInfo" rspXmlMapping="JRBRspBatchFileMsg"
            serviceMethod="JRBBizInfoDeclareService.doSendQuotaInfoBatchFile"/>
+    <field serviceName="网签批量信息上报"
+           reqEntity="com.pactera.fems.message.jrb.domain.business.request.PettyLoanContractInfoUpload"
+           rspEntity="com.pactera.fems.message.jrb.domain.JRBRespBatchFileMsg"
+           reqXmlMapping="JRBReqPettyLoanContractInfo" rspXmlMapping="JRBRspBatchFileMsg"
+           serviceMethod="JRBBizInfoDeclareService.doSendPettyLoanContractBatchFile"/>
 </config>

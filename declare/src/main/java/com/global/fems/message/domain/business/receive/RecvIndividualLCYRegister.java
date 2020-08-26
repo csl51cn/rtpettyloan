@@ -4,12 +4,12 @@ import com.global.fems.message.domain.DataStores;
 
 /**
  * 类描述：个人结售汇额度登记 接口代码：000004
- * 
+ *
  * @ClassName: RecvIndividualLCYRegister
- * @Description: TODO
+ * @Description:
  * @author leonardLeo
  * @date 2015-6-24 下午09:24:58
- * 
+ *
  */
 public class RecvIndividualLCYRegister extends DataStores {
 	/** 2.交易类型 */

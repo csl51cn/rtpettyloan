@@ -31,20 +31,20 @@
                     </td>
                     <th>批次号：</th>
                     <td>
-                        <input type="text" id="batchNo" name="batchNo" style="border:1px solid #95B8E7;
+                        <input type="text" autocomplete="off" id="batchNo" name="batchNo" style="border:1px solid #95B8E7;
                         *color:#007fca;width:245px;padding:4px 2px;"/>
                     </td>
                 </tr>
                 <tr>
                     <th width="15%">上报日期：</th>
                     <td width="28%">
-                        <input type="text" id="startDate" name="startDate"
+                        <input type="text" autocomplete="off" id="startDate" name="startDate"
                                class="easyui-validatebox"
                                style="border:1px solid #95B8E7;*color:#007fca;width:245px;padding:4px 2px;"
                                onclick="WdatePicker()"/> 至
                     </td>
                     <td>
-                        <input type="text" id="endDate" name="endDate" style="border:1px solid #95B8E7;
+                        <input type="text" autocomplete="off" id="endDate" name="endDate" style="border:1px solid #95B8E7;
                         *color:#007fca;width:245px;padding:4px 2px;" onclick="WdatePicker()"
                                class="easyui-validatebox"/>
                         <input id="declareQueryBtn" type="button" class="inputButton" onclick="doDeclareQuery();"
@@ -68,15 +68,14 @@
     });
 
 
-
     /*重新发送通知报文*/
     function reReportFilePath(id) {
         $.messager.progress({
-            title : '提示',
-            text : '数据提交中，请稍后....'
+            title: '提示',
+            text: '数据提交中，请稍后....'
         });
         $.ajax({
-            async:true,
+            async: true,
             type: "POST",
             timeout: 120000,
             url: "${basePath}/batchDeclare.do?method=reReportFilePath",
@@ -123,15 +122,17 @@
                 title: "数据类型",
 
                 formatter: function (value, row) {
-                    if (value == "QUOTA_INFO") {
+                    if (value === "NETBOOK_INFO") {
+                        return '合同网签信息';
+                    } else if (value === "QUOTA_INFO") {
                         return '授信额度信息';
-                    } else if (value == "CONTRACT_INFO") {
+                    } else if (value === "CONTRACT_INFO") {
                         return '贷款合同信息';
-                    } else if (value == "ISSUE_INFO") {
+                    } else if (value === "ISSUE_INFO") {
                         return '贷款发放信息';
-                    } else if (value == "REPAY_INFO") {
+                    } else if (value === "REPAY_INFO") {
                         return '贷款回收信息';
-                    } else if (value == "PAYPLAN_INFO") {
+                    } else if (value === "PAYPLAN_INFO") {
                         return '还款计划信息';
                     }
                 }
@@ -150,20 +151,26 @@
             }, {
                 field: "gmtModified",
                 title: "最后修改时间"
+            },{
+                field: "contractNo",
+                title: "含错业务"
+            },{
+                field: "errorMsg",
+                title: "错误信息"
             }
-            // , {
-            //     field: "lastReReportDate",
-            //     title: "最后重新发送通知报文时间"
-            // }, {
-            //     field: "id1", title: '操作', width: 120, sortable: true,
-            //     formatter: function (value, rowData) {
-            //         if (rowData.declareResultCode === "888888" && StringToDate(rowData.gmtCreate).DateDiff('d', new Date())) {
-            //             return "<a onClick='reReportFilePath(" + rowData.id + ")' style='color:blue;'>重新发送通知报文</a>";
-            //         } else {
-            //             return "";
-            //         }
-            //     }
-            // }
+                // , {
+                //     field: "lastReReportDate",
+                //     title: "最后重新发送通知报文时间"
+                // }, {
+                //     field: "id1", title: '操作', width: 120, sortable: true,
+                //     formatter: function (value, rowData) {
+                //         if (rowData.declareResultCode === "888888" && StringToDate(rowData.gmtCreate).DateDiff('d', new Date())) {
+                //             return "<a onClick='reReportFilePath(" + rowData.id + ")' style='color:blue;'>重新发送通知报文</a>";
+                //         } else {
+                //             return "";
+                //         }
+                //     }
+                // }
             ]]
 
         })

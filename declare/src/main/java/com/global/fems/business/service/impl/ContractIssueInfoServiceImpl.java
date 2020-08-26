@@ -372,7 +372,7 @@ public class ContractIssueInfoServiceImpl implements ContractIssueInfoService {
         String zone = ZoneEnum.getCodeByZone(contractIssueInfo.getZone());
         if (StringUtil.isNullOrEmpty(zone)) {
             //如果没有匹配的区域信息,设置为其它
-            zone = "230044";
+            zone = "999999";
         }
         contractIssueInfo.setZone(zone);
         //贷款期限

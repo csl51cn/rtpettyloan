@@ -674,7 +674,7 @@
                     <td width="32%">
                         <input type="text" id="id" name="id"
                                value="${model.id}" class="inputText" hidden/>
-                        <input type="text" id="contractNo" name="contractNo"
+                        <input type="text" id="contractNo" autocomplete="off" name="contractNo"
                                value="${model.contractNo}" class="inputText"/>
                         <span class="warning">${errors['contractNo']}</span>
                     </td>
@@ -1422,7 +1422,7 @@
             <tr>
                 <th width="15%">签约日期：</th>
                 <td>
-                    <input type="text" id="startDate" name="signStartDate" data-options="required:true"
+                    <input type="text"  autocomplete="off" id="startDate" name="signStartDate" data-options="required:true"
                            class="easyui-validatebox"
                            style="border:1px solid #95B8E7;*color:#007fca;width:245px;padding:4px 2px;"
                            onclick="WdatePicker()"/>至
@@ -1430,7 +1430,7 @@
 
                 <td>
 
-                    <input type="text" id="endDate" name="signEndDate" data-options="required:true" style="border:1px solid #95B8E7;
+                    <input type="text" autocomplete="off" id="endDate" name="signEndDate" data-options="required:true" style="border:1px solid #95B8E7;
                         *color:#007fca;width:245px;padding:4px 2px;" onclick="WdatePicker()"
                            class="easyui-validatebox"/>
                 </td>
@@ -1438,7 +1438,7 @@
             <tr>
                 <th width="5%">合同编号:</th>
                 <td>
-                    <input type="text" id="contract_no1" name="contract_no" style="border:1px solid #95B8E7;
+                    <input type="text"  autocomplete="off"  id="contract_no1" name="contract_no" style="border:1px solid #95B8E7;
                         *color:#007fca;width:180px;padding:4px 2px;">
                 </td>
 
@@ -1480,14 +1480,14 @@
             <tr>
                 <th width="15%">签约日期：</th>
                 <td>
-                    <input type="text" id="signStartDate" name="signStartDate" data-options="required:true"
+                    <input type="text" autocomplete="off" id="signStartDate" name="signStartDate" data-options="required:true"
                            class="easyui-validatebox" style="border:1px solid #95B8E7;
                         *color:#007fca;width:180px;padding:4px 2px;"
                            onclick="WdatePicker()" class="inputText"/> 至
                 </td>
 
                 <td>
-                    <input type="text" id="signEndDate" name="signEndDate" data-options="required:true"
+                    <input type="text" autocomplete="off"  id="signEndDate" name="signEndDate" data-options="required:true"
                            class="easyui-validatebox" style="border:1px solid #95B8E7;
                         *color:#007fca;width:180px;padding:4px 2px;"
                            onclick="WdatePicker()" class="inputText"/>
@@ -1496,7 +1496,7 @@
             <tr>
                 <th width="5%">合同编号:</th>
                 <td>
-                    <input type="text" id="contract_no2" name="contract_no" style="border:1px solid #95B8E7;
+                    <input type="text" autocomplete="off"  id="contract_no2" name="contract_no" style="border:1px solid #95B8E7;
                         *color:#007fca;width:180px;padding:4px 2px;">
                 </td>
 

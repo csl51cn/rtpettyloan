@@ -3,12 +3,12 @@ package com.global.fems.message.domain.business.response;
 import com.global.fems.message.domain.DataStores;
 /**
  * 类描述：个人结售汇额度查询反馈 接口代码：000001
- * 
+ *
  * @ClassName: RspIndividualLCYQuery
- * @Description: TODO
+ * @Description:
  * @author leonardLeo
  * @date 2015-6-25 上午11:31:56
- * 
+ *
  */
 public class RspIndividualLCYQuery extends DataStores {
 	/** 1.交易类型 */

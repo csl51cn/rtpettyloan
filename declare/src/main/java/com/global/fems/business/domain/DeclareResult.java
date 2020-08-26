@@ -90,6 +90,12 @@ public class DeclareResult extends Entity {
     private String modifiedId;
 
 
+    @ColumnMapping(columnName = "contract_no",columnType = "String")
+    private String contractNo;
+
+    @ColumnMapping(columnName = "error_msg",columnType = "String")
+    private String  errorMsg;
+
     public String getId() {
         return id;
     }
@@ -184,5 +190,21 @@ public class DeclareResult extends Entity {
 
     public void setLastReReportDate(Date lastReReportDate) {
         this.lastReReportDate = lastReReportDate;
+    }
+
+    public String getContractNo() {
+        return contractNo;
+    }
+
+    public void setContractNo(String contractNo) {
+        this.contractNo = contractNo;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
     }
 }

@@ -34,7 +34,7 @@ public class JRBMsgHandler {
         String reqMsg = new JRBXmlMsgBuilder().buildXml(getTx, headerMsg);
         log.debug("发送的请求报文:\r\n" + reqMsg);
         String retMsg = null;
-        // TODO: 2018/4/2 生产环境需要将下面的注释打开 
+        // TODO: 2018/4/2 生产环境需要将下面的注释打开
         retMsg = sendMessageBySocket(reqMsg, retMsg);
         //将返回的报文转换成javaBean
         Map map = JRBIntfCodeCfgUtil.getCfgCache(getTx.getClass().getName());
@@ -66,7 +66,7 @@ public class JRBMsgHandler {
         //保存xml到SFTP服务器
         FileInputStream fileInputStream = new FileInputStream(pathAndFileName);
         String destinationFileName = pathAndFileName.substring(pathAndFileName.lastIndexOf("/") + 1);
-        // TODO: 2018/4/2 生产环境需要将下面的注释打开 
+        // TODO: 2018/4/2 生产环境需要将下面的注释打开
         try {
             SFTPClient.put(fileInputStream, destinationFileName);
         } catch (Exception e) {

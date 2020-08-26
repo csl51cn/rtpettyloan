@@ -37,7 +37,12 @@ public enum MessageTypeEnum {
     /**
      * 还款计划信息
      */
-    PAY_PLAN_INFO("0105", "PAYPLAN_INFO");
+    PAY_PLAN_INFO("0105", "PAYPLAN_INFO"),
+
+    /**
+     * 网签信息
+     */
+    NETBOOK_INFO("0107", "NETBOOK_INFO");
 
 
     private String code;

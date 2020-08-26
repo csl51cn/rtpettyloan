@@ -48,7 +48,7 @@ public class QueryDeclareServiceImpl implements QueryDeclareService {
     @Override
     public ResultModel queryDeclared(String id, String userId) throws Exception {
         DeclareResult declareResult = declareResultDao.findDeclareResultById(id);
-        Map map = jrbBizInfoDeclareManager.packageMsgHeader(declareResult.getBatchNo(), declareResult.getDataType());
+        Map map = jrbBizInfoDeclareManager.packageMsgHeader(declareResult.getRemoteFilePath(), declareResult.getDataType());
         JRBRespMsg respMsg = (JRBRespMsg) map.get("respMsg");
         if (respMsg != null) {
             JRBRespHeaderMsg msg = respMsg.getHeader().getMsg();
@@ -62,13 +62,17 @@ public class QueryDeclareServiceImpl implements QueryDeclareService {
                 QueryDeclaredRtrTx msgInBody = (QueryDeclaredRtrTx) body.getRtrtx();
                 String msgCode = msgInBody.getMsgCode();
                 declareResult.setDeclareResultCode(msgCode);
-                if (StringUtils.equals("000000", msgCode)) {
+                if (StringUtils.equals("200000", msgCode)) {
                     //上报成功
                     declareResult.setDeclareResult("上报成功");
                     declareResultDao.saveOrUpdate(declareResult);
                     notifyObservers(declareResult);
                     return ResultModel.ok("查询成功:返回结果为" + msgInBody.getMsgInfo());
-                } else if (StringUtils.equals("000001", msgCode) || StringUtils.equals("991210", msgCode)) {
+                } else if (StringUtils.equals("000000", msgCode)) {
+                    //数据待解析
+                    declareResult.setDeclareResult("数据待解析");
+                    return ResultModel.ok("查询成功:返回结果为" + msgInBody.getMsgInfo());
+                } else if (StringUtils.equals("100000", msgCode)) {
                     //数据导入中
                     declareResult.setDeclareResult("数据导入中");
                     declareResultDao.saveOrUpdate(declareResult);
@@ -111,6 +115,27 @@ public class QueryDeclareServiceImpl implements QueryDeclareService {
     public PageBean queryRawDeclareData(String batchNo, String transactionType, String startDate, String endDate, PageBean pageBean) {
 
         return declareResultDao.findRawDeclareData(StringUtils.trim(batchNo), transactionType, startDate, endDate, pageBean);
+    }
+
+    /**
+     * 通过文件名查询上报结果记录
+     *
+     * @param batchFileName 文件名
+     * @return
+     */
+    @Override
+    public DeclareResult findByRemoteFilePath(String batchFileName) {
+        return declareResultDao.findByRemoteFilePath(batchFileName);
+    }
+
+    /**
+     * 更新记录
+     *
+     * @param declareResult
+     */
+    @Override
+    public void update(DeclareResult declareResult) {
+        declareResultDao.saveOrUpdate(declareResult);
     }
 
 
