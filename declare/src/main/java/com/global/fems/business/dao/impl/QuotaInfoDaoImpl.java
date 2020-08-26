@@ -282,13 +282,18 @@ public class QuotaInfoDaoImpl extends BaseDaoSupport implements QuotaInfoDao {
     }
 
     @Override
-    public PageBean findLastQuotaInfoBySendStatus(String sendStatusCode, String startDate, String endDate, PageBean pageBean) throws DAOException {
+    public PageBean findLastQuotaInfoBySendStatus(String sendStatusCode, String contractNo, String startDate, String endDate, PageBean pageBean) throws DAOException {
         StringBuilder sql = new StringBuilder("SELECT id, date_id,contract_no,contract_no_query,customer_name,contract_amount,contract_begin_date,contract_end_date," +
                 "contract_sign_date,used_amount,remain_amount,is_send,is_last,report_type,batch_no FROM DC_QUOTA_INFO WHERE  1 = 1 ");
         List<Object> list = new ArrayList<Object>();
         if (StringUtils.isNotBlank(sendStatusCode)) {
             sql.append(" AND is_send = ? ");
             list.add(sendStatusCode);
+        }
+
+        if (StringUtils.isNotBlank(contractNo)) {
+            sql.append(" AND contract_no_query = ? ");
+            list.add(contractNo);
         }
 
         if (StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {

@@ -123,13 +123,14 @@ public interface QuotaInfoDao {
      * 根据申报状态查询和签约日期查询最新的授信额度信息
      *
      * @param sendStatusCode
+     * @param contractNo
      * @param startDate
      * @param endDate
      * @param pageBean
      * @return
      * @throws DAOException
      */
-    PageBean findLastQuotaInfoBySendStatus(String sendStatusCode, String startDate, String endDate, PageBean pageBean) throws DAOException;
+    PageBean findLastQuotaInfoBySendStatus(String sendStatusCode, String contractNo, String startDate, String endDate, PageBean pageBean) throws DAOException;
 
     /**
      * 根据batchNo查询记录

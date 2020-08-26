@@ -725,7 +725,7 @@
 									nowrap:false,
 								">
                     </td>
-                    <th>合同编号:</th>
+                    <th>合同编号(JK):</th>
                     <td><input type="text" id="contractNo" autocomplete="off" name="contractNo" style="border:1px solid #95B8E7;
                         *color:#007fca;width:220px;padding:4px 2px;"></td>
                 </tr>

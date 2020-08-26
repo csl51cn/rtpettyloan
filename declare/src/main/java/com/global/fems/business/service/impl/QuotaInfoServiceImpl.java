@@ -289,9 +289,19 @@ public class QuotaInfoServiceImpl implements QuotaInfoService {
         return ResultModel.ok();
     }
 
+    /**
+     *
+     * @param sendStatusCode 申报状态
+     * @param contractNo jk合同号
+     * @param startDate  签署日期
+     * @param endDate  签署日期
+     * @param pageBean  分页信息
+     * @return
+     * @throws DAOException
+     */
     @Override
     public PageBean findLastQuotaInfoBySendStatus(String sendStatusCode, String contractNo, String startDate, String endDate, PageBean pageBean) throws DAOException {
-        return quotaInfoDao.findLastQuotaInfoBySendStatus(sendStatusCode, startDate, endDate, pageBean);
+        return quotaInfoDao.findLastQuotaInfoBySendStatus(sendStatusCode, contractNo,startDate, endDate, pageBean);
     }
 
     private void validate(String contractNo, QuotaInfo quotaInfo) {
