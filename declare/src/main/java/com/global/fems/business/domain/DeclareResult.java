@@ -90,11 +90,17 @@ public class DeclareResult extends Entity {
     private String modifiedId;
 
 
-    @ColumnMapping(columnName = "contract_no",columnType = "String")
+    /**
+     * 有问题的合同号
+     */
+    @ColumnMapping(columnName = "contract_no", columnType = "String")
     private String contractNo;
 
-    @ColumnMapping(columnName = "error_msg",columnType = "String")
-    private String  errorMsg;
+    /**
+     * 具体问题
+     */
+    @ColumnMapping(columnName = "error_msg", columnType = "String")
+    private String errorMsg;
 
     public String getId() {
         return id;

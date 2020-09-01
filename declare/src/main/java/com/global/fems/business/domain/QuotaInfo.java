@@ -15,7 +15,7 @@ import java.util.Date;
  * 授信额度信息实体类
  */
 @TableMapping(primaryKey = "id", primaryKeyType = "Single", tableName = "DC_QUOTA_INFO")
-public class QuotaInfo   extends Entity {
+public class QuotaInfo extends Entity {
 
     /**
      * 主键

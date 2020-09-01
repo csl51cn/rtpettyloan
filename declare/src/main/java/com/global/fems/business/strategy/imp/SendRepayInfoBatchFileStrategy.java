@@ -19,9 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 贷款回收信息上报策略
@@ -114,17 +113,20 @@ public class SendRepayInfoBatchFileStrategy implements SendBatchFileStrategy {
         if (StringUtils.equals(declareResult.getDataType(), MessageTypeEnum.REPAY_INFO.getDesc())) {
             List<RepayInfo> list = repayInfoDao.findByBatchNo(declareResult.getBatchNo());
             if (list.size() > 0) {
-                Integer isSend;
-                if ("000000".equals(declareResult.getDeclareResultCode())) {
-                    isSend = 1;
+                if ("200000".equals(declareResult.getDeclareResultCode())) {
+                    //申报成功,不需要修改isSend,在上报数据时已将isSend设置为1
+                    return;
+                } else if ("900000".equals(declareResult.getDeclareResultCode()) && StringUtils.isNotBlank(declareResult.getContractNo())) {
+                    //部分上报失败.需要将失败的修改为未上报
+                    String[] split = declareResult.getContractNo().split(",");
+                    HashSet<String> contractNoSet = new HashSet<>(Arrays.asList(split));
+                    list = list.stream().filter(repayInfo -> contractNoSet.contains(repayInfo.getContractNo())).collect(Collectors.toList());
+                    list.forEach(repayInfo -> repayInfo.setIsSend(0));
                 } else {
-                    isSend = 0;
+                    //没有成功,需要将所有的记录设置为未申报
+                    list.forEach(quotaInfo -> quotaInfo.setIsSend(0));
                 }
-                list.forEach(repayInfo -> {
-                    repayInfo.setIsSend(isSend);
-
-                });
-                repayInfoDao.batchUpdateRepayInfo(list,true);
+                repayInfoDao.batchUpdateRepayInfo(list, false);
             }
         }
     }

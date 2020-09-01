@@ -323,5 +323,16 @@ public class ContractInfoDaoImpl extends BaseDaoSupport implements ContractInfoD
         return super.findForLongBySql(sql, new Object[]{dateId, reportType, result});
     }
 
+    /**
+     * 将记录设置为已上报
+     *
+     * @param dateIds dateIds ,格式dateId1,dateId2,dateId3
+     */
+    @Override
+    public void updateSent(List<String> dateIds) {
+        String sql = "update DC_CONTRACT_INFO set is_send = 1 where date_id in  " + getInClauseStr(dateIds);
+        super.updateBySql(sql, dateIds.toArray());
+    }
+
 
 }

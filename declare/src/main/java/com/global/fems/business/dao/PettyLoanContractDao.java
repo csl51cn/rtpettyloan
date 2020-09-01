@@ -51,4 +51,13 @@ public interface PettyLoanContractDao {
 
 
     void batchUpdateInfo(List<PettyLoanContract> byBatchNo,  boolean isUpdateValueNullField);
+
+    List<PettyLoanContract> findRealQuotaContractListByWorkInfoId(List<String> dateIds);
+
+    /**
+     * 将记录设置为已上报
+     *
+     * @param dateIds dateIds ,格式dateId1,dateId2,dateId3
+     */
+    void updateSent(List<String> dateIds);
 }

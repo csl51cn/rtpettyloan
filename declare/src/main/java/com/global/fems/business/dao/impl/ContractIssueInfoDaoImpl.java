@@ -49,7 +49,7 @@ public class ContractIssueInfoDaoImpl extends BaseDaoSupport implements Contract
      */
     @Override
     public ContractIssueInfo findContractByDateId(String dateId) throws DAOException {
-        String sql = "SELECT a.contract_no,a.contract_no AS dueBillNo, a.date_id,a.net_sign_no,a.customer_type,a.customer_name,a.certificate_type,a.certificate_no,b.授信金额 AS dd_amt, " +
+        String sql = "SELECT a.contract_no,b.合同编号 AS dueBillNo, a.date_id,a.net_sign_no,a.customer_type,a.customer_name,a.certificate_type,a.certificate_no,b.授信金额 AS dd_amt, " +
                 "a.loan_cate,a.int_rate,a.pri_plty_rate,a.contract_sign_date AS sign_date,  convert(nvarchar ,b.放款日期,121)+' 00:00:00.000' AS dd_date,  e.到期日期 AS mature_date," +
                 "a.guar_type,a.loan_object,a.loan_object_size,b.认定区域编号 AS [zone],ISNULL(CASE a.loan_object_size WHEN '280002' THEN '260001' WHEN '280003' THEN '260002' ELSE NULL END,'') AS purpose, " +
                 "b.还款方式 AS rate_calc_mode,ISNULL (CASE b.授信主体类型 WHEN 1 THEN d.[行业类别] WHEN 2 THEN c.[行业分类] END,'')AS industry, (CASE  b.是否为循环授信贷款   WHEN  870 THEN   '740001'   ELSE  '740002' END ) AS is_real_quota_loan,  ISNULL(a.real_quota_no, '') as real_quota_no FROM " +

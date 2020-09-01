@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -362,6 +363,19 @@ public class ContractInfoServiceImpl implements ContractInfoService {
             return ResultModel.fail();
         }
         return ResultModel.ok();
+    }
+
+    /**
+     * 将记录设置为已上报
+     *
+     * @param dateIds dateIds ,格式dateId1,dateId2,dateId3
+     * @return
+     * @throws BaseException
+     */
+    @Override
+    public void updateSent(String dateIds) {
+
+        contractInfoDao.updateSent(Arrays.asList(dateIds.split(",")));
     }
 
 

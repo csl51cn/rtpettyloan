@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
@@ -24,9 +25,9 @@ import java.util.stream.Collectors;
 @Service
 public class ScheduleService {
 
+    private static final String PATH = "/error_msg/";
     @Autowired
     private QueryDeclareService queryDeclareService;
-    private static final String PATH = "/error_msg/";
 
     /**
      * 获取sftp错误文件更新报送结果
@@ -46,13 +47,22 @@ public class ScheduleService {
 
                 return JSONObject.parseObject(new String(outputStream.toByteArray(), StandardCharsets.UTF_8), SftpErrorResult.class);
             }).collect(Collectors.toList());
-
-            resultErrors.forEach(resultError -> {
-                DeclareResult declareResult = queryDeclareService.findByRemoteFilePath(resultError.getBatchFile());
-                declareResult.setContractNo(resultError.getContractNo());
-                declareResult.setErrorMsg(resultError.getErrorMsg());
+            Map<String, List<SftpErrorResult>> collect = resultErrors.stream().collect(Collectors.groupingBy(SftpErrorResult::getBatchFile));
+            collect.forEach((fileName, list) -> {
+                DeclareResult declareResult = queryDeclareService.findByRemoteFilePath(fileName);
+                String contractNos = list.stream().map(SftpErrorResult::getContractNo).collect(Collectors.joining(","));
+                String errorMsgs = list.stream().map(sftpErrorResult -> {
+                    String contractNo = sftpErrorResult.getContractNo();
+                    String errorMsg = sftpErrorResult.getErrorMsg();
+                    return contractNo + "|" + errorMsg;
+                }).collect(Collectors.joining(","));
+                declareResult.setContractNo(contractNos);
+                declareResult.setErrorMsg(errorMsgs);
                 queryDeclareService.update(declareResult);
+                queryDeclareService.notifyObservers(declareResult);
             });
+
+
         }
 
     }

@@ -111,6 +111,7 @@ public abstract class BaseDaoSupport {
             final Object[] args = sqlHelper.getInsertValues(e, dtoMap);
             logger.debug("Executing SQL insert [{}], params:[{}]", sql, SqlHelper.getArrayToString(args));
             this.jdbcTemplate.execute(sql, new AbstractLobCreatingPreparedStatementCallback(this.lobHandler) {
+                @Override
                 protected void setValues(PreparedStatement ps, LobCreator lobCreator) throws SQLException {
                     for (int i = 0; i < e.getColumnList().size(); ++i) {
                         ColumnDescribe cd = (ColumnDescribe) e.getColumnList().get(i);
@@ -679,4 +680,39 @@ public abstract class BaseDaoSupport {
             }
         }
     }
+
+    /**
+     * <pre>
+     * 获取 PreparedStatement 需要的in sql 子句
+     * 如：
+     * 空集合：('')
+     * [1, 2, 3] (?,?,?)
+     * </pre>
+     *
+     * @param params
+     * @return
+     */
+    public static String getInClauseStr(Collection<?> params) {
+        StringBuilder inClause = new StringBuilder("(");
+        boolean last = false;
+        if (params == null || params.isEmpty()) {
+            inClause.append("'')");
+
+        } else {
+            for (int i = 0; i < params.size(); i++) {
+                inClause.append("?");
+                if (i == params.size() - 1) {
+                    last = true;
+                }
+                // 最后一个占位符不需要逗号
+                if (!last) {
+                    inClause.append(",");
+                }
+
+            }
+            inClause.append(")");
+        }
+        return inClause.toString();
+    }
+
 }

@@ -24,6 +24,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
     private static final Logger logger = LoggerFactory.getLogger(PettyLoanContractDaoImpl.class);
 
 
+
     /**
      * 保存或更新贷款合同
      *
@@ -72,7 +73,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
                 " ELSE  " +
                 "   '740002' " +
                 " END ) AS is_real_quota_loan, " +
-                " ISNULL(w.循环授信合同编号, '') as real_quota_no " +
+                " ISNULL(replace(w.循环授信合同编号,' ',''), '') as real_quota_no " +
                 " FROM  " +
                 "  Data_WorkInfo w  " +
                 " LEFT JOIN Data_CompanyInfo c ON w.授信主体编号 = c.Id  " +
@@ -230,7 +231,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
                         " ELSE  " +
                         "   '740002' " +
                         " END ) AS is_real_quota_loan, " +
-                        " ISNULL(w.循环授信合同编号, '') as real_quota_no " +
+                        " ISNULL(replace(w.循环授信合同编号,' ',''), '') as real_quota_no " +
                         " FROM  " +
                         "  Data_WorkInfo w  " +
                         " LEFT JOIN Data_CompanyInfo c ON w.授信主体编号 = c.Id  " +
@@ -335,7 +336,7 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
                 " ELSE  " +
                 "   '740002' " +
                 " END ) AS is_real_quota_loan, " +
-                " ISNULL(w.循环授信合同编号, '') as real_quota_no " +
+                " ISNULL(replace(w.循环授信合同编号,' ',''), '') as real_quota_no " +
                 "FROM " +
                 " Data_WorkInfo w " +
                 "LEFT JOIN Data_CompanyInfo c ON w.授信主体编号 = c.Id " +
@@ -476,11 +477,10 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
      */
     @Override
     public int findBusinessCount(Integer dateId, String revolvingCreditContractNo) {
-        String sql = "SELECT count(*) FROM Data_WorkInfo WHERE  是否放款 = 485 AND Date_Id <= ? AND 循环授信合同编号 = ?  ";
+        String sql = "SELECT count(*) FROM Data_WorkInfo WHERE  是否放款 = 485 AND Date_Id <= ? AND replace(循环授信合同编号,' ','') = ?  ";
         logger.debug("Executing SQL query [{}], params: [{}]", sql, new Object[]{dateId, revolvingCreditContractNo});
         return (Integer) super.getJdbcTemplate().queryForObject(sql, new Object[]{dateId, revolvingCreditContractNo}, Integer.class);
     }
-
 
 
     @Override
@@ -492,6 +492,106 @@ public class PettyLoanContractDaoImpl extends BaseDaoSupport implements PettyLoa
     @Override
     public void batchUpdateInfo(List<PettyLoanContract> list, boolean isUpdateValueNullField) {
         super.batchUpdate(list, isUpdateValueNullField);
+    }
+
+
+    /**
+     * 查询循环授信
+     * @param dateIds
+     * @return
+     */
+    @Override
+    public List<PettyLoanContract> findRealQuotaContractListByWorkInfoId(List<String> dateIds) {
+        String sql = "SELECT  " +
+                "  w.date_id AS dateid ," +
+                " w.合同编号 AS contractno, " +
+                " (case  w.是否为循环授信贷款  " +
+                " WHEN  870 THEN " +
+                "   w.循环授信额度   " +
+                " ELSE  " +
+                "    w.授信金额 " +
+                " END)  AS contractamount, " +
+                "  d.content AS contractsigndate,  " +
+                " ISNULL( " +
+                "  CASE dic.Word " +
+                "  WHEN '付易贷' THEN " +
+                "   w.利率 * 30 " +
+                "  ELSE " +
+                "   w.利率 " +
+                "  END, " +
+                "  NULL " +
+                " ) AS intrate, " +
+                "  ISNULL(  " +
+                "    CASE w.授信主体类型  " +
+                "    WHEN 1 THEN  " +
+                "      m.身份证号码  " +
+                "    WHEN 2 THEN  " +
+                "      c.组织机构代码证号  " +
+                "    END,  " +
+                "    ''  " +
+                "  ) AS certificateno,  " +
+                "  ISNULL(  " +
+                "    CASE w.授信主体类型  " +
+                "    WHEN 1 THEN  " +
+                "      m.客户名称  " +
+                "    WHEN 2 THEN  " +
+                "      c.中文客户名称  " +
+                "    END,  " +
+                "    ''  " +
+                "  ) AS customername,  " +
+                "  ISNULL(  " +
+                "    CASE w.授信主体类型  " +
+                "    WHEN 1 THEN  " +
+                "      480001  " +
+                "    WHEN 2 THEN  " +
+                "      480002  " +
+                "    END,  " +
+                "    ''  " +
+                "  ) AS customertype,  " +
+                "  ISNULL(  " +
+                "    CASE w.授信主体类型  " +
+                "    WHEN 1 THEN  " +
+                "      150001  " +
+                "    WHEN 2 THEN  " +
+                "      150002  " +
+                "    END,  " +
+                "    ''  " +
+                "  ) AS certificatetype,  " +
+                " (CASE  w.是否为循环授信贷款 " +
+                " WHEN  870 THEN " +
+                "   '740001' " +
+                " ELSE  " +
+                "   '740002' " +
+                " END ) AS is_real_quota_loan, " +
+                " ISNULL(replace(w.循环授信合同编号,' ',''), '') as real_quota_no " +
+                " FROM  " +
+                "  Data_WorkInfo w  " +
+                " LEFT JOIN Data_CompanyInfo c ON w.授信主体编号 = c.Id  " +
+                " LEFT JOIN Data_MemberInfo m ON w.授信主体编号 = m.ID  " +
+                " LEFT JOIN WorkData_Date d ON d.date_id = w.Date_Id " +
+                "Left Join Dictionary As dic On w.产品类别 = dic.Id " +
+                " WHERE w.是否为循环授信贷款 = 870  AND w.是否放款=485 and  d.Flow_NO IN( " +
+                " SELECT  " +
+                "      Flow_No  " +
+                "    FROM  " +
+                "      WorkFlowConstruction  " +
+                "    WHERE  " +
+                "      Flow_Title = '现场签约'  " +
+                "  ) AND d.form_arrno = 24 AND  d.GoBackId = 0 AND " +
+                "  w.date_id in" +getInClauseStr(dateIds);
+        logger.debug("Executing SQL query [{}], params: [{}]", sql, dateIds);
+        return super.getJdbcTemplate().query(sql, dateIds.toArray(), new BeanPropertyRowMapper(PettyLoanContract.class));
+    }
+    /**
+     * 将记录设置为已上报
+     *
+     * @param dateIds dateIds ,格式dateId1,dateId2,dateId3
+     */
+    @Override
+    public void updateSent(List<String> dateIds) {
+        String sql = "update DC_PETTY_LOAN_CONTRACT set sendStatus = 1 where dateid in  " + getInClauseStr(dateIds);
+        logger.debug("Executing SQL query [{}], params: [{}]", sql, dateIds);
+        super.updateBySql(sql, dateIds.toArray());
     }
 
 

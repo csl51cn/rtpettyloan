@@ -3,6 +3,7 @@ package com.global.fems.business.service.impl;
 import com.global.fems.business.dao.PettyLoanContractDao;
 import com.global.fems.business.dao.QuotaInfoDao;
 import com.global.fems.business.domain.QuotaInfo;
+import com.global.fems.business.service.PettyLoanContractService;
 import com.global.fems.business.service.QuotaInfoService;
 import com.global.fems.message.util.OrgCode;
 import com.global.framework.dbutils.support.DAOException;
@@ -33,6 +34,10 @@ public class QuotaInfoServiceImpl implements QuotaInfoService {
     private QuotaInfoDao quotaInfoDao;
     @Autowired
     private PettyLoanContractDao pettyLoanContractDao;
+
+
+    @Autowired
+    private PettyLoanContractService PettyLoanContractService;
 
     @Override
     public PageBean findQuotaInfoByContractNoFromBizSys(String contractNo, PageBean pageBean) throws DAOException {
@@ -66,15 +71,15 @@ public class QuotaInfoServiceImpl implements QuotaInfoService {
         }
         quotaInfoDao.batchUpdateQuotaoInfo(list, true);
         quotaInfo.setId(null);
-        //设置上报类型,初始保存时,默认为新增:100001
-        quotaInfo.setReportType("100001");
+        //设置上报类型为修改记录
+        quotaInfo.setReportType("100002");
         //设置组织机构代码
         quotaInfo.setOrgCode((OrgCode.getOrgCode()));
         //设置是否发送,0:否,1:是
         quotaInfo.setIsSend(0);
         //设置数据类型
         quotaInfo.setDataType("QUOTA_INFO");
-
+        quotaInfo.setBatchNo(null);
         if (StringUtil.isNullOrEmpty(quotaInfo.getInsertDate())) {
             //设置记录保存时间
             quotaInfo.setInsertDate(new Date());
@@ -174,8 +179,16 @@ public class QuotaInfoServiceImpl implements QuotaInfoService {
             //设置客户经理
             quotaInfo.setRelationManager("渠道来源");
 
-            //设置上报类型,初始保存时,默认为新增:100001
-            quotaInfo.setReportType("100001");
+
+            //需要判断同一个循环授信合同号是否是第一次放款,如果是第二次及其以后的放款,需要修改为更新还款记录
+            boolean isFirstRevolvingCredit = PettyLoanContractService.findIsFirstIssue(Integer.valueOf(dateId), quotaInfo.getContractNo());
+            if (isFirstRevolvingCredit) {
+                //设置上报类型,初始保存时,默认为新增:100001
+                quotaInfo.setReportType("100001");
+            } else {
+                //如果不是第一次发放,需要设置为更新:100002
+                quotaInfo.setReportType("100002");
+            }
             //设置组织机构代码
             quotaInfo.setOrgCode(OrgCode.getOrgCode());
             //设置是否申报,0:否,1:是
@@ -290,18 +303,17 @@ public class QuotaInfoServiceImpl implements QuotaInfoService {
     }
 
     /**
-     *
      * @param sendStatusCode 申报状态
-     * @param contractNo jk合同号
-     * @param startDate  签署日期
-     * @param endDate  签署日期
-     * @param pageBean  分页信息
+     * @param contractNo     jk合同号
+     * @param startDate      签署日期
+     * @param endDate        签署日期
+     * @param pageBean       分页信息
      * @return
      * @throws DAOException
      */
     @Override
     public PageBean findLastQuotaInfoBySendStatus(String sendStatusCode, String contractNo, String startDate, String endDate, PageBean pageBean) throws DAOException {
-        return quotaInfoDao.findLastQuotaInfoBySendStatus(sendStatusCode, contractNo,startDate, endDate, pageBean);
+        return quotaInfoDao.findLastQuotaInfoBySendStatus(sendStatusCode, contractNo, startDate, endDate, pageBean);
     }
 
     private void validate(String contractNo, QuotaInfo quotaInfo) {

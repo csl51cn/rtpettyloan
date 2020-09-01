@@ -19,9 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 贷款合同信息上传策略
@@ -114,7 +113,7 @@ public class SendContractInoBatchFileStrategy implements SendBatchFileStrategy {
     public void updateStatus(String batchNo, int isSend) {
         List<ContractInfoCycleNode> contractInfoCycleNodes = contractInfoDao.findByBatchNo(batchNo);
         contractInfoCycleNodes.forEach(contractInfoCycleNode -> contractInfoCycleNode.setIsSend(isSend));
-        contractInfoDao.batchUpdateContract(contractInfoCycleNodes,true);
+        contractInfoDao.batchUpdateContract(contractInfoCycleNodes, true);
     }
 
     @Override
@@ -123,16 +122,21 @@ public class SendContractInoBatchFileStrategy implements SendBatchFileStrategy {
         if (StringUtils.equals(declareResult.getDataType(), MessageTypeEnum.CONTRACT_INFO.getDesc())) {
             List<ContractInfoCycleNode> list = contractInfoDao.findByBatchNo(declareResult.getBatchNo());
             if (list.size() > 0) {
-                Integer isSend;
-                if ("000000".equals(declareResult.getDeclareResultCode())) {
-                    isSend = 1;
+
+                if ("200000".equals(declareResult.getDeclareResultCode())) {
+                    //申报成功,不需要修改isSend,在上报数据时已将isSend设置为1
+                    return;
+                } else if ("900000".equals(declareResult.getDeclareResultCode()) && StringUtils.isNotBlank(declareResult.getContractNo())) {
+                    //部分上报失败.需要将失败的修改为未上报
+                    String[] split = declareResult.getContractNo().split(",");
+                    HashSet<String> contractNoSet = new HashSet<>(Arrays.asList(split));
+                    list = list.stream().filter(contractInfoCycleNode -> contractNoSet.contains(contractInfoCycleNode.getContractNo())).collect(Collectors.toList());
+                    list.forEach(contractInfoCycleNode -> contractInfoCycleNode.setIsSend(0));
                 } else {
-                    isSend = 0;
+                    //没有成功,需要将所有的记录设置为未申报
+                    list.forEach(contractInfoCycleNode -> contractInfoCycleNode.setIsSend(0));
                 }
-                list.forEach(contractInfoCycleNode -> {
-                    contractInfoCycleNode.setIsSend(isSend);
-                    contractInfoDao.saveOrUpdate(contractInfoCycleNode);
-                });
+                contractInfoDao.batchUpdateContract(list, false);
             }
         }
     }

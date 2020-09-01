@@ -258,6 +258,38 @@
             });
         }
 
+        function doBatchSaveAllInfo(){
+            var ids = [];
+            var rows = $("#businessQueryResultTb").datagrid("getSelections");
+            for (var i = 0; i < rows.length; i++) {
+                ids.push(rows[i].dateId);
+            }
+            $.ajax({
+                type: "POST",
+                url: "${basePath}/pettyLoanContract.do?method=batchSaveAllInfo",
+                data: {"ids": ids.toString()},
+                dataType: "json",
+                async:true,
+                beforeSend: function () {
+                    $.messager.progress({
+                        title: '提示',
+                        msg: '批量保存中，请稍候……',
+                        text: ''
+                    });
+                },
+                complete: function () {
+                    $.messager.progress('close');
+                },
+                success: function (data) {
+                    if (data == "1") {
+                        $.messager.alert("提示消息", "操作成功", "info");
+                    } else {
+                        $.messager.alert("提示消息", "操作失败", "warning");
+                    }
+                }
+            });
+        }
+
         //将表单数据转为json
         function form2Json(id) {
             var arr = $("#" + id).serializeArray();
@@ -747,6 +779,8 @@
                            value="查询"/>
                     <input id="batchSaveBtn" type="button" class="inputButton" onclick="doBatchSave();"
                            value="保存"/>
+                    <input id="batchSaveAllInfoBtn" type="button" title="一键批量保存网签,合同,发放,还款计划,如果是循环授信贷款,会额外保存授信额度" class="inputButton" onclick="doBatchSaveAllInfo();"
+                           value="一键保存除还款外信息"/>
                 </td>
             </tr>
         </table>

@@ -590,18 +590,22 @@
                 return;
             }
 
-            // 显示进度条
-            $.messager.progress({
-                title: "申报数据",
-                text: "正在处理...",
-                interval: 400
-            });
             $.ajax({
                 type: "POST",
                 timeout: 120000,
                 url: "${basePath}/batchDeclare.do?method=sendBatchFile",
                 data: {"ids": ids.toString(), "transactionType": $("#transactionType").combobox("getValue")},
                 dataType: "json",
+                beforeSend: function () {
+                    $.messager.progress({
+                        title: '申报数据提示',
+                        msg: '批量报送中，请稍候……',
+                        text: ''
+                    });
+                },
+                complete: function () {
+                    $.messager.progress('close');
+                },
                 success: function (data) {
                     $.messager.progress('close');
                     data = eval(data);
@@ -610,7 +614,7 @@
                     } else {
                         $.messager.alert("提示消息", data.msg, "warning");
                     }
-                }
+                },
             });
 
         }

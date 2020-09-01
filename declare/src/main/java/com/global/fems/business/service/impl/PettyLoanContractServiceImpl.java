@@ -2,8 +2,8 @@ package com.global.fems.business.service.impl;
 
 import com.global.fems.business.dao.PettyLoanContractDao;
 import com.global.fems.business.domain.PettyLoanContract;
-import com.global.fems.business.service.CommonService;
-import com.global.fems.business.service.PettyLoanContractService;
+import com.global.fems.business.service.*;
+import com.global.fems.business.utils.SpringContextUtils;
 import com.global.framework.dbutils.support.DAOException;
 import com.global.framework.dbutils.support.PageBean;
 import com.global.framework.exception.BaseException;
@@ -14,9 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 实时网签小额贷款合同管理Service接口实现类
@@ -26,6 +25,18 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
     private static final Logger logger = LoggerFactory.getLogger(PettyLoanContractServiceImpl.class);
     @Autowired
     private PettyLoanContractDao pettyLoanContractDao;
+
+    @Autowired
+    private ContractInfoService contractInfoService;
+
+    @Autowired
+    private ContractIssueInfoService contractIssueInfoService;
+
+    @Autowired
+    private PayPlanInfoService payPlanInfoService;
+
+    @Autowired
+    private QuotaInfoService quotaInfoService;
 
     /**
      * 保存或者更新小额贷款合同记录
@@ -87,9 +98,6 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
     @Override
     public PageBean findPettyLoanContractByDate(String startDate, String endDate, PageBean pageBean) throws BaseException {
         PageBean result = pettyLoanContractDao.findPettyLoanContractByDate(startDate, endDate, pageBean);
-        for (PettyLoanContract pettyLoanContract : (List<PettyLoanContract>) result.getDataList()) {
-            setRealQuotaNo(pettyLoanContract);
-        }
         return result;
 
     }
@@ -129,7 +137,6 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
     @Override
     public PettyLoanContract findPettyLoanContractByWorkInfoId(Integer dateId) throws BaseException {
         PettyLoanContract pettyLoanContract = pettyLoanContractDao.findPettyLoanContractByWorkInfoId(dateId);
-        setRealQuotaNo(pettyLoanContract);
         setIntRate(pettyLoanContract);
         //当前查询的业务数据贷款类型都是自营贷款，委托贷款未走业务系统，设置贷款类型为自营贷款530001
         if (StringUtils.isEmpty(pettyLoanContract.getConCustomerName())) {
@@ -191,7 +198,6 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
                 continue;
             }
             PettyLoanContract pettyLoanContract = pettyLoanContractDao.findPettyLoanContractByWorkInfoId(dateId);
-            setRealQuotaNo(pettyLoanContract);
             setIntRate(pettyLoanContract);
             //当前查询的业务数据贷款类型都是自营贷款，委托贷款未走业务系统，设置贷款类型为自营贷款530001
             if (StringUtils.isEmpty(pettyLoanContract.getConCustomerName())) {
@@ -249,9 +255,6 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
     @Override
     public PageBean findPettyLoanContractByContractNoFromBizSys(String contractNo, PageBean pageBean) throws BaseException {
         PageBean result = pettyLoanContractDao.findPettyLoanContractByContractNoFromBizSys(contractNo, pageBean);
-        for (PettyLoanContract pettyLoanContract : (List<PettyLoanContract>) result.getDataList()) {
-            setRealQuotaNo(pettyLoanContract);
-        }
         return result;
     }
 
@@ -314,6 +317,80 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
             }
         }
         return result;
+    }
+
+    /**
+     * 指定循环授信合同编号,dateId查询是否是第一次放款的业务
+     *
+     * @param dateId                    流水号
+     * @param revolvingCreditContractNo 循环授信合同编号
+     * @return
+     */
+    @Override
+    public boolean findIsFirstIssue(Integer dateId, String revolvingCreditContractNo) {
+        int businessCount = pettyLoanContractDao.findBusinessCount(dateId, revolvingCreditContractNo);
+        return businessCount == 1;
+    }
+
+    /**
+     * 批量保存网签,合同信息,合同发放,还款计划,如果是循环授信贷款,会额外保存授信额度
+     *
+     * @param ids Data_WorkInfo表中的Date_Id
+     */
+    @Override
+    public void batchSaveAllInfo(String ids) throws BaseException {
+        PettyLoanContractService pettyLoanContractService = SpringContextUtils.getBean(PettyLoanContractService.class);
+
+        //查询循环授信贷款
+        List<PettyLoanContract> list = pettyLoanContractService.findRealQuotaContractListByWorkInfoId(ids);
+        //dateId和是否循环授信第一次放款映射Map
+        HashMap<Integer, Boolean> dateIdAndIsRealQuotaContractMap = new HashMap<>(list.size() * 4 / 3);
+        for (PettyLoanContract pettyLoanContract : list) {
+            boolean isFirstRevolvingCredit = pettyLoanContractService.findIsFirstIssue(pettyLoanContract.getDateId(), pettyLoanContract.getRealQuotaNo());
+            dateIdAndIsRealQuotaContractMap.put(pettyLoanContract.getDateId(), isFirstRevolvingCredit);
+        }
+
+        //保存网签信息
+        pettyLoanContractService.batchSavePettyLoanContract(ids);
+        //保存合同信息
+        contractInfoService.batchSaveContract(ids);
+        //保存发放信息
+        contractIssueInfoService.batchSaveContract(ids);
+        //保存还款计划信息
+        contractIssueInfoService.batchSaveContract(ids);
+        //保存授信额度信息
+        String dateIds = list.stream().map(pettyLoanContract -> pettyLoanContract.getDateId() + "").collect(Collectors.joining(","));
+        quotaInfoService.batchSaveContract(dateIds);
+
+        //循环授信贷款如果不是第一次放款,不需要报送网签,合同信息,直接设置为已申报
+        pettyLoanContractService.updateSent(dateIds);
+        contractInfoService.updateSent(dateIds);
+
+
+
+    }
+
+
+    /**
+     *  将记录设置为已上报
+     * @param dateIds dateIds ,格式dateId1,dateId2,dateId3
+     * @return
+     * @throws BaseException
+     */
+    @Override
+    public List<PettyLoanContract> findRealQuotaContractListByWorkInfoId(String dateIds) throws BaseException {
+        String[] split = dateIds.split(",");
+        return pettyLoanContractDao.findRealQuotaContractListByWorkInfoId(Arrays.asList(split));
+    }
+
+    /**
+     * 将记录设置为已上报
+     *
+     * @param dateIds dateIds ,格式dateId1,dateId2,dateId3
+     */
+    @Override
+    public void updateSent(String dateIds) {
+        pettyLoanContractDao.updateSent(Arrays.asList(dateIds.split(",")));
     }
 
     /**

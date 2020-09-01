@@ -36,16 +36,19 @@ public class QuotaInfoDaoImpl extends BaseDaoSupport implements QuotaInfoDao {
                 "  END, " +
                 "  '' " +
                 " ) AS customer_name, " +
-                " a.循环授信额度 as contract_amount, " +
+                " a1.循环授信额度 as contract_amount, " +
                 " a.授信金额 as used_amount, " +
-                " (a.循环授信额度 - a.授信金额) as remain_amount, " +
+                " (a1.循环授信额度 - a.授信金额) as remain_amount, " +
                 " b.content as contract_sign_date, " +
                 " b.content as contract_begin_date, " +
-                " DATEADD(m, a.循环授信期限, b.content) as contract_end_date, " +
+                " DATEADD(m, a1.循环授信期限, b.content) as contract_end_date, " +
                 " '740001' as is_circle " +
                 "FROM " +
                 " Data_WorkInfo a " +
-                "LEFT JOIN WorkData_Date b ON b.date_id = a.Date_Id " +
+                "left join  (SELECT a.循环授信合同编号, MIN (a.Date_Id ) AS Date_Id,a.循环授信额度,a.循环授信期限  FROM " +
+                "( SELECT Replace(循环授信合同编号, ' ', '' ) AS 循环授信合同编号, Date_Id,循环授信额度,循环授信期限 FROM Data_WorkInfo WHERE 是否放款 = 485 AND [是否为循环授信贷款] = 870 ) a  " +
+                "GROUP BY a.循环授信合同编号,a.循环授信额度,a.循环授信期限 ) a1 on a.循环授信合同编号 = a1.循环授信合同编号 "+
+                "LEFT JOIN WorkData_Date b ON b.date_id = a1.Date_Id " +
                 "AND b.Flow_NO IN ( " +
                 " SELECT " +
                 "  Flow_No " +
@@ -125,22 +128,25 @@ public class QuotaInfoDaoImpl extends BaseDaoSupport implements QuotaInfoDao {
                 "  END, " +
                 "  '' " +
                 " ) AS guar_type, " +
-                " a.循环授信额度 AS contract_amount, " +
+                " a1.循环授信额度 AS contract_amount, " +
                 " a.授信金额 AS used_amount, " +
                 " ( " +
-                "  a.循环授信额度 - a.授信金额 " +
+                "  a1.循环授信额度 - a.授信金额 " +
                 " ) AS remain_amount, " +
                 " b.content AS contract_sign_date, " +
                 " b.content AS contract_begin_date, " +
                 " DATEADD( " +
                 "  m, " +
-                "  a.循环授信期限, " +
+                "  a1.循环授信期限, " +
                 "  b.content " +
                 " ) AS contract_end_date, " +
                 " '740001' AS is_circle " +
                 "FROM " +
                 " Data_WorkInfo a " +
-                "LEFT JOIN WorkData_Date b ON b.date_id = a.Date_Id " +
+                "left join  (SELECT a.循环授信合同编号, MIN (a.Date_Id ) AS Date_Id,a.循环授信额度,a.循环授信期限  FROM " +
+                "( SELECT Replace(循环授信合同编号, ' ', '' ) AS 循环授信合同编号, Date_Id,循环授信额度,循环授信期限 FROM Data_WorkInfo WHERE 是否放款 = 485 AND [是否为循环授信贷款] = 870 ) a  " +
+                "GROUP BY a.循环授信合同编号,a.循环授信额度,a.循环授信期限  ) a1 on a.循环授信合同编号 = a1.循环授信合同编号 "+
+                "LEFT JOIN WorkData_Date b ON b.date_id = a1.Date_Id " +
                 "AND b.Flow_NO IN ( " +
                 " SELECT " +
                 "  Flow_No " +
@@ -205,16 +211,19 @@ public class QuotaInfoDaoImpl extends BaseDaoSupport implements QuotaInfoDao {
                 "  END, " +
                 "  '' " +
                 " ) AS customer_name, " +
-                " a.循环授信额度 as contract_amount, " +
+                " a1.循环授信额度 as contract_amount, " +
                 " a.授信金额 as used_amount, " +
-                " (a.循环授信额度 - a.授信金额) as remain_amount, " +
+                " (a1.循环授信额度 - a.授信金额) as remain_amount, " +
                 " b.content as contract_sign_date, " +
                 " b.content as contract_begin_date, " +
-                " DATEADD(m, a.循环授信期限, b.content) as contract_end_date, " +
+                " DATEADD(m, a1.循环授信期限, b.content) as contract_end_date, " +
                 " '740001' as is_circle " +
                 "FROM " +
                 " Data_WorkInfo a " +
-                "LEFT JOIN WorkData_Date b ON b.date_id = a.Date_Id " +
+                "left join  (SELECT a.循环授信合同编号, MIN (a.Date_Id ) AS Date_Id,a.循环授信额度,a.循环授信期限  FROM " +
+                "( SELECT Replace(循环授信合同编号, ' ', '' ) AS 循环授信合同编号, Date_Id,循环授信额度, 循环授信期限 FROM Data_WorkInfo WHERE 是否放款 = 485 AND [是否为循环授信贷款] = 870 ) a  " +
+                "GROUP BY a.循环授信合同编号,a.循环授信额度,a.循环授信期限 ) a1 on a.循环授信合同编号 = a1.循环授信合同编号 "+
+                "LEFT JOIN WorkData_Date b ON b.date_id = a1.Date_Id " +
                 "AND b.Flow_NO IN ( " +
                 " SELECT " +
                 "  Flow_No " +

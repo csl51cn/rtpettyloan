@@ -239,5 +239,25 @@ public class PettyLoanContractController extends BaseController {
 
     }
 
+    /**
+     * 批量保存网签,合同信息,合同发放,还款计划,如果是循环授信贷款,会额外保存授信额度
+     *
+     * @param ids Data_WorkInfo表中的Date_Id
+     * @return 是否操作成功：1保存成功，0保存失败
+     */
+    @RequestMapping(params = "method=batchSaveAllInfo")
+    @ResponseBody
+    public String batchSaveAllInfo(String ids) {
+        try {
+            contractService.batchSaveAllInfo(ids);
+            return "1";
+        } catch (BaseException e) {
+            e.printStackTrace();
+            return "0";
+        }
+
+
+    }
+
 
 }

@@ -51,4 +51,11 @@ public interface ContractInfoDao {
      * @return 满足条件的记录数
      */
     Long findCountByDateIdAndReportTypeAndResult(String dateId, String reportType, String result);
+    /**
+     * 将记录设置为已上报
+     *
+     * @param dateIds dateIds ,格式dateId1,dateId2,dateId3
+     */
+    void updateSent(List<String> dateIds);
+
 }

@@ -3,6 +3,7 @@ package com.global.fems.business.service;
 import com.global.fems.business.domain.ContractInfoCycleNode;
 import com.global.framework.dbutils.support.DAOException;
 import com.global.framework.dbutils.support.PageBean;
+import com.global.framework.exception.BaseException;
 import com.global.param.domain.ResultModel;
 
 /**
@@ -30,4 +31,11 @@ public interface ContractInfoService {
     PageBean findLastContractBySendStatus(String sendStatusCode, String contractNo, String signStartDate, String signEndDate, PageBean pageBean) throws DAOException;
 
     ResultModel setNotSend(String ids) throws DAOException;
+    /**
+     *  将记录设置为已上报
+     * @param dateIds dateIds ,格式dateId1,dateId2,dateId3
+     * @return
+     * @throws BaseException
+     */
+    void updateSent(String dateIds);
 }
