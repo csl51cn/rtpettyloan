@@ -6,7 +6,6 @@ import com.global.fems.business.domain.DeclareResult;
 import com.global.fems.client.SFTPClient;
 import com.jcraft.jsch.ChannelSftp;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -32,7 +31,7 @@ public class ScheduleService {
     /**
      * 获取sftp错误文件更新报送结果
      */
-    @Scheduled(cron = "0 0 9 * * ? ")
+//    @Scheduled(cron = "0 0 9 * * ? ")
     public void getErrorResult() throws Exception {
         Vector<ChannelSftp.LsEntry> objects = (Vector<ChannelSftp.LsEntry>) SFTPClient.listFiles(PATH);
         if (objects.size() > 0) {

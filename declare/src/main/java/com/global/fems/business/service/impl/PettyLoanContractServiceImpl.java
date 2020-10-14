@@ -344,10 +344,10 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
         //查询循环授信贷款
         List<PettyLoanContract> list = pettyLoanContractService.findRealQuotaContractListByWorkInfoId(ids);
         //dateId和是否循环授信第一次放款映射Map
-        HashMap<Integer, Boolean> dateIdAndIsRealQuotaContractMap = new HashMap<>(list.size() * 4 / 3);
+        HashMap<Boolean, String> dateIdAndIsRealQuotaContractMap = new HashMap<>(list.size() * 4 / 3);
         for (PettyLoanContract pettyLoanContract : list) {
             boolean isFirstRevolvingCredit = pettyLoanContractService.findIsFirstIssue(pettyLoanContract.getDateId(), pettyLoanContract.getRealQuotaNo());
-            dateIdAndIsRealQuotaContractMap.put(pettyLoanContract.getDateId(), isFirstRevolvingCredit);
+            dateIdAndIsRealQuotaContractMap.merge(isFirstRevolvingCredit, pettyLoanContract.getDateId().toString(), (oldValue, newValue) -> String.join(",", oldValue, newValue));
         }
 
         //保存网签信息
@@ -357,22 +357,23 @@ public class PettyLoanContractServiceImpl implements PettyLoanContractService {
         //保存发放信息
         contractIssueInfoService.batchSaveContract(ids);
         //保存还款计划信息
-        contractIssueInfoService.batchSaveContract(ids);
+        payPlanInfoService.batchSaveContract(ids);
         //保存授信额度信息
         String dateIds = list.stream().map(pettyLoanContract -> pettyLoanContract.getDateId() + "").collect(Collectors.joining(","));
         quotaInfoService.batchSaveContract(dateIds);
 
         //循环授信贷款如果不是第一次放款,不需要报送网签,合同信息,直接设置为已申报
-        pettyLoanContractService.updateSent(dateIds);
-        contractInfoService.updateSent(dateIds);
-
-
-
+        String notFirstRevolvingCreditDateIds = dateIdAndIsRealQuotaContractMap.get(false);
+        if (StringUtils.isNotBlank(notFirstRevolvingCreditDateIds)) {
+            pettyLoanContractService.updateSent(notFirstRevolvingCreditDateIds);
+            contractInfoService.updateSent(dateIds);
+        }
     }
 
 
     /**
-     *  将记录设置为已上报
+     * 通过dateId查询记录
+     *
      * @param dateIds dateIds ,格式dateId1,dateId2,dateId3
      * @return
      * @throws BaseException
