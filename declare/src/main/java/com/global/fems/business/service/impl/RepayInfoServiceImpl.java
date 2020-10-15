@@ -89,9 +89,10 @@ public class RepayInfoServiceImpl implements RepayInfoService {
                         continue;
                     }
                 }
-                //合同编号后面加上-0
+                //合同编号和发放编号后面加上-0
                 if (SPECIAL_CONTRACT_NO.contains(repayInfo.getContractNo())) {
                     repayInfo.setContractNo(repayInfo.getContractNo() + "-0");
+                    repayInfo.setDueBillNo(repayInfo.getContractNo());
                 }
                 //设置实还本金,实还利息.findRepayInfoByIdFromBizSys()查询的结果不能合并同期同日多条记录;设置回收利息:提前结清时有违约金,违约金加到回收利息中
                 setRepayPrincipalInterest(repayInfo);
