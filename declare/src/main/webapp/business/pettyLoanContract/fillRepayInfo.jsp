@@ -311,6 +311,12 @@
                             return '正常还款';
                         } else if (value == 550002) {
                             return '逾期还款';
+                        } else if( value == 550003){
+                            return '提前结清';
+                        }else if (value == 550004){
+                            return '不良核销';
+                        }else if(value == 550005){
+                            return '资产转让';
                         }
                     }
                 }, {
