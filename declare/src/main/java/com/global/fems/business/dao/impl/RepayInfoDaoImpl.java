@@ -2,6 +2,7 @@ package com.global.fems.business.dao.impl;
 
 import com.global.fems.business.dao.RepayInfoDao;
 import com.global.fems.business.domain.RepayInfo;
+import com.global.fems.business.dto.RepaymentInfo;
 import com.global.framework.dbutils.support.BaseDaoSupport;
 import com.global.framework.dbutils.support.DAOException;
 import com.global.framework.dbutils.support.PageBean;
@@ -9,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -338,6 +340,22 @@ public class RepayInfoDaoImpl extends BaseDaoSupport implements RepayInfoDao {
     public Long findCountByDateIdAndCounterAndReportTypeAndResult(Integer dateId, String counter, String repayDate, String reportType, String result) {
         String sql = "SELECT COUNT(*) FROM DC_REPAY_INFO a LEFT JOIN DC_DECLARE_RESULT b ON a.batch_no = b.batch_no WHERE  a.date_id =?  and  a.counter =?   and  a.repay_date = ?  and a.report_type = ?  AND b.declare_result = ? ";
         return super.findForLongBySql(sql, new Object[]{dateId, counter, repayDate, reportType, result});
+    }
+
+    /**
+     * 查询指定还款记录的在当期是第几次还款(同一入账日期多笔算一笔)
+     *
+     * @param dateId    业务流水号
+     * @param counter   还款期数
+     * @return
+     * @throws DAOException
+     */
+    @Override
+    public List<RepaymentInfo> findRepaymentSequenceNo(Integer dateId, String counter) throws DAOException {
+        String sql = "select  入账日期 as  repaymentDate, row_number() over (  ORDER BY 入账日期 ) as sequenceNo from  (select  入账日期  from   Date_还款登记表   where  还款计划类别 = 1212  and Date_Id = ? AND  还款期数  =? AND (实还本金 >0 or 实还利息 >0 or 实还罚息>0 or 实还费用Two >0)   group  by 入账日期) a";
+        Object[] objects = {dateId, counter};
+        logger.debug("Executing SQL query [{}], params: [{}]", sql, objects);
+        return super.getJdbcTemplate().query(sql, objects, new BeanPropertyRowMapper<>(RepaymentInfo.class));
     }
 
 

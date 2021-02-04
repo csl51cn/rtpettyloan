@@ -123,6 +123,11 @@ public class RepayInfoController extends BaseController  {
             if (StringUtils.isEmpty(repayInfo.getDelayAmt())) {
                 repayInfo.setDelayAmt("0");
             }
+            //校验remark是否为空,如果为空补全当期第几次还款
+            if(StringUtils.isEmpty(repayInfo.getRemark())){
+                repayInfoService.setRemark(repayInfo);
+            }
+
             if (repayInfo.getIsSend() != null && repayInfo.getIsSend() == 1) {
                 repayInfoService.declaredUpdate(repayInfo);
             } else {

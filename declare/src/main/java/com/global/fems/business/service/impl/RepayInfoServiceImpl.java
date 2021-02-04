@@ -3,6 +3,7 @@ package com.global.fems.business.service.impl;
 import com.global.fems.business.dao.PettyLoanContractDao;
 import com.global.fems.business.dao.RepayInfoDao;
 import com.global.fems.business.domain.RepayInfo;
+import com.global.fems.business.dto.RepaymentInfo;
 import com.global.fems.business.service.RepayInfoService;
 import com.global.fems.message.util.OrgCode;
 import com.global.framework.dbutils.support.DAOException;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 贷款回收信息管理Service
@@ -149,6 +151,7 @@ public class RepayInfoServiceImpl implements RepayInfoService {
             repayInfo.setRepayPriAmt(repay_pri_amt);
             repayInfo.setRepayIntAmt(repay_int_amt);
         }
+        setRemark(repayInfo);
 
         //设置回收利息:提前结清时有违约金,违约金加到回收利息中
         Float penalty1 = repayInfoDao.findPenaltyPrincipalInterest(repayInfo.getDateId(), counter, repayInfo.getRepayDate());
@@ -401,6 +404,21 @@ public class RepayInfoServiceImpl implements RepayInfoService {
             return ResultModel.fail();
         }
         return ResultModel.ok();
+    }
+
+    /**
+     * 设置当期还款次数,使用RepayInfo的remark字段
+     *
+     * @param repayInfo 还款信息
+     */
+    @Override
+    public void setRemark(RepayInfo repayInfo) {
+
+        //查找某期所有实际还款并按入账日期升序排序编号,同期同天多笔还款算作一次还款
+        List<RepaymentInfo> repaymentSequenceNo = repayInfoDao.findRepaymentSequenceNo(repayInfo.getDateId(), repayInfo.getCounter());
+        Map<String, List<RepaymentInfo>> dateAndRepaymentInfoMap = repaymentSequenceNo.stream().collect(Collectors.groupingBy(RepaymentInfo::getRepaymentDate));
+        repayInfo.setRemark(dateAndRepaymentInfoMap.get(repayInfo.getRepayDate()).get(0).getSequenceNo().toString());
+
     }
 
 

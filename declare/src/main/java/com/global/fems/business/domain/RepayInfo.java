@@ -79,8 +79,12 @@ public class RepayInfo extends Entity {
     private String delayFee = "0";//逾期滞纳金
     @ColumnMapping(columnName = "pri_plty_rate", columnType = "BigDecimal")
     private String priPltyRate = "0";//逾期月利率
+
+    /**
+     * 备注 从重庆小贷监管平台2.0_业务信息上报_报文交换标准v4.9后此字段传某期第几次还款
+     */
     @ColumnMapping(columnName = "remark", columnType = "String")
-    private String remark;//备注
+    private String remark;
     @ColumnMapping(columnName = "total_counter", columnType = "Integer")
     private String totalCounter; //总期数
     @ColumnMapping(columnName = "is_send", columnType = "Integer")

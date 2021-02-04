@@ -27,6 +27,7 @@
         <field fieldName="delayInterest" nodeName="delay_interest" text="逾期利息" type = "Double" required = "Y"  length="[1,18]" format="#.##"/>
         <field fieldName="delayFee" nodeName="delay_fee" text="逾期滞纳金" type = "Double" required = "Y"  length="[1,18]" format="#.##"/>
         <field fieldName="priPltyRate" nodeName="pri_plty_rate" text="逾期月利率" type = "Double" required = "Y" length="[1,18]" format="#.########"/>
+        <field fieldName="remark" nodeName="remark" text="备注" type = "String" required = "Y"  length="[1,500]"/>
     </field>
 </field>
 </transaction>

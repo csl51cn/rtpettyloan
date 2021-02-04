@@ -1,6 +1,7 @@
 package com.global.fems.business.dao;
 
 import com.global.fems.business.domain.RepayInfo;
+import com.global.fems.business.dto.RepaymentInfo;
 import com.global.framework.dbutils.support.DAOException;
 import com.global.framework.dbutils.support.PageBean;
 
@@ -74,4 +75,13 @@ public interface RepayInfoDao {
      * @return 满足条件的记录数
      */
     Long findCountByDateIdAndCounterAndReportTypeAndResult(Integer dateId, String counter, String repayDate, String reportType, String result);
+
+    /**
+     * 查询指定还款期数的还款记录有几次还款(同一入账日期多笔算一笔)
+     * @param dateId 业务流水号
+     * @param counter 还款期数
+     * @return
+     * @throws DAOException
+     */
+   List<RepaymentInfo>  findRepaymentSequenceNo(Integer dateId, String counter) throws DAOException;;
 }

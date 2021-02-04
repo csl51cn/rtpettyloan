@@ -28,7 +28,7 @@ public class RepayInfoUploadParam extends SerialBean {
     private String delayInterest ;//逾期利息
     private String delayFee ;//逾期滞纳金
     private String priPltyRate ;//逾期月利率
-//    private String remark;//备注
+    private String remark;//备注
 
     public String getReportType() {
         return reportType;
@@ -202,11 +202,11 @@ public class RepayInfoUploadParam extends SerialBean {
         this.priPltyRate = priPltyRate;
     }
 
-//    public String getRemark() {
-//        return remark;
-//    }
-//
-//    public void setRemark(String remark) {
-//        this.remark = remark;
-//    }
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 }

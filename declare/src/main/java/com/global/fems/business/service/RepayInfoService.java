@@ -19,7 +19,7 @@ public interface RepayInfoService {
      * @param pageBean
      * @return
      */
-    PageBean findRepayInfoByRepayDateAndContractNoFromBizSys(String repayStartDate, String repayEndDate, String contractNo, PageBean pageBean)  throws DAOException;
+    PageBean findRepayInfoByRepayDateAndContractNoFromBizSys(String repayStartDate, String repayEndDate, String contractNo, PageBean pageBean) throws DAOException;
 
     void batchSaveRepayInfo(String ids) throws DAOException;
 
@@ -41,5 +41,11 @@ public interface RepayInfoService {
 
     ResultModel setNotSend(String ids) throws DAOException;
 
+    /**
+     * 设置当期还款次数,使用RepayInfo的remark字段
+     *
+     * @param repayInfo 还款信息
+     */
+    void setRemark(RepayInfo repayInfo);
 
 }
