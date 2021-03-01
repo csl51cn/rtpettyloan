@@ -77,6 +77,7 @@ public class RepayInfoServiceImpl implements RepayInfoService {
         });
         for (String id : idsArr) {
             RepayInfo repayInfo = repayInfoDao.findRepayInfoByIdFromBizSys(id);
+            System.out.println(repayInfo);
             boolean isAdd = treeSet.add(repayInfo);
             if (isAdd) {
                 List<RepayInfo> existRepayInfoList = repayInfoDao.findRepayInfoListByDateIdAndCounter(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());
@@ -413,9 +414,14 @@ public class RepayInfoServiceImpl implements RepayInfoService {
      */
     @Override
     public void setRemark(RepayInfo repayInfo) {
-
+        String counter = repayInfo.getCounter();
+        String repayMode = repayInfoDao.findRepayModeByDateId(repayInfo.getDateId());
+        //查询时,这两种还款方式数据库中还款期数是从0开始计算,根据Date_Id查询时加了1,此时需要减1才能与数据库数据匹配
+        if ("1835".equals(repayMode) || "818".equals(repayMode)) {
+            counter = (Integer.parseInt(counter) - 1) + "";
+        }
         //查找某期所有实际还款并按入账日期升序排序编号,同期同天多笔还款算作一次还款
-        List<RepaymentInfo> repaymentSequenceNo = repayInfoDao.findRepaymentSequenceNo(repayInfo.getDateId(), repayInfo.getCounter());
+        List<RepaymentInfo> repaymentSequenceNo = repayInfoDao.findRepaymentSequenceNo(repayInfo.getDateId(),counter);
         Map<String, List<RepaymentInfo>> dateAndRepaymentInfoMap = repaymentSequenceNo.stream().collect(Collectors.groupingBy(RepaymentInfo::getRepaymentDate));
         repayInfo.setRemark(dateAndRepaymentInfoMap.get(repayInfo.getRepayDate()).get(0).getSequenceNo().toString());
 

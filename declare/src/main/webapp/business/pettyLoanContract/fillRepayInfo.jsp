@@ -264,7 +264,7 @@
                 checkOnSelect: true,
                 pagination: true,
                 pageSize: 15,
-                pageList: [5, 10, 15, 20, 30, 50 ,100 ,300],
+                pageList: [5, 10, 15, 20, 30, 50, 100, 300, 500],
                 columns: [[{
                     field: "id",
                     title: "主键",
