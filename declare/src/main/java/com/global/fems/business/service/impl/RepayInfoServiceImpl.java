@@ -77,7 +77,6 @@ public class RepayInfoServiceImpl implements RepayInfoService {
         });
         for (String id : idsArr) {
             RepayInfo repayInfo = repayInfoDao.findRepayInfoByIdFromBizSys(id);
-            System.out.println(repayInfo);
             boolean isAdd = treeSet.add(repayInfo);
             if (isAdd) {
                 List<RepayInfo> existRepayInfoList = repayInfoDao.findRepayInfoListByDateIdAndCounter(repayInfo.getDateId(), repayInfo.getCounter(), repayInfo.getRepayDate());
